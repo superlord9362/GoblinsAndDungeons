@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "pickles=1,waterlogged=false": [
+      {
+        "model": "goblinsanddungeons:block/candle1_lit",
+		"y":270
+      }
+    ],
+    "pickles=1,waterlogged=true": [
+      {
+        "model": "goblinsanddungeons:block/candle1",
+		"y":270
+      }
+    ],
+    "pickles=2,waterlogged=false": [
+      {
+        "model": "goblinsanddungeons:block/candle2_lit",
+		"y":270
+      }
+    ],
+    "pickles=2,waterlogged=true": [
+      {
+        "model": "goblinsanddungeons:block/candle2",
+		"y":270
+      }
+    ],
+    "pickles=3,waterlogged=false": [
+      {
+        "model": "goblinsanddungeons:block/candle3_lit",
+		"y":270
+      }
+    ],
+    "pickles=3,waterlogged=true": [
+      {
+        "model": "goblinsanddungeons:block/candle3",
+		"y":270
+      }
+    ],
+    "pickles=4,waterlogged=false": [
+      {
+        "model": "goblinsanddungeons:block/candle4_lit",
+		"y":270
+      }
+    ],
+    "pickles=4,waterlogged=true": [
+      {
+        "model": "goblinsanddungeons:block/candle4",
+		"y":270
+      }
+    ]
+  }
+}

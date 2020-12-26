@@ -1,0 +1,44 @@
+{
+  "variants": {
+    "pickles=1,waterlogged=false": [
+      {
+        "model": "goblinsanddungeons:block/urn1"
+      }
+    ],
+    "pickles=1,waterlogged=true": [
+      {
+        "model": "goblinsanddungeons:block/urn1"
+      }
+    ],
+    "pickles=2,waterlogged=false": [
+      {
+        "model": "goblinsanddungeons:block/urn2"
+      }
+    ],
+    "pickles=2,waterlogged=true": [
+      {
+        "model": "goblinsanddungeons:block/urn2"
+      }
+    ],
+    "pickles=3,waterlogged=false": [
+      {
+        "model": "goblinsanddungeons:block/urn3"
+      }
+    ],
+    "pickles=3,waterlogged=true": [
+      {
+        "model": "goblinsanddungeons:block/urn3"
+      }
+    ],
+    "pickles=4,waterlogged=false": [
+      {
+        "model": "goblinsanddungeons:block/urn4"
+      }
+    ],
+    "pickles=4,waterlogged=true": [
+      {
+        "model": "goblinsanddungeons:block/urn4"
+      }
+    ]
+  }
+}

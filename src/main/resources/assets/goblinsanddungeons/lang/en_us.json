@@ -1,0 +1,27 @@
+{
+	"itemGroup.goblinsanddungeons_item_group": "Goblins & Dungeons",
+	
+	"item.goblinsanddungeons.goblin_crown": "Goblin Crown",
+	"item.goblinsanddungeons.goblin_eye": "Goblin Eye",
+	"item.goblinsanddungeons.key": "Key",
+	"item.goblinsanddungeons.dagger": "Dagger",
+	"item.goblinsanddungeons.gob_spawn_egg": "Gob Spawn Egg",
+	"item.goblinsanddungeons.hobgob_spawn_egg": "Hobgob Spawn Egg",
+	"item.goblinsanddungeons.goblo_spawn_egg": "Goblo Spawn Egg",
+	"item.goblinsanddungeons.garch_spawn_egg": "Garch Spawn Egg",
+	"item.goblinsanddungeons.goom_spawn_egg": "Goom Spawn Egg",
+	"item.goblinsanddungeons.ogre_spawn_egg": "Ogre Spawn Egg",
+	
+	"block.goblinsanddungeons.candle": "Candle",
+	"block.goblinsanddungeons.urn": "Urn",
+	"block.goblinsanddungeons.locked_chest": "Locked Chest",
+	
+	"block.goblinsanddungeons.message.key_needed": "You need a key to open this chest!",
+	
+	"entity.goblinsanddungeons.gob": "Gob",
+	"entity.goblinsanddungeons.hobgob": "Hobgob",
+	"entity.goblinsanddungeons.goblo": "Goblo",
+	"entity.goblinsanddungeons.garch": "Garch",
+	"entity.goblinsanddungeons.goom": "Goom",
+	"entity.goblinsanddungeons.ogre": "Ogre"
+}
