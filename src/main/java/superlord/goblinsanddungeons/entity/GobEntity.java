@@ -30,6 +30,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.ClimberPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
@@ -124,5 +125,9 @@ public class GobEntity extends MonsterEntity {
 		this.dataManager.set(CLIMBING, b0);
 	}
 
+	@Override
+    public ItemStack getPickedResult(RayTraceResult target) {
+        return new ItemStack(ItemInit.GOB_SPAWN_EGG.get());
+    }
 
 }

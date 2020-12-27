@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "goblinsanddungeons:scoria_wall",
+	"goblinsanddungeons:scoria_brick_wall",
+	"goblinsanddungeons:cracked_scoria_brick_wall"
+  ]
+}

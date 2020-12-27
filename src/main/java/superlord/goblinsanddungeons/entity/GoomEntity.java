@@ -31,14 +31,17 @@ import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import superlord.goblinsanddungeons.entity.ai.GoomSmokeGoal;
 import superlord.goblinsanddungeons.init.ItemInit;
 
 public class GoomEntity extends MonsterEntity {
 	private static final DataParameter<Byte> CLIMBING = EntityDataManager.createKey(GoomEntity.class, DataSerializers.BYTE);
 	private static final DataParameter<Integer> STATE = EntityDataManager.createKey(GoomEntity.class, DataSerializers.VARINT);
 	private static final DataParameter<Boolean> IGNITED = EntityDataManager.createKey(GoomEntity.class, DataSerializers.BOOLEAN);
+	@SuppressWarnings("unused")
 	private int lastActiveTime;
 	private int timeSinceIgnited;
 	private int fuseTime = 30;
@@ -59,7 +62,8 @@ public class GoomEntity extends MonsterEntity {
 		this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
 		this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-		this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true));
+		this.goalSelector.addGoal(1, new GoomSmokeGoal(this));
+		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractRaiderEntity.class, true));
@@ -102,10 +106,10 @@ public class GoomEntity extends MonsterEntity {
 		if (this.isAlive()) {
 			this.lastActiveTime = this.timeSinceIgnited;
 			if (this.hasIgnited()) {
-				this.setCreeperState(1);
+				this.setGoomState(1);
 			}
 
-			int i = this.getCreeperState();
+			int i = this.getGoomState();
 			if (i > 0 && this.timeSinceIgnited == 0) {
 				this.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
 			}
@@ -123,14 +127,14 @@ public class GoomEntity extends MonsterEntity {
 
 	}
 
-	public int getCreeperState() {
+	public int getGoomState() {
 		return this.dataManager.get(STATE);
 	}
 
 	/**
-	 * Sets the state of creeper, -1 to idle and 1 to be 'in fuse'
+	 * Sets the state of goom, -1 to idle and 1 to be 'in fuse'
 	 */
-	public void setCreeperState(int state) {
+	public void setGoomState(int state) {
 		this.dataManager.set(STATE, state);
 	}
 
@@ -196,5 +200,9 @@ public class GoomEntity extends MonsterEntity {
 		this.dataManager.set(CLIMBING, b0);
 	}
 
+	@Override
+    public ItemStack getPickedResult(RayTraceResult target) {
+        return new ItemStack(ItemInit.GOOM_SPAWN_EGG.get());
+    }
 
 }

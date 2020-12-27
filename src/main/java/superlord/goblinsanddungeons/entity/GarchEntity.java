@@ -34,10 +34,12 @@ import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
+import superlord.goblinsanddungeons.init.ItemInit;
 
 public class GarchEntity extends MonsterEntity implements IRangedAttackMob{
 
@@ -136,4 +138,9 @@ public class GarchEntity extends MonsterEntity implements IRangedAttackMob{
 
 	}
 
+	@Override
+    public ItemStack getPickedResult(RayTraceResult target) {
+        return new ItemStack(ItemInit.GARCH_SPAWN_EGG.get());
+    }
+	
 }

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "goblinsanddungeons:cracked_scoria_bricks"
+    }
+  },
+  "result": {
+    "item": "goblinsanddungeons:cracked_scoria_brick_stairs",
+    "count": 4
+  }
+}

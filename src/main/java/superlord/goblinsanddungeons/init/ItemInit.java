@@ -28,5 +28,19 @@ public class ItemInit {
     public static final RegistryObject<BlockItem> CANDLE = REGISTER.register("candle", () -> new BlockItem(BlockInit.CANDLE.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
     public static final RegistryObject<BlockItem> URN = REGISTER.register("urn", () -> new BlockItem(BlockInit.URN.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
     public static final RegistryObject<BlockItem> LOCKED_CHEST = REGISTER.register("locked_chest", () -> new BlockItem(BlockInit.LOCKED_CHEST.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
-
+    public static final RegistryObject<BlockItem> SCORIA = REGISTER.register("scoria", () -> new BlockItem(BlockInit.SCORIA.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> SCORIA_BRICKS = REGISTER.register("scoria_bricks", () -> new BlockItem(BlockInit.SCORIA_BRICKS.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> CRACKED_SCORIA_BRICKS = REGISTER.register("cracked_scoria_bricks", () -> new BlockItem(BlockInit.CRACKED_SCORIA_BRICKS.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> CHISELED_SCORIA = REGISTER.register("chiseled_scoria", () -> new BlockItem(BlockInit.CHISELED_SCORIA.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> POLISHED_SCORIA = REGISTER.register("polished_scoria", () -> new BlockItem(BlockInit.POLISHED_SCORIA.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> SCORIA_SLAB = REGISTER.register("scoria_slab", () -> new BlockItem(BlockInit.SCORIA_SLAB.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> SCORIA_BRICK_SLAB = REGISTER.register("scoria_brick_slab", () -> new BlockItem(BlockInit.SCORIA_BRICK_SLAB.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> CRACKED_SCORIA_BRICK_SLAB = REGISTER.register("cracked_scoria_brick_slab", () -> new BlockItem(BlockInit.CRACKED_SCORIA_BRICK_SLAB.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> SCORIA_STAIRS = REGISTER.register("scoria_stairs", () -> new BlockItem(BlockInit.SCORIA_STAIRS.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> SCORIA_BRICK_STAIRS = REGISTER.register("scoria_brick_stairs", () -> new BlockItem(BlockInit.SCORIA_BRICK_STAIRS.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> CRACKED_SCORIA_BRICK_STAIRS = REGISTER.register("cracked_scoria_brick_stairs", () -> new BlockItem(BlockInit.CRACKED_SCORIA_BRICK_STAIRS.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> SCORIA_WALL = REGISTER.register("scoria_wall", () -> new BlockItem(BlockInit.SCORIA_WALL.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> SCORIA_BRICK_WALL = REGISTER.register("scoria_brick_wall", () -> new BlockItem(BlockInit.SCORIA_BRICK_WALL.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+    public static final RegistryObject<BlockItem> CRACKED_SCORIA_BRICK_WALL = REGISTER.register("cracked_scoria_brick_wall", () -> new BlockItem(BlockInit.CRACKED_SCORIA_BRICK_WALL.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+   
 }

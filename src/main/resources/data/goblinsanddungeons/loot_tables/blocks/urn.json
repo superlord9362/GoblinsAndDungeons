@@ -1,0 +1,202 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "goblinsanddungeons:urn",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 4,
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "goblinsanddungeons:urn",
+                  "properties": {
+                    "pickles": "4"
+                  }
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": 3,
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "goblinsanddungeons:urn",
+                  "properties": {
+                    "pickles": "3"
+                  }
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": 2,
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "goblinsanddungeons:urn",
+                  "properties": {
+                    "pickles": "2"
+                  }
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": 1,
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "goblinsanddungeons:urn",
+                  "properties": {
+                    "pickles": "1"
+                  }
+                }
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "condition": "minecraft:match_tool",
+              "predicate": {
+                "enchantments": [
+                  {
+                    "enchantment": "minecraft:silk_touch",
+                    "levels": {
+                      "min": 1
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_nugget",
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.07
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:emerald",
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.1
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:string",
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.4
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bread",
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.3
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bone",
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.25
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:rotten_flesh",
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.5
+            }
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "function": "minecraft:set_count",
+          "count": 4,
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "goblinsanddungeons:urn",
+              "properties": {
+                "pickles": "4"
+              }
+            }
+          ]
+        },
+        {
+          "function": "minecraft:set_count",
+          "count": 3,
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "goblinsanddungeons:urn",
+              "properties": {
+                "pickles": "3"
+              }
+            }
+          ]
+        },
+        {
+          "function": "minecraft:set_count",
+          "count": 2,
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "goblinsanddungeons:urn",
+              "properties": {
+                "pickles": "2"
+              }
+            }
+          ]
+        },
+        {
+          "function": "minecraft:set_count",
+          "count": 1,
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "goblinsanddungeons:urn",
+              "properties": {
+                "pickles": "1"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

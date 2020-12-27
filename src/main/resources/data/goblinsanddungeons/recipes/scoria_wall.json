@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "goblinsanddungeons:scoria"
+    }
+  },
+  "result": {
+    "item": "goblinsanddungeons:scoria_wall",
+    "count": 6
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "goblinsanddungeons:blocks/cracked_scoria_bricks",
+    "top": "goblinsanddungeons:blocks/cracked_scoria_bricks",
+    "side": "goblinsanddungeons:blocks/cracked_scoria_bricks"
+  }
+}
