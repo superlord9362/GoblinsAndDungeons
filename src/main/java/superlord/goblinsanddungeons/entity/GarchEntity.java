@@ -23,7 +23,6 @@ import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
@@ -32,6 +31,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -40,6 +41,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import superlord.goblinsanddungeons.init.ItemInit;
+import superlord.goblinsanddungeons.init.SoundInit;
 
 public class GarchEntity extends MonsterEntity implements IRangedAttackMob{
 
@@ -54,7 +56,6 @@ public class GarchEntity extends MonsterEntity implements IRangedAttackMob{
 	protected void registerGoals() {
 		this.goalSelector.addGoal(2, new RestrictSunGoal(this));
 		this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
-		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, WolfEntity.class, 6.0F, 1.0D, 1.2D));
 		this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
 		this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
 		this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
@@ -67,6 +68,18 @@ public class GarchEntity extends MonsterEntity implements IRangedAttackMob{
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractRaiderEntity.class, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
+	}
+
+	protected SoundEvent getAmbientSound() {
+		return SoundInit.GARCH_IDLE;
+	}
+
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return SoundInit.GARCH_HURT;
+	}
+
+	protected SoundEvent getDeathSound() {
+		return SoundInit.GARCH_DEATH;
 	}
 
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
@@ -139,8 +152,8 @@ public class GarchEntity extends MonsterEntity implements IRangedAttackMob{
 	}
 
 	@Override
-    public ItemStack getPickedResult(RayTraceResult target) {
-        return new ItemStack(ItemInit.GARCH_SPAWN_EGG.get());
-    }
-	
+	public ItemStack getPickedResult(RayTraceResult target) {
+		return new ItemStack(ItemInit.GARCH_SPAWN_EGG.get());
+	}
+
 }

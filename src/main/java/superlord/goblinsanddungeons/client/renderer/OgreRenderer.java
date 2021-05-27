@@ -12,7 +12,7 @@ public class OgreRenderer extends MobRenderer<OgreEntity, OgreModel<OgreEntity>>
 	private static final ResourceLocation TEXTURE = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/ogre.png");
 
 	public OgreRenderer(EntityRendererManager renderManagerIn) {
-		super(renderManagerIn, new OgreModel<>(), 0.375F);
+		super(renderManagerIn, new OgreModel<>(), 2.125F);
 	}
 
 	@Override

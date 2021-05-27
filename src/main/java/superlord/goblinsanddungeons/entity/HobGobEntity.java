@@ -23,9 +23,12 @@ import net.minecraft.entity.passive.horse.DonkeyEntity;
 import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import superlord.goblinsanddungeons.init.ItemInit;
+import superlord.goblinsanddungeons.init.SoundInit;
 
 public class HobGobEntity extends GobEntity {
 
@@ -56,6 +59,18 @@ public class HobGobEntity extends GobEntity {
 	
 	public static AttributeModifierMap.MutableAttribute createAttributes() {
 		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 20.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.22F).createMutableAttribute(Attributes.ATTACK_DAMAGE, 6.0D);
+	}
+	
+	protected SoundEvent getAmbientSound() {
+		return SoundInit.HOBGOB_IDLE;
+	}
+
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return SoundInit.HOBGOB_HURT;
+	}
+
+	protected SoundEvent getDeathSound() {
+		return SoundInit.HOBGOB_DEATH;
 	}
 	
 	@Override

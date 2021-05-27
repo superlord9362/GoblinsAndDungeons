@@ -12,7 +12,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.renderer.GarchRenderer;
+import superlord.goblinsanddungeons.client.renderer.GobKingRenderer;
 import superlord.goblinsanddungeons.client.renderer.GobRenderer;
+import superlord.goblinsanddungeons.client.renderer.GobberRenderer;
+import superlord.goblinsanddungeons.client.renderer.GoblinSoulBulletRenderer;
 import superlord.goblinsanddungeons.client.renderer.GobloRenderer;
 import superlord.goblinsanddungeons.client.renderer.GoomRenderer;
 import superlord.goblinsanddungeons.client.renderer.HobGobRenderer;
@@ -34,7 +37,10 @@ public class ClientEvents {
 		RenderingRegistry.registerEntityRenderingHandler(EntityInit.GOBLO.get(), GobloRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityInit.GARCH.get(), GarchRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityInit.GOOM.get(), GoomRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityInit.GOBBER.get(), GobberRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityInit.OGRE.get(), OgreRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityInit.GOBLIN_SOUL_BULLET.get(), GoblinSoulBulletRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityInit.GOB_KING.get(), GobKingRenderer::new);
 	}
 
 	@SubscribeEvent

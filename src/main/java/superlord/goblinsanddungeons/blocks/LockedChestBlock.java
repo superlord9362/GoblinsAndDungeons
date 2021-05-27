@@ -58,6 +58,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -75,6 +76,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.goblinsanddungeons.entity.tile.LockedChestTileEntity;
 import superlord.goblinsanddungeons.init.ItemInit;
+import superlord.goblinsanddungeons.init.SoundInit;
 
 public class LockedChestBlock extends AbstractLockableChestBlock<LockedChestTileEntity> implements IWaterLoggable {
 	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
@@ -290,10 +292,12 @@ public class LockedChestBlock extends AbstractLockableChestBlock<LockedChestTile
 			double y = (double)pos.getY() + 0.7D;
 			double z = (double)pos.getZ() + 0.5D;
 			worldIn.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, 0.0D, 0.0D, 0.0D);
+			worldIn.playSound(player, pos, SoundInit.UNLOCK, SoundCategory.BLOCKS, 0.3F, 0.5F);
 			return ActionResultType.SUCCESS;
 		} else if (state.get(LOCKED) == true) {
 			LockedChestBlock.isBlocked(worldIn, pos);
 			player.sendStatusMessage(new TranslationTextComponent("block.goblinsanddungeons.message.key_needed"), true);
+			worldIn.playSound(player, pos, SoundInit.OPEN_FAIL, SoundCategory.BLOCKS, 0.3F, 0.5F);
 			return ActionResultType.SUCCESS;
 		} else if (worldIn.isRemote) {
 			return ActionResultType.SUCCESS;

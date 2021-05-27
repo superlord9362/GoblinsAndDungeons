@@ -9,6 +9,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.entity.GarchEntity;
 import superlord.goblinsanddungeons.entity.GobEntity;
+import superlord.goblinsanddungeons.entity.GobKingEntity;
+import superlord.goblinsanddungeons.entity.GobberEntity;
+import superlord.goblinsanddungeons.entity.GoblinSoulBulletEntity;
 import superlord.goblinsanddungeons.entity.GobloEntity;
 import superlord.goblinsanddungeons.entity.GoomEntity;
 import superlord.goblinsanddungeons.entity.HobGobEntity;
@@ -23,6 +26,9 @@ public class EntityInit {
 	public static final RegistryObject<EntityType<GobloEntity>> GOBLO = REGISTER.register("goblo", () -> EntityType.Builder.<GobloEntity>create(GobloEntity::new, EntityClassification.MONSTER).size(0.875F, 1F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "goblo").toString()));
 	public static final RegistryObject<EntityType<GarchEntity>> GARCH = REGISTER.register("garch", () -> EntityType.Builder.<GarchEntity>create(GarchEntity::new, EntityClassification.MONSTER).size(0.5F, 1.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "garch").toString()));
 	public static final RegistryObject<EntityType<GoomEntity>> GOOM = REGISTER.register("goom", () -> EntityType.Builder.<GoomEntity>create(GoomEntity::new, EntityClassification.MONSTER).size(0.5F, 1.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "goom").toString()));
-	public static final RegistryObject<EntityType<OgreEntity>> OGRE = REGISTER.register("ogre", () -> EntityType.Builder.<OgreEntity>create(OgreEntity::new, EntityClassification.MONSTER).size(0.5F, 1.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "ogre").toString()));
-
+	public static final RegistryObject<EntityType<OgreEntity>> OGRE = REGISTER.register("ogre", () -> EntityType.Builder.<OgreEntity>create(OgreEntity::new, EntityClassification.MONSTER).size(2.125F, 4.5F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "ogre").toString()));
+	public static final RegistryObject<EntityType<GobberEntity>> GOBBER = REGISTER.register("gobber", () -> EntityType.Builder.<GobberEntity>create(GobberEntity::new, EntityClassification.MONSTER).size(1.0625F, 1.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "gobber").toString()));
+	public static final RegistryObject<EntityType<GoblinSoulBulletEntity>> GOBLIN_SOUL_BULLET = REGISTER.register("goblin_soul_bullet", () -> EntityType.Builder.<GoblinSoulBulletEntity>create(GoblinSoulBulletEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "goblin_soul_bullet").toString()));
+	public static final RegistryObject<EntityType<GobKingEntity>> GOB_KING = REGISTER.register("goblin_king", () -> EntityType.Builder.<GobKingEntity>create(GobKingEntity::new, EntityClassification.MONSTER).size(0.75F, 1.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "goblin_king").toString()));
+	
 }

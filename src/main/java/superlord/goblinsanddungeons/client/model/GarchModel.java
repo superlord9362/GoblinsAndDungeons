@@ -114,7 +114,6 @@ public class GarchModel<T extends MobEntity & IRangedAttackMob> extends EntityMo
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	@SuppressWarnings("unused")
 	private void func_241654_b_(GarchEntity p_241654_1_) {
 		switch(this.rightArmPose) {
 		case EMPTY:
@@ -130,7 +129,6 @@ public class GarchModel<T extends MobEntity & IRangedAttackMob> extends EntityMo
 
 	}
 
-	@SuppressWarnings("unused")
 	private void func_241655_c_(GarchEntity entityIn) {
 		switch(this.leftArmPose) {
 		case EMPTY:
@@ -166,6 +164,7 @@ public class GarchModel<T extends MobEntity & IRangedAttackMob> extends EntityMo
 		modelrenderer.rotationPointX += f;
 		modelrenderer.translateRotate(matrixStackIn);
 		modelrenderer.rotationPointX -= f;
+		matrixStackIn.translate(-0.1, -0.25, 0);
 	}
 
 	protected ModelRenderer getArmForSide(HandSide side) {

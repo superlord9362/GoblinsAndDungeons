@@ -10,7 +10,9 @@
 	"item.goblinsanddungeons.goblo_spawn_egg": "Goblo Spawn Egg",
 	"item.goblinsanddungeons.garch_spawn_egg": "Garch Spawn Egg",
 	"item.goblinsanddungeons.goom_spawn_egg": "Goom Spawn Egg",
+	"item.goblinsanddungeons.gobber_spawn_egg": "Gobber Spawn Egg",
 	"item.goblinsanddungeons.ogre_spawn_egg": "Ogre Spawn Egg",
+	"item.goblinsanddungeons.goblin_king_spawn_egg": "Goblin King Spawn Egg",
 	
 	"block.goblinsanddungeons.candle": "Candle",
 	"block.goblinsanddungeons.urn": "Urn",
@@ -37,5 +39,24 @@
 	"entity.goblinsanddungeons.goblo": "Goblo",
 	"entity.goblinsanddungeons.garch": "Garch",
 	"entity.goblinsanddungeons.goom": "Goom",
-	"entity.goblinsanddungeons.ogre": "Ogre"
+	"entity.goblinsanddungeons.gobber": "Gobber",
+	"entity.goblinsanddungeons.ogre": "Ogre",
+	"entity.goblinsanddungeons.goblin_soul_bullet": "Soul Bullet",
+	"entity.goblinsanddungeons.goblin_king": "Goblin King",
+	
+	"goblinsanddungeons.subtitle.locked_chest_fail": "Lock rattles",
+	"goblinsanddungeons.subtitle.locked_chest_unlock": "Chest unlocks",
+	"goblinsanddungeons.subtitle.ogre_idle": "Ogre groans",
+	"goblinsanddungeons.subtitle.ogre_hurt": "Ogre hurts",
+	"goblinsanddungeons.subtitle.ogre_death": "Ogre dies",
+	"goblinsanddungeons.subtitle.garch_idle": "Garch yelps",
+	"goblinsanddungeons.subtitle.garch_hurt": "Garch hurts",
+	"goblinsanddugeons.subtitle.garch_death": "Garch dies",
+	"goblinsanddungeons.subtitle.hobgob_idle": "Hobgob rumbles",
+	"goblinsanddungeons.subtitle.hobgob_hurt": "Hobgob hurts",
+	"goblinsanddungeons.subtitle.hobgob_death": "Hobgob death",
+	"goblinsanddungeons.subtitle.goom_idle": "Goom hmms",
+	"goblinsanddungeons.subtitle.goom_hurt": "Goom hurts",
+	"goblinsanddungeons.subtitle.goom_death": "Goom dies",
+	"goblinsanddungeons.subtitle.goom_warning": "Goom yells"
 }
