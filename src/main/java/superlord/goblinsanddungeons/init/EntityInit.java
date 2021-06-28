@@ -7,6 +7,7 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
+import superlord.goblinsanddungeons.entity.GDFallingBlockEntity;
 import superlord.goblinsanddungeons.entity.GarchEntity;
 import superlord.goblinsanddungeons.entity.GobEntity;
 import superlord.goblinsanddungeons.entity.GobKingEntity;
@@ -15,6 +16,7 @@ import superlord.goblinsanddungeons.entity.GoblinSoulBulletEntity;
 import superlord.goblinsanddungeons.entity.GobloEntity;
 import superlord.goblinsanddungeons.entity.GoomEntity;
 import superlord.goblinsanddungeons.entity.HobGobEntity;
+import superlord.goblinsanddungeons.entity.MimicEntity;
 import superlord.goblinsanddungeons.entity.OgreEntity;
 
 public class EntityInit {
@@ -30,5 +32,6 @@ public class EntityInit {
 	public static final RegistryObject<EntityType<GobberEntity>> GOBBER = REGISTER.register("gobber", () -> EntityType.Builder.<GobberEntity>create(GobberEntity::new, EntityClassification.MONSTER).size(1.0625F, 1.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "gobber").toString()));
 	public static final RegistryObject<EntityType<GoblinSoulBulletEntity>> GOBLIN_SOUL_BULLET = REGISTER.register("goblin_soul_bullet", () -> EntityType.Builder.<GoblinSoulBulletEntity>create(GoblinSoulBulletEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "goblin_soul_bullet").toString()));
 	public static final RegistryObject<EntityType<GobKingEntity>> GOB_KING = REGISTER.register("goblin_king", () -> EntityType.Builder.<GobKingEntity>create(GobKingEntity::new, EntityClassification.MONSTER).size(0.75F, 1.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "goblin_king").toString()));
-	
+	public static final RegistryObject<EntityType<MimicEntity>> MIMIC = REGISTER.register("mimic", () -> EntityType.Builder.<MimicEntity>create(MimicEntity::new, EntityClassification.MONSTER).size(0.875F, 1.0625F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "mimic").toString()));
+	public static final RegistryObject<EntityType<GDFallingBlockEntity>> FALLING_BLOCK = REGISTER.register("falling_block", () -> EntityType.Builder.<GDFallingBlockEntity>create(GDFallingBlockEntity::new, EntityClassification.MISC).size(1, 1).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "falling_block").toString()));
 }

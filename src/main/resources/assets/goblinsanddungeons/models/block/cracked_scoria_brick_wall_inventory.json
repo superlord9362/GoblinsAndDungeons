@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/wall_inventory",
-  "textures": {
-    "wall": "goblinsanddungeons:blocks/cracked_scoria_bricks"
-  }
-}

@@ -1,24 +1,4 @@
 {
-	"open_fail": {
-		"category": "neutral",
-		"subtitle": "goblinsanddungeons.subtitle.locked_chest_fail",
-		"sounds": [
-			{
-				"name": "goblinsanddungeons:locked_chest/opening_fail",
-				"stream": true
-			}
-		]
-	},
-	"unlock": {
-		"category": "neutral",
-		"subtitle": "goblinsanddungeons.subtitle.locked_chest_unlock",
-		"sounds": [
-			{
-				"name": "goblinsanddungeons:locked_chest/unlock",
-				"stream": true
-			}
-		]
-	},
 	"ogre_idle": {
 		"category": "neutral",
 		"subtitle": "goblinsanddungeons.subtitle.ogre_idle",
@@ -124,7 +104,67 @@
 		"subtitle": "goblinsanddungeons.subtitle.hobgob_death",
 		"sounds": [
 			{
-				"name": "goblinsanddungeons.subtitle.hobgob_death",
+				"name": "goblinsanddungeons:hobgob/hobgob_death",
+				"stream": true
+			}
+		]
+	},
+	"gob_idle": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.gob_idle",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:gob/gob_idle",
+				"stream": true
+			}
+		]
+	},
+	"gob_hurt": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.gob_hurt",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:gob/gob_hurt",
+				"stream": true
+			}
+		]
+	},
+	"gob_death": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.gob_death",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:gob/gob_death",
+				"stream": true
+			}
+		]
+	},
+	"mimic_idle": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.mimic_idle",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:mimic/mimic_idle",
+				"stream": true
+			}
+		]
+	},
+	"mimic_hurt": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.mimic_hurt",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:mimic/mimic_hurt",
+				"stream": true
+			}
+		]
+	},
+	"mimic_death": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.mimic_death",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:mimic/mimic_death",
 				"stream": true
 			}
 		]

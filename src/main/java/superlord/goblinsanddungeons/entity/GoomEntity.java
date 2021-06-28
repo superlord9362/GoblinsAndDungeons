@@ -1,9 +1,14 @@
 package superlord.goblinsanddungeons.entity;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.FleeSunGoal;
@@ -16,31 +21,32 @@ import net.minecraft.entity.ai.goal.RestrictSunGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
-import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.ClimberPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import superlord.goblinsanddungeons.entity.ai.GoomSmokeGoal;
+import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
-public class GoomEntity extends MonsterEntity {
+public class GoomEntity extends GoblinEntity {
 	private static final DataParameter<Byte> CLIMBING = EntityDataManager.createKey(GoomEntity.class, DataSerializers.BYTE);
 	private static final DataParameter<Integer> STATE = EntityDataManager.createKey(GoomEntity.class, DataSerializers.VARINT);
 	private static final DataParameter<Boolean> IGNITED = EntityDataManager.createKey(GoomEntity.class, DataSerializers.BOOLEAN);
@@ -49,13 +55,11 @@ public class GoomEntity extends MonsterEntity {
 	private int lastActiveTime;
 	private int timeSinceIgnited;
 	private int fuseTime = 30;
+	private int timeTillBomb = 0;
 
 	public GoomEntity(EntityType<? extends GoomEntity> type, World worldIn) {
 		super(type, worldIn);
-	}
-
-	protected PathNavigator createNavigator(World worldIn) {
-		return new ClimberPathNavigator(this, worldIn);
+		this.setCombatTask();
 	}
 
 	protected void registerGoals() {
@@ -67,17 +71,32 @@ public class GoomEntity extends MonsterEntity {
 		this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 		this.goalSelector.addGoal(1, new GoomSmokeGoal(this));
-		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractRaiderEntity.class, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
 	}
 
-	public static AttributeModifierMap.MutableAttribute createAttributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 8.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.275F).createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0D);
+	public boolean canDespawn(double distanceToClosestPlayer) {
+		return false;
 	}
 	
+	public void setCombatTask() {
+		if (this.world != null && !this.world.isRemote) {
+			if (this.isBlownUp()) {
+				this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));				
+			}
+		}
+	}
+
+	public boolean preventDespawn() {
+		return super.preventDespawn();
+	}
+
+	public static AttributeModifierMap.MutableAttribute createAttributes() {
+		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 8.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.275F).createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 25.0D);
+	}
+
 	protected SoundEvent getAmbientSound() {
 		return SoundInit.GOOM_IDLE;
 	}
@@ -88,11 +107,6 @@ public class GoomEntity extends MonsterEntity {
 
 	protected SoundEvent getDeathSound() {
 		return SoundInit.GOOM_DEATH;
-	}
-
-	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
-		this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemInit.DAGGER.get()));
-
 	}
 
 	public boolean attackEntityAsMob(Entity entityIn) {
@@ -106,11 +120,11 @@ public class GoomEntity extends MonsterEntity {
 
 		return flag;
 	}
-	
+
 	public boolean isBlownUp() {
 		return this.dataManager.get(BLOWN);
 	}
-	
+
 	public void setBlownUp(boolean isBlownUp) {
 		this.dataManager.set(BLOWN, isBlownUp);
 	}
@@ -125,9 +139,6 @@ public class GoomEntity extends MonsterEntity {
 
 	public void tick() {
 		super.tick();
-		if (!this.world.isRemote) {
-			this.setBesideClimbableBlock(this.collidedHorizontally);
-		}
 		if (this.isAlive()) {
 			this.lastActiveTime = this.timeSinceIgnited;
 			if (this.hasIgnited()) {
@@ -146,12 +157,36 @@ public class GoomEntity extends MonsterEntity {
 
 			if (this.timeSinceIgnited >= this.fuseTime) {
 				this.timeSinceIgnited = this.fuseTime;
-				this.explode();
+				if (!this.isBlownUp()) {
+					this.explode();
+				}
+			}
+			if (this.isBlownUp()) {
+				this.timeTillBomb++;
+				if (this.timeTillBomb >= 6000) {
+					this.ignite(false);
+					this.setBlownUp(false);
+					BlockPos pos = new BlockPos (this.getPosX(), this.getPosY(), this.getPosZ());
+					world.playSound(null, pos, SoundEvents.BLOCK_BUBBLE_COLUMN_BUBBLE_POP, SoundCategory.HOSTILE, 0.3F, 0.5F);
+				}
 			}
 		}
+		this.setCombatTask();
 
 	}
+	
+	public void readAdditional(CompoundNBT compound) {
+		super.readAdditional(compound);
+		this.setCombatTask();
+	}
 
+	@Nullable
+	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficulty, SpawnReason reason, @Nullable ILivingEntityData spawnData, @Nullable CompoundNBT compound) {
+		spawnData = super.onInitialSpawn(worldIn, difficulty, reason, spawnData, compound);
+		this.setCombatTask();
+		return spawnData;
+	}
+	
 	public int getGoomState() {
 		return this.dataManager.get(STATE);
 	}
@@ -168,7 +203,7 @@ public class GoomEntity extends MonsterEntity {
 		if (itemstack.getItem() == Items.FLINT_AND_STEEL) {
 			this.world.playSound(p_230254_1_, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 0.8F);
 			if (!this.world.isRemote) {
-				this.ignite();
+				this.ignite(true);
 				itemstack.damageItem(1, p_230254_1_, (player) -> {
 					player.sendBreakAnimation(p_230254_2_);
 				});
@@ -190,6 +225,8 @@ public class GoomEntity extends MonsterEntity {
 			areaeffectcloudentity.setRadiusPerTick(-areaeffectcloudentity.getRadius() / (float)areaeffectcloudentity.getDuration());
 			areaeffectcloudentity.setParticleData(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE);
 			this.setBlownUp(true);
+			BlockPos pos = new BlockPos(this.getPosX(), this.getPosY(), this.getPosZ());
+			world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.HOSTILE, 0.3F, 0.5F);
 			this.world.addEntity(areaeffectcloudentity);
 		}
 
@@ -199,36 +236,23 @@ public class GoomEntity extends MonsterEntity {
 		return this.dataManager.get(IGNITED);
 	}
 
-	public void ignite() {
-		this.dataManager.set(IGNITED, true);
-	}
-
-	public boolean isOnLadder() {
-		return this.isBesideClimbableBlock();
-	}
-
-	public boolean isBesideClimbableBlock() {
-		return (this.dataManager.get(CLIMBING) & 1) != 0;
-	}
-
-	/**
-	 * Updates the WatchableObject (Byte) created in entityInit(), setting it to 0x01 if par1 is true or 0x00 if it is
-	 * false.
-	 */
-	public void setBesideClimbableBlock(boolean climbing) {
-		byte b0 = this.dataManager.get(CLIMBING);
-		if (climbing) {
-			b0 = (byte)(b0 | 1);
-		} else {
-			b0 = (byte)(b0 & -2);
-		}
-
-		this.dataManager.set(CLIMBING, b0);
+	public void ignite(boolean hasIgnited) {
+		this.dataManager.set(IGNITED, hasIgnited);
 	}
 
 	@Override
-    public ItemStack getPickedResult(RayTraceResult target) {
-        return new ItemStack(ItemInit.GOOM_SPAWN_EGG.get());
-    }
+	public ItemStack getPickedResult(RayTraceResult target) {
+		return new ItemStack(ItemInit.GOOM_SPAWN_EGG.get());
+	}
+	
+	public boolean isOnSameTeam(Entity entityIn) {
+		if (super.isOnSameTeam(entityIn)) {
+			return true;
+		} else if (entityIn instanceof LivingEntity && ((LivingEntity)entityIn).getCreatureAttribute() == CreatureAttributeInit.GOBLIN) {
+			return this.getTeam() == null && entityIn.getTeam() == null;
+		} else {
+			return false;
+		}
+	}
 
 }

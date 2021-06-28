@@ -1,43 +1,23 @@
 {
   "variants": {
-    "pickles=1,waterlogged=false": [
+    "exploding=false,waterlogged=false": [
       {
-        "model": "goblinsanddungeons:block/urn1"
+        "model": "goblinsanddungeons:block/urn"
       }
     ],
-    "pickles=1,waterlogged=true": [
+    "exploding=true,waterlogged=true": [
       {
-        "model": "goblinsanddungeons:block/urn1"
+        "model": "goblinsanddungeons:block/urn"
       }
     ],
-    "pickles=2,waterlogged=false": [
+	"exploding=true,waterlogged=false": [
       {
-        "model": "goblinsanddungeons:block/urn2"
+        "model": "goblinsanddungeons:block/urn"
       }
     ],
-    "pickles=2,waterlogged=true": [
+    "exploding=false,waterlogged=true": [
       {
-        "model": "goblinsanddungeons:block/urn2"
-      }
-    ],
-    "pickles=3,waterlogged=false": [
-      {
-        "model": "goblinsanddungeons:block/urn3"
-      }
-    ],
-    "pickles=3,waterlogged=true": [
-      {
-        "model": "goblinsanddungeons:block/urn3"
-      }
-    ],
-    "pickles=4,waterlogged=false": [
-      {
-        "model": "goblinsanddungeons:block/urn4"
-      }
-    ],
-    "pickles=4,waterlogged=true": [
-      {
-        "model": "goblinsanddungeons:block/urn4"
+        "model": "goblinsanddungeons:block/urn"
       }
     ]
   }

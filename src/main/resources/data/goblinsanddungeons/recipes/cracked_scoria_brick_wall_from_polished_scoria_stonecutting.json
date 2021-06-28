@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "goblinsanddungeons:polished_scoria"
-  },
-  "result": "goblinsanddungeons:cracked_scoria_brick_wall",
-  "count": 1
-}

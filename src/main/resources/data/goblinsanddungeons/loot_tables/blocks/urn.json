@@ -10,53 +10,11 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": 4,
-              "conditions": [
-                {
-                  "condition": "minecraft:block_state_property",
-                  "block": "goblinsanddungeons:urn",
-                  "properties": {
-                    "pickles": "4"
-                  }
-                }
-              ]
-            },
-            {
-              "function": "minecraft:set_count",
-              "count": 3,
-              "conditions": [
-                {
-                  "condition": "minecraft:block_state_property",
-                  "block": "goblinsanddungeons:urn",
-                  "properties": {
-                    "pickles": "3"
-                  }
-                }
-              ]
-            },
-            {
-              "function": "minecraft:set_count",
-              "count": 2,
-              "conditions": [
-                {
-                  "condition": "minecraft:block_state_property",
-                  "block": "goblinsanddungeons:urn",
-                  "properties": {
-                    "pickles": "2"
-                  }
-                }
-              ]
-            },
-            {
-              "function": "minecraft:set_count",
               "count": 1,
               "conditions": [
                 {
                   "condition": "minecraft:block_state_property",
-                  "block": "goblinsanddungeons:urn",
-                  "properties": {
-                    "pickles": "1"
-                  }
+                  "block": "goblinsanddungeons:urn"
                 }
               ]
             }
@@ -146,52 +104,15 @@
       "functions": [
         {
           "function": "minecraft:set_count",
-          "count": 4,
-          "conditions": [
-            {
-              "condition": "minecraft:block_state_property",
-              "block": "goblinsanddungeons:urn",
-              "properties": {
-                "pickles": "4"
-              }
-            }
-          ]
-        },
-        {
-          "function": "minecraft:set_count",
-          "count": 3,
-          "conditions": [
-            {
-              "condition": "minecraft:block_state_property",
-              "block": "goblinsanddungeons:urn",
-              "properties": {
-                "pickles": "3"
-              }
-            }
-          ]
-        },
-        {
-          "function": "minecraft:set_count",
-          "count": 2,
-          "conditions": [
-            {
-              "condition": "minecraft:block_state_property",
-              "block": "goblinsanddungeons:urn",
-              "properties": {
-                "pickles": "2"
-              }
-            }
-          ]
-        },
-        {
-          "function": "minecraft:set_count",
           "count": 1,
           "conditions": [
             {
               "condition": "minecraft:block_state_property",
               "block": "goblinsanddungeons:urn",
               "properties": {
-                "pickles": "1"
+                "water": false,
+				"lava": false,
+				"exploding": false
               }
             }
           ]

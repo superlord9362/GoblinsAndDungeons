@@ -2,6 +2,7 @@ package superlord.goblinsanddungeons.entity;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.IRangedAttackMob;
@@ -21,7 +22,6 @@ import net.minecraft.entity.ai.goal.RestrictSunGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
-import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
@@ -31,6 +31,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -40,17 +43,35 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
+import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
-public class GarchEntity extends MonsterEntity implements IRangedAttackMob{
+public class GarchEntity extends GoblinEntity implements IRangedAttackMob{
 
 	private final RangedBowAttackGoal<GarchEntity> aiArrowAttack = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
+	
+	private static final DataParameter<Boolean> HAS_RIDER = EntityDataManager.createKey(GarchEntity.class, DataSerializers.BOOLEAN);
+	
+	public boolean hasRider() {
+		return this.dataManager.get(HAS_RIDER);
+	}
+
+	private void setHasRider(boolean hasRider) {
+		this.dataManager.set(HAS_RIDER, hasRider);
+	}
 
 	public GarchEntity(EntityType<? extends GarchEntity> type, World worldIn) {
 		super(type, worldIn);
 		this.setCombatTask();
+	}
 
+	public boolean canDespawn(double distanceToClosestPlayer) {
+		return false;
+	}
+
+	public boolean preventDespawn() {
+		return super.preventDespawn();
 	}
 
 	protected void registerGoals() {
@@ -88,7 +109,7 @@ public class GarchEntity extends MonsterEntity implements IRangedAttackMob{
 	}
 
 	public static AttributeModifierMap.MutableAttribute createAttributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 10.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.25F).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D);
+		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 10.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.25F).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 35.0D);
 	}
 
 	@Nullable
@@ -98,7 +119,7 @@ public class GarchEntity extends MonsterEntity implements IRangedAttackMob{
 		this.setCombatTask();
 		return spawnDataIn;
 	}
-
+	
 	public void setCombatTask() {
 		if (this.world != null && !this.world.isRemote) {
 			this.goalSelector.removeGoal(this.aiArrowAttack);
@@ -141,6 +162,7 @@ public class GarchEntity extends MonsterEntity implements IRangedAttackMob{
 	public void readAdditional(CompoundNBT compound) {
 		super.readAdditional(compound);
 		this.setCombatTask();
+		this.setHasRider(compound.getBoolean("HasRider"));
 	}
 
 	public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack) {
@@ -148,12 +170,32 @@ public class GarchEntity extends MonsterEntity implements IRangedAttackMob{
 		if (!this.world.isRemote) {
 			this.setCombatTask();
 		}
-
+	}
+	
+	protected void registerData() {
+		super.registerData();
+		this.dataManager.register(HAS_RIDER, false);
 	}
 
+	public void writeAdditional(CompoundNBT compound) {
+		super.writeAdditional(compound);
+		compound.putBoolean("IsSleeping", this.isSleeping());
+		compound.putBoolean("HasRider", this.hasRider());
+	}
+	
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target) {
 		return new ItemStack(ItemInit.GARCH_SPAWN_EGG.get());
+	}
+	
+	public boolean isOnSameTeam(Entity entityIn) {
+		if (super.isOnSameTeam(entityIn)) {
+			return true;
+		} else if (entityIn instanceof LivingEntity && ((LivingEntity)entityIn).getCreatureAttribute() == CreatureAttributeInit.GOBLIN) {
+			return this.getTeam() == null && entityIn.getTeam() == null;
+		} else {
+			return false;
+		}
 	}
 
 }

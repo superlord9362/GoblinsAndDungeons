@@ -21,27 +21,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "goblinsanddungeons:goblin_eye",
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": 1
-            }
-          ],
-          "conditions": [
-            {
-              "condition": "minecraft:random_chance",
-              "chance": 0.5
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
           "name": "minecraft:gunpowder",
           "functions": [
             {

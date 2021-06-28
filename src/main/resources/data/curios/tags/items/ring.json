@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "goblinsanddungeons:ring_of_health",
+	"goblinsanddungeons:ring_of_stealth",
+	"goblinsanddungeons:ring_of_experience"
+  ]
+}

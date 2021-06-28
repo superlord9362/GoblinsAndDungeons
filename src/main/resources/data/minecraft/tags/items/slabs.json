@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "goblinsanddungeons:scoria_slab",
-	"goblinsanddungeons:scoria_brick_slab",
-	"goblinsanddungeons:cracked_scoria_brick_slab"
+	"goblinsanddungeons:scoria_brick_slab"
   ]
 }

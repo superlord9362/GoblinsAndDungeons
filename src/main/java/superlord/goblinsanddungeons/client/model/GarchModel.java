@@ -9,8 +9,6 @@ import net.minecraft.client.renderer.entity.model.IHasArm;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
@@ -82,27 +80,18 @@ public class GarchModel<T extends MobEntity & IRangedAttackMob> extends EntityMo
 		});
 	}
 
-	public GarchModel.ArmPose rightArmPose = GarchModel.ArmPose.EMPTY;
-	public GarchModel.ArmPose leftArmPose = GarchModel.ArmPose.EMPTY;
-
-
 	@Override
 	public void setRotationAngles(GarchEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		boolean flag2 = entityIn.getPrimaryHand() == HandSide.RIGHT;
-		boolean flag3 = flag2 ? this.leftArmPose.func_241657_a_() : this.rightArmPose.func_241657_a_();
-		if (flag2 != flag3) {
-			this.func_241655_c_(entityIn);
-			this.func_241654_b_(entityIn);
-		} else {
-			this.func_241654_b_(entityIn);
-			this.func_241655_c_(entityIn);
-		}
 		this.Headlayer.rotateAngleX = headPitch * ((float)Math.PI / 180F);
 		this.Headlayer.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
 		this.Rightleg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 		this.Leftleg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
 		this.RightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
 		this.LeftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		this.RightArm.rotateAngleY = -0.1F + this.Headlayer.rotateAngleY;
+		this.LeftArm.rotateAngleY = 0.1F + this.Headlayer.rotateAngleY + 0.4F;
+		this.RightArm.rotateAngleX = (-(float)Math.PI / 2F) + this.Headlayer.rotateAngleX;
+		this.LeftArm.rotateAngleX = (-(float)Math.PI / 2F) + this.Headlayer.rotateAngleX;
 	}
 
 	/**
@@ -114,49 +103,6 @@ public class GarchModel<T extends MobEntity & IRangedAttackMob> extends EntityMo
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	private void func_241654_b_(GarchEntity p_241654_1_) {
-		switch(this.rightArmPose) {
-		case EMPTY:
-			this.RightArm.rotateAngleY = 0.0F;
-			break;
-		case BOW_AND_ARROW:
-			this.RightArm.rotateAngleY = -0.1F + this.Headlayer.rotateAngleY;
-			this.LeftArm.rotateAngleY = 0.1F + this.Headlayer.rotateAngleY + 0.4F;
-			this.RightArm.rotateAngleX = (-(float)Math.PI / 2F) + this.Headlayer.rotateAngleX;
-			this.LeftArm.rotateAngleX = (-(float)Math.PI / 2F) + this.Headlayer.rotateAngleX;
-			break;
-		}
-
-	}
-
-	private void func_241655_c_(GarchEntity entityIn) {
-		switch(this.leftArmPose) {
-		case EMPTY:
-			this.LeftArm.rotateAngleY = 0.0F;
-			break;
-		case BOW_AND_ARROW:
-			this.RightArm.rotateAngleY = -0.1F + this.Headlayer.rotateAngleY - 0.4F;
-			this.LeftArm.rotateAngleY = 0.1F + this.Headlayer.rotateAngleY;
-			this.RightArm.rotateAngleX = (-(float)Math.PI / 2F) + this.Headlayer.rotateAngleX;
-			this.LeftArm.rotateAngleX = (-(float)Math.PI / 2F) + this.Headlayer.rotateAngleX;
-			break;
-		}
-	}
-
-	public void setLivingAnimations(GarchEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
-		this.rightArmPose = GarchModel.ArmPose.EMPTY;
-		this.leftArmPose = GarchModel.ArmPose.EMPTY;
-		ItemStack itemstack = entityIn.getHeldItem(Hand.MAIN_HAND);
-		if (itemstack.getItem() instanceof net.minecraft.item.BowItem && entityIn.isAggressive()) {
-			if (entityIn.getPrimaryHand() == HandSide.RIGHT) {
-				this.rightArmPose = GarchModel.ArmPose.BOW_AND_ARROW;
-			} else {
-				this.leftArmPose = GarchModel.ArmPose.BOW_AND_ARROW;
-			}
-		}
-
-		super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
-	}
 
 	public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) {
 		float f = sideIn == HandSide.RIGHT ? 1.0F : -1.0F;
@@ -164,26 +110,11 @@ public class GarchModel<T extends MobEntity & IRangedAttackMob> extends EntityMo
 		modelrenderer.rotationPointX += f;
 		modelrenderer.translateRotate(matrixStackIn);
 		modelrenderer.rotationPointX -= f;
-		matrixStackIn.translate(-0.1, -0.25, 0);
+		matrixStackIn.translate(-0.1, -0.3, 0);
 	}
 
 	protected ModelRenderer getArmForSide(HandSide side) {
 		return side == HandSide.LEFT ? this.LeftArm : this.RightArm;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public static enum ArmPose {
-		EMPTY(false),
-		BOW_AND_ARROW(true);
-
-		private final boolean field_241656_h_;
-
-		private ArmPose(boolean p_i241257_3_) {
-			this.field_241656_h_ = p_i241257_3_;
-		}
-
-		public boolean func_241657_a_() {
-			return this.field_241656_h_;
-		}
-	}
 }

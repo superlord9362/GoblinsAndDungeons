@@ -89,18 +89,18 @@ public class GobModel<T extends Entity> extends EntityModel<GobEntity> implement
         modelRenderer.rotateAngleZ = z;
     }
     
-    @Override
-	public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) {
+    public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) {
 		float f = sideIn == HandSide.RIGHT ? 1.0F : -1.0F;
 		ModelRenderer modelrenderer = this.getArmForSide(sideIn);
 		modelrenderer.rotationPointX += f;
 		modelrenderer.translateRotate(matrixStackIn);
-		modelrenderer.rotationPointX -= f;		
-		matrixStackIn.translate(-0.05, -0.3, 0);
+		modelrenderer.rotationPointX -= f;
+		matrixStackIn.translate(-0.075, -0.225, 0);
+		matrixStackIn.scale(0.75F, 0.75F, 0.75F);
 	}
 
 	protected ModelRenderer getArmForSide(HandSide side) {
-		return side == HandSide.LEFT ? this.LeftArm : this.RightArm;
+		return side == HandSide.LEFT ? this.RightArm : this.LeftArm;
 	}
 	
 }

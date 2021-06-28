@@ -1,14 +1,18 @@
 package superlord.goblinsanddungeons.client.model;
 
+import java.util.List;
+
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import superlord.goblinsanddungeons.entity.GobEntity;
 import superlord.goblinsanddungeons.entity.HobGobEntity;
 
 /**
@@ -84,12 +88,20 @@ public class HobgobModel<T extends Entity> extends EntityModel<HobGobEntity> {
 
     @Override
     public void setRotationAngles(HobGobEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    	this.RightArm.rotateAngleX = 0.0F;
+    	this.LeftArm.rotateAngleX = 0.0F;
     	this.Head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
         this.Head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
         this.RightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
         this.LeftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
         this.RightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
         this.LeftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+        List<GobEntity> gob1 = entityIn.world.getEntitiesWithinAABB(GobEntity.class, entityIn.getBoundingBox().grow(1.0D, 1.0D, 1.0D));
+		List<PlayerEntity> player = entityIn.world.getEntitiesWithinAABB(PlayerEntity.class, entityIn.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
+		if (!gob1.isEmpty() && !player.isEmpty() && entityIn.getRevengeTarget() == null){
+			this.RightArm.rotateAngleX = -MathHelper.abs(-0.5F * 2F * MathHelper.sin((1F * ageInTicks) / 10));
+			this.LeftArm.rotateAngleX = -MathHelper.abs(-0.5F * 2F * MathHelper.sin((1F * ageInTicks) / 10));
+		}
     }
 
     /**

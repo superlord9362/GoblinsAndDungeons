@@ -11,9 +11,6 @@ import superlord.goblinsanddungeons.GoblinsAndDungeons;
 @Mod.EventBusSubscriber(modid = GoblinsAndDungeons.MOD_ID, bus = Bus.MOD)
 public class SoundInit {
 	
-	public static final SoundEvent OPEN_FAIL;
-	public static final SoundEvent UNLOCK;
-	
 	public static final SoundEvent OGRE_IDLE;
 	
 	public static final SoundEvent GARCH_IDLE;
@@ -29,10 +26,16 @@ public class SoundInit {
 	public static final SoundEvent HOBGOB_HURT;
 	public static final SoundEvent HOBGOB_DEATH;
 	
+	public static final SoundEvent GOB_IDLE;
+	public static final SoundEvent GOB_HURT;
+	public static final SoundEvent GOB_DEATH;
+	
+	public static final SoundEvent MIMIC_IDLE;
+	public static final SoundEvent MIMIC_HURT;
+	public static final SoundEvent MIMIC_DEATH;
+	
 	@SubscribeEvent
 	public static void registerSounds(final RegistryEvent.Register<SoundEvent> evt) {
-		evt.getRegistry().register(OPEN_FAIL);
-		evt.getRegistry().register(UNLOCK);
 		evt.getRegistry().register(OGRE_IDLE);
 		evt.getRegistry().register(GARCH_IDLE);
 		evt.getRegistry().register(GARCH_HURT);
@@ -44,6 +47,12 @@ public class SoundInit {
 		evt.getRegistry().register(HOBGOB_IDLE);
 		evt.getRegistry().register(HOBGOB_HURT);
 		evt.getRegistry().register(HOBGOB_DEATH);
+		evt.getRegistry().register(GOB_IDLE);
+		evt.getRegistry().register(GOB_HURT);
+		evt.getRegistry().register(GOB_DEATH);
+		evt.getRegistry().register(MIMIC_IDLE);
+		evt.getRegistry().register(MIMIC_HURT);
+		evt.getRegistry().register(MIMIC_DEATH);
 	}
 	
 	private static SoundEvent createEvent(final String soundName) {
@@ -52,8 +61,6 @@ public class SoundInit {
 	}
 	
 	static {
-		OPEN_FAIL = createEvent("open_fail");
-		UNLOCK = createEvent("unlock");
 		OGRE_IDLE = createEvent("ogre_idle");
 		GARCH_IDLE = createEvent("garch_idle");
 		GARCH_HURT = createEvent("garch_hurt");
@@ -65,6 +72,12 @@ public class SoundInit {
 		HOBGOB_IDLE = createEvent("hobgob_idle");
 		HOBGOB_HURT = createEvent("hobgob_hurt");
 		HOBGOB_DEATH = createEvent("hobgob_death");
+		GOB_IDLE = createEvent("gob_idle");
+		GOB_HURT = createEvent("gob_hurt");
+		GOB_DEATH = createEvent("gob_death");
+		MIMIC_IDLE = createEvent("mimic_idle");
+		MIMIC_HURT = createEvent("mimic_hurt");
+		MIMIC_DEATH = createEvent("mimic_death");
 	}
 
 }

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "goblinsanddungeons:goblin_eye",
+          "name": "minecraft:iron_nugget",
           "conditions": [
             {
               "condition": "minecraft:random_chance",
@@ -21,29 +21,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "goblinsanddungeons:dagger",
+          "name": "minecraft:stone_sword",
           "conditions": [
             {
               "condition": "minecraft:random_chance",
-              "chance": 0.25
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:leather",
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1,
-                "max": 2
-              }
+              "chance": 0.1
             }
           ]
         }
