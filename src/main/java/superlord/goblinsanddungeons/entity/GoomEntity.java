@@ -3,6 +3,7 @@ package superlord.goblinsanddungeons.entity;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
@@ -59,7 +60,6 @@ public class GoomEntity extends GoblinEntity {
 
 	public GoomEntity(EntityType<? extends GoomEntity> type, World worldIn) {
 		super(type, worldIn);
-		this.setCombatTask();
 	}
 
 	protected void registerGoals() {
@@ -80,14 +80,7 @@ public class GoomEntity extends GoblinEntity {
 	public boolean canDespawn(double distanceToClosestPlayer) {
 		return false;
 	}
-	
-	public void setCombatTask() {
-		if (this.world != null && !this.world.isRemote) {
-			if (this.isBlownUp()) {
-				this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));				
-			}
-		}
-	}
+
 
 	public boolean preventDespawn() {
 		return super.preventDespawn();
@@ -171,19 +164,16 @@ public class GoomEntity extends GoblinEntity {
 				}
 			}
 		}
-		this.setCombatTask();
 
 	}
 	
 	public void readAdditional(CompoundNBT compound) {
 		super.readAdditional(compound);
-		this.setCombatTask();
 	}
 
 	@Nullable
 	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficulty, SpawnReason reason, @Nullable ILivingEntityData spawnData, @Nullable CompoundNBT compound) {
 		spawnData = super.onInitialSpawn(worldIn, difficulty, reason, spawnData, compound);
-		this.setCombatTask();
 		return spawnData;
 	}
 	
@@ -253,6 +243,24 @@ public class GoomEntity extends GoblinEntity {
 		} else {
 			return false;
 		}
+	}
+	
+	class PostExplosionAttackGoal extends MeleeAttackGoal {
+
+		public PostExplosionAttackGoal(CreatureEntity creature, double speedIn, boolean useLongMemory) {
+			super(creature, speedIn, useLongMemory);
+		}
+		
+		public boolean shouldExecute() {
+			if (GoomEntity.this.isBlownUp() && super.shouldExecute()) return true;
+			else return false;
+		}
+		
+		public boolean shouldContinueExecuting() {
+			if (!GoomEntity.this.isBlownUp() || !super.shouldContinueExecuting()) return false;
+			else return true;
+		}
+		
 	}
 
 }

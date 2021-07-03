@@ -222,7 +222,7 @@ public class GobKingEntity extends GoblinEntity implements IRangedAttackMob {
 		double d2 = d0 - soulBullet.getPosY();
 		double d3 = target.getPosZ() - this.getPosZ();
 		float f = MathHelper.sqrt(d1 * d1 + d3 * d3) * 0.2F;
-		soulBullet.shoot(d1, d2 + (double)f, d3, 1.6F, 12.0F);
+		soulBullet.shoot(d1, d2 + (double)f, d3, 1F, 12.0F);
 		this.world.addEntity(soulBullet);
 	}
 

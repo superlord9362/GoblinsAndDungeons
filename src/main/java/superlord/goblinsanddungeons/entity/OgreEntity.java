@@ -433,6 +433,7 @@ public class OgreEntity extends GoblinEntity {
 		
 		public void resetTask() {
 			ogre.setFallingOnButt(false);
+			ogre.setMotion(0, 0, 0);
 		}
 
 	}

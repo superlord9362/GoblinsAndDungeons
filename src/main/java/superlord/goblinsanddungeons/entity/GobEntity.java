@@ -100,18 +100,6 @@ public class GobEntity extends GoblinEntity {
 		return spawnDataIn;
 	}
 
-	public boolean attackEntityAsMob(Entity entityIn) {
-		boolean flag = super.attackEntityAsMob(entityIn);
-		if (flag) {
-			float f = this.world.getDifficultyForLocation(this.getPosition()).getAdditionalDifficulty();
-			if (this.getHeldItemMainhand().isEmpty() && this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
-				entityIn.setFire(2 * (int)f);
-			}
-		}
-
-		return flag;
-	}
-
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target) {
 		return new ItemStack(ItemInit.GOB_SPAWN_EGG.get());

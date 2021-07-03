@@ -39,7 +39,7 @@ public class GoblinSoulBulletEntity extends ProjectileItemEntity {
 	public void tick() {
 		super.tick();
 		if (this.world.isRemote) {
-			this.spawnParticles(2);
+			this.spawnParticles(8);
 			if (this.ticksExisted >= 600) {
 				this.remove();
 			}
@@ -47,10 +47,7 @@ public class GoblinSoulBulletEntity extends ProjectileItemEntity {
 	}
 
 	private void spawnParticles(int particleCount) {
-		for(int j = 0; j < particleCount; ++j) {
-			this.world.addParticle(ParticleInit.gobSoulBullet, this.getPosXRandom(0.5D), this.getPosYRandom(), this.getPosZRandom(0.5D), 1, 1, 1);
-		}
-
+		this.world.addParticle(ParticleInit.gobSoulBullet, true, this.getPosX() - 0.1, this.getPosY() - 1, this.getPosZ() - 0.1 , 0, 0, 0);
 	}
 
 	@Override
