@@ -31,6 +31,8 @@ public class ItemInit {
 
 	public static final RegistryObject<Item> OGRE_TUSK = REGISTER.register("ogre_tusk", () -> new Item(new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 
+	public static final RegistryObject<Item> GOBLIN_EYE = REGISTER.register("goblin_eye", () -> new Item(new Item.Properties()));
+	
 	public static final RegistryObject<Item> GOBLIN_SOUL_BULLET = REGISTER.register("goblin_soul_bullet", () -> new GoblinSoulBulletItem(new Item.Properties()));
 
 	public static final RegistryObject<BlockItem> URN = REGISTER.register("urn", () -> new BlockItem(BlockInit.URN.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
@@ -41,14 +43,17 @@ public class ItemInit {
 	public static final RegistryObject<BlockItem> POLISHED_SCORIA = REGISTER.register("polished_scoria", () -> new BlockItem(BlockInit.POLISHED_SCORIA.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<BlockItem> SCORIA_SLAB = REGISTER.register("scoria_slab", () -> new BlockItem(BlockInit.SCORIA_SLAB.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<BlockItem> SCORIA_BRICK_SLAB = REGISTER.register("scoria_brick_slab", () -> new BlockItem(BlockInit.SCORIA_BRICK_SLAB.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+	public static final RegistryObject<BlockItem> POLISHED_SCORIA_SLAB = REGISTER.register("polished_scoria_slab", () -> new BlockItem(BlockInit.POLISHED_SCORIA_SLAB.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<BlockItem> SCORIA_STAIRS = REGISTER.register("scoria_stairs", () -> new BlockItem(BlockInit.SCORIA_STAIRS.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<BlockItem> SCORIA_BRICK_STAIRS = REGISTER.register("scoria_brick_stairs", () -> new BlockItem(BlockInit.SCORIA_BRICK_STAIRS.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+	public static final RegistryObject<BlockItem> POLISHED_SCORIA_STAIRS = REGISTER.register("polished_scoria_stairs", () -> new BlockItem(BlockInit.POLISHED_SCORIA_STAIRS.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<BlockItem> SCORIA_WALL = REGISTER.register("scoria_wall", () -> new BlockItem(BlockInit.SCORIA_WALL.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<BlockItem> SCORIA_BRICK_WALL = REGISTER.register("scoria_brick_wall", () -> new BlockItem(BlockInit.SCORIA_BRICK_WALL.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+	public static final RegistryObject<BlockItem> POLISHED_SCORIA_WALL = REGISTER.register("polished_scoria_wall", () -> new BlockItem(BlockInit.POLISHED_SCORIA_WALL.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 
 	public static final RegistryObject<Item> RING_OF_HEALTH = REGISTER.register("ring_of_health", () -> new HealthRingItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1)));
 	public static final RegistryObject<Item> RING_OF_STEALTH = REGISTER.register("ring_of_stealth", () -> new StealthRingItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1)));
 	public static final RegistryObject<Item> RING_OF_EXPERIENCE = REGISTER.register("ring_of_experience", () -> new StealthRingItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1)));
-	public static final RegistryObject<Item> TOTEM_OF_GLORY = REGISTER.register("totem_of_glory", () -> new StealthRingItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1)));
+	public static final RegistryObject<Item> RING_OF_GLORY = REGISTER.register("ring_of_glory", () -> new StealthRingItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1)));
 	
 }

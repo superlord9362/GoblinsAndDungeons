@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"#",
+		"#",
+		"#"
+	],
+	"key": {
+		"#": {
+			"item": "goblinsanddungeons:scoria_brick_slab"
+		}
+	},
+	"result": {
+		"item": "goblinsanddungeons:scoria_brick_vertical_slab",
+		"count": 3
+	},
+  "conditions": [
+    {
+      "type": "goblinsanddungeons:quark_flag",
+      "flag": "vertical_slabs"
+    }
+  ]
+}

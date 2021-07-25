@@ -1,0 +1,8 @@
+{
+    "parent": "goblinsanddungeons:block/vertical_slab",
+    "textures": {
+        "side": "goblinsanddungeons:blocks/scoria",
+        "top": "goblinsanddungeons:blocks/scoria",
+        "bottom": "goblinsanddungeons:blocks/scoria"
+    }
+}

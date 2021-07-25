@@ -1,0 +1,33 @@
+{
+  "parent": "goblinsanddungeons:goblinsanddungeons/root",
+  "display": {
+    "icon": {
+      "item": "goblinsanddungeons:ogre_tusk"
+    },
+    "title": {
+      "translate": "advancements.goblinsanddungeons.ogres_are_like_onions.title"
+    },
+    "description": {
+      "translate": "advancements.goblinsanddungeons.ogres_are_like_onions.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+     "killed_something": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+	"entity": {
+          "type": "goblinsanddungeons:ogre"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "killed_something"
+    ]
+  ]
+}

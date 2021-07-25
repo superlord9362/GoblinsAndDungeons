@@ -31,6 +31,7 @@ import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -40,6 +41,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import superlord.goblinsanddungeons.compat.QuarkFlagRecipeCondition;
+import superlord.goblinsanddungeons.compat.RegistryHelper;
 import superlord.goblinsanddungeons.entity.GarchEntity;
 import superlord.goblinsanddungeons.entity.GobEntity;
 import superlord.goblinsanddungeons.entity.GobKingEntity;
@@ -63,12 +66,16 @@ public class GoblinsAndDungeons {
 
 	public static final String MOD_ID = "goblinsanddungeons";
 	public static final Logger LOGGER = LogManager.getLogger();
-
+	public static final RegistryHelper REGISTRY_HELPER = new RegistryHelper(MOD_ID);
+	
 	public GoblinsAndDungeons() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		bus.addListener(this::registerCommon);
 		bus.addListener(this::setup);
+		CraftingHelper.register(new QuarkFlagRecipeCondition.Serializer());
 
+		REGISTRY_HELPER.getDeferredBlockRegister().register(bus);
+		REGISTRY_HELPER.getDeferredItemRegister().register(bus);
 		ItemInit.REGISTER.register(bus);
 		BlockInit.REGISTER.register(bus);
 		EntityInit.REGISTER.register(bus);

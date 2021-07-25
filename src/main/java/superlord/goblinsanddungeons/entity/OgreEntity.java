@@ -261,19 +261,29 @@ public class OgreEntity extends GoblinEntity {
 	
 	public void tick() {
 		super.tick();
+		int RoarCoolDownTicks = 0;
+		int ButtSmashCoolDownTicks = 0;
 		int attack = this.rand.nextInt(99);
-		if (attack >= 95) {
+		if (attack >= 95 && RoarCoolDownTicks == 0) {
 			this.setCanButtSmash(false);
 			this.setAttacking(false);
 			this.setCanRoar(true);
+			RoarCoolDownTicks = 300;
 		} else if(attack >= 90 && attack < 95) {
 			this.setCanRoar(false);
 			this.setAttacking(false);
 			this.setCanButtSmash(true);
+			ButtSmashCoolDownTicks = 600;
 		} else {
 			this.setAttacking(true);
 			this.setCanButtSmash(false);
 			this.setCanRoar(false);
+		}
+		if (RoarCoolDownTicks != 0) {
+			RoarCoolDownTicks--;
+		}
+		if (ButtSmashCoolDownTicks != 0) {
+			ButtSmashCoolDownTicks--;
 		}
 	}
 
@@ -339,7 +349,7 @@ public class OgreEntity extends GoblinEntity {
 	}
 
 	class ButtSmashGoal extends Goal {
-
+		Boolean hasJumped = false;
 		OgreEntity ogre;
 		int timer;
 
@@ -358,15 +368,17 @@ public class OgreEntity extends GoblinEntity {
 		
 		@Override
 		public boolean shouldContinueExecuting() {
-			if (ogre.getAttackTarget() == null && !ogre.canButtSmash()) return false;
+			if (ogre.getAttackTarget() == null || !ogre.canButtSmash()) return false;
 			else return true;
 		}
 
 		@Override
 		public void tick() {
 			timer++;
-			if (ogre.isOnGround()) {
+			if (ogre.isOnGround() && !this.hasJumped) {
 				ogre.setMotion(0, 0.5, 0);
+				
+				this.hasJumped = true;
 			}
 			double perpFacing = ogre.renderYawOffset * (Math.PI / 180);
 			double facingAngle = perpFacing + Math.PI / 2;
@@ -434,6 +446,7 @@ public class OgreEntity extends GoblinEntity {
 		public void resetTask() {
 			ogre.setFallingOnButt(false);
 			ogre.setMotion(0, 0, 0);
+			this.hasJumped = false;
 		}
 
 	}

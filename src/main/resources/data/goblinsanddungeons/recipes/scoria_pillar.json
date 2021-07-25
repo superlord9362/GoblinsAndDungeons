@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+	"#"
+  ],
+  "key": {
+    "#": {
+      "item": "goblinsanddungeons:scoria_slab"
+    }
+  },
+  "result": {
+    "item": "goblinsanddungeons:scoria_pillar",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "goblinsanddungeons:quark_flag",
+      "flag": "stone_pillar"
+    }
+  ]
+}

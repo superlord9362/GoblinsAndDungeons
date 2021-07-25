@@ -1,0 +1,9 @@
+{
+    "variants": {
+ 		"type=north": { "model": "goblinsanddungeons:block/polished_scoria_vertical_slab", "y": 0, "uvlock": true },
+ 		"type=south": { "model": "goblinsanddungeons:block/polished_scoria_vertical_slab", "y": 180, "uvlock": true },
+  		"type=east": { "model": "goblinsanddungeons:block/polished_scoria_vertical_slab", "y": 90, "uvlock": true },
+ 		"type=west": { "model": "goblinsanddungeons:block/polished_scoria_vertical_slab", "y": 270, "uvlock": true },
+        "type=double": { "model": "goblinsanddungeons:block/polished_scoria" }
+    }
+}

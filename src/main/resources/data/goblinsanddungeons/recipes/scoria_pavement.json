@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"###",
+		"###",
+		"###"
+	],
+	"key": {
+		"#": {
+			"item": "goblinsanddungeons:polished_scoria"
+		}
+	},
+	"result": {
+		"item": "goblinsanddungeons:scoria_pavement",
+		"count": 9
+	},
+  "conditions": [
+    {
+      "type": "goblinsanddungeons:quark_flag",
+      "flag": "stone_pavement"
+    }
+  ]
+}

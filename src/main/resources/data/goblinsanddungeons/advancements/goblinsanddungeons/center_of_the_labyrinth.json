@@ -1,0 +1,31 @@
+{
+  "parent": "goblinsanddungeons:goblinsanddungeons/root",
+  "display": {
+    "icon": {
+      "item": "goblinsanddungeons:chiseled_scoria"
+    },
+    "title": {
+      "translate": "advancements.goblinsanddungeons.center_of_the_labyrinth.title"
+    },
+    "description": {
+      "translate": "advancements.goblinsanddungeons.center_of_the_labyrinth.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ruined_keep": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "feature": "goblinsanddungeons:ruined_keep"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "ruined_keep"
+    ]
+  ]
+}

@@ -1,0 +1,29 @@
+{
+	"display": {
+		"icon": {
+			"item": "goblinsanddungeons:goblin_crown"
+		},
+		"title": {
+			"translate": "advancements.goblinsanddungeons.root.title"
+		},
+		"description": {
+			"translate": "advancements.goblinsanddungeons.root.description"
+		},
+		"frame": "task",
+		"show_toast": false,
+		"announce_to_chat": false,
+		"hidden": false,
+		"background": "goblinsanddungeons:textures/blocks/scoria.png"
+	},
+	"criteria": {
+		"tick": {
+			"trigger": "minecraft:tick",
+			"conditions": {}
+		}
+	},
+	"requirements": [
+		[
+			"tick"
+		]
+	]
+}

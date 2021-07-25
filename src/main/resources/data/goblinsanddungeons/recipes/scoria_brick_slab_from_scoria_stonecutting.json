@@ -4,5 +4,11 @@
     "item": "goblinsanddungeons:scoria"
   },
   "result": "goblinsanddungeons:scoria_brick_slab",
-  "count": 2
+  "count": 2,
+	"conditions": [
+		{
+			"type": "goblinsanddungeons:quark_flag",
+			"flag": "vertical_slabs"
+		}
+	]
 }

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "goblinsanddungeons:scoria_vertical_slab"
+  },
+  "result": "goblinsanddungeons:scoria_slab",
+  "count": 1,
+	"conditions": [
+		{
+			"type": "goblinsanddungeons:quark_flag",
+			"flag": "vertical_slabs"
+		}
+	]
+}

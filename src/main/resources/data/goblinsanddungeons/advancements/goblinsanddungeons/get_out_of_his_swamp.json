@@ -1,0 +1,33 @@
+{
+  "parent": "goblinsanddungeons:goblinsanddungeons/root",
+  "display": {
+    "icon": {
+      "item": "goblinsanddungeons:ogre_tusk"
+    },
+    "title": {
+      "translate": "advancements.goblinsanddungeons.get_out_of_his_swamp.title"
+    },
+    "description": {
+      "translate": "advancements.goblinsanddungeons.get_out_of_his_swamp.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+     "killed_by_something": {
+      "trigger": "minecraft:entity_killed_player",
+      "conditions": {
+	"entity": {
+          "type": "goblinsanddungeons:ogre"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "killed_by_something"
+    ]
+  ]
+}

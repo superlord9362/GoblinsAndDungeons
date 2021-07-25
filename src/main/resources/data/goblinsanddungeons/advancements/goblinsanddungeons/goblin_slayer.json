@@ -1,0 +1,102 @@
+{
+  "parent": "goblinsanddungeons:goblinsanddungeons/root",
+  "display": {
+    "icon": {
+      "item": "goblinsanddungeons:goblin_eye"
+    },
+    "title": {
+      "translate": "advancements.goblinsanddungeons.goblin_slayer.title"
+    },
+    "description": {
+      "translate": "advancements.goblinsanddungeons.goblin_slayer.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "experience": 100
+  },
+  "criteria": {
+     "gob": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+	"entity": {
+          "type": "goblinsanddungeons:gob"
+        }
+      }
+    },
+	"goblo": {
+		"trigger": "minecraft:player_killed_entity",
+		"conditions": {
+			"entity": {
+				"type": "goblinsanddungeons:goblo"
+			}
+		}
+	},
+	"hobgob": {
+		"trigger": "minecraft:player_killed_entity",
+		"conditions": {
+			"entity": {
+				"type": "goblinsanddungeons:hobgob"
+			}
+		}
+	},
+	"garch": {
+		"trigger": "minecraft:player_killed_entity",
+		"conditions": {
+			"entity": {
+				"type": "goblinsanddungeons:garch"
+			}
+		}
+	},
+	"goom": {
+		"trigger": "minecraft:player_killed_entity",
+		"conditions": {
+			"entity": {
+				"type": "goblinsanddungeons:goom"
+			}
+		}
+	},
+	"gobber": {
+		"trigger": "minecraft:player_killed_entity",
+		"conditions": {
+			"entity": {
+				"type": "goblinsanddungeons:gobber"
+			}
+		}
+	},
+	"mimic": {
+		"trigger": "minecraft:player_killed_entity",
+		"conditions": {
+			"entity": {
+				"type": "goblinsanddungeons:mimic"
+			}
+		}
+	}
+  },
+  "requirements": [
+    [
+      "gob"
+    ],
+	[
+		"goblo"
+	],
+	[
+		"garch"
+	],
+	[
+		"hobgob"
+	],
+	[
+		"goom"
+	],
+	[
+		"gobber"
+	],
+	[
+		"mimic"
+	]
+  ]
+}

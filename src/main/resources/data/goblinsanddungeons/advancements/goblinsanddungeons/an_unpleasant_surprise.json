@@ -1,0 +1,33 @@
+{
+  "parent": "goblinsanddungeons:goblinsanddungeons/center_of_the_labyrinth",
+  "display": {
+    "icon": {
+      "item": "minecraft:chest"
+    },
+    "title": {
+      "translate": "advancements.goblinsanddungeons.an_unpleasant_surprise.title"
+    },
+    "description": {
+      "translate": "advancements.goblinsanddungeons.an_unpleasant_surprise.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+     "killed_something": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+	"entity": {
+          "type": "goblinsanddungeons:mimic"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "killed_something"
+    ]
+  ]
+}

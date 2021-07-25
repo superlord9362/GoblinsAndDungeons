@@ -41,9 +41,6 @@ public class UrnBlock extends FallingBlock implements IWaterLoggable {
 	public static final BooleanProperty EXPLODING = BooleanProperty.create("exploding");
 	public static final BooleanProperty HAS_WATER = BooleanProperty.create("water");
 	public static final BooleanProperty HAS_LAVA = BooleanProperty.create("lava");
-	//public static final BooleanProperty HAS_ITEM = BooleanProperty.create("item");
-	//public static final IntegerProperty COUNT = IntegerProperty.create("count", 0, 64);
-	//public static final IntegerProperty ITEM_NAME = IntegerProperty.create("name", 0, 10000);
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	public UrnBlock(AbstractBlock.Properties properties) {
@@ -136,14 +133,7 @@ public class UrnBlock extends FallingBlock implements IWaterLoggable {
 					player.addItemStackToInventory(bucket);
 				}
 				return ActionResultType.func_233537_a_(worldIn.isRemote);
-			} /**else {
-				player.playSound(SoundEvents.BLOCK_COMPOSTER_FILL, 1.0F, 1.0F);
-				worldIn.setBlockState(pos, state.with(HAS_ITEM, Boolean.valueOf(true)).with(COUNT, stack.getCount()).with(ITEM_NAME, Item.getIdFromItem(item)));
-
-				if (!player.abilities.isCreativeMode) {
-					stack.shrink(stack.getCount());
-				}
-			}*/
+			}
 			return ActionResultType.CONSUME;
 		}
 	}

@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "goblinsanddungeons:scoria_wall",
-	"goblinsanddungeons:scoria_brick_wall"
+	"goblinsanddungeons:scoria_brick_wall",
+	"goblinsanddungeons:polished_scoria_wall"
   ]
 }

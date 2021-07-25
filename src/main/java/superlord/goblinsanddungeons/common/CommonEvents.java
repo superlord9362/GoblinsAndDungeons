@@ -77,8 +77,49 @@ public class CommonEvents {
 				int xp = entity.experienceValue;
 				entity.experienceValue = xp + 1;
 			}
-			if (item == ItemInit.TOTEM_OF_GLORY.get() && !playerEntity.isCreative() && event.getEntity() instanceof LivingEntity) {
-				playerEntity.heal(1);
+			if (item == ItemInit.RING_OF_GLORY.get() && !playerEntity.isCreative() && event.getEntity() instanceof LivingEntity) {
+				LivingEntity entity = (LivingEntity) event.getEntity();
+				if (entity.getMaxHealth() <= 15.0D) {
+					playerEntity.heal(1);
+				} else if (entity.getMaxHealth() > 15.0D && entity.getMaxHealth() <= 30.0D) {
+					playerEntity.heal(2);
+				} else if (entity.getMaxHealth() > 30.0D && entity.getMaxHealth() <= 45.0D) {
+					playerEntity.heal(3);
+				} else if (entity.getMaxHealth() > 45.0D && entity.getMaxHealth() <= 60.0D) {
+					playerEntity.heal(4);
+				} else if (entity.getMaxHealth() > 75.0D && entity.getMaxHealth() <= 90.0D) {
+					playerEntity.heal(5);
+				} else if (entity.getMaxHealth() > 90.0D && entity.getMaxHealth() <= 105.0D) {
+					playerEntity.heal(6);
+				} else if (entity.getMaxHealth() > 105.0D && entity.getMaxHealth() <= 120.0D) {
+					playerEntity.heal(7);
+				} else if (entity.getMaxHealth() > 120.0D && entity.getMaxHealth() <= 135.0D) {
+					playerEntity.heal(8);
+				} else if (entity.getMaxHealth() > 135.0D && entity.getMaxHealth() <= 150.0D) {
+					playerEntity.heal(9);
+				} else if (entity.getMaxHealth() > 150.0D && entity.getMaxHealth() <= 165.0D) {
+					playerEntity.heal(10);
+				} else if (entity.getMaxHealth() > 165.0D && entity.getMaxHealth() <= 180.0D) {
+					playerEntity.heal(11);
+				} else if (entity.getMaxHealth() > 180.0D && entity.getMaxHealth() <= 195.0D) {
+					playerEntity.heal(12);
+				} else if (entity.getMaxHealth() > 195.0D && entity.getMaxHealth() <= 210.0D) {
+					playerEntity.heal(13);
+				} else if (entity.getMaxHealth() > 210.0D && entity.getMaxHealth() <= 225.0D) {
+					playerEntity.heal(14);
+				} else if (entity.getMaxHealth() > 225.0D && entity.getMaxHealth() <= 240.0D) {
+					playerEntity.heal(15);
+				} else if (entity.getMaxHealth() > 240.0D && entity.getMaxHealth() <= 255.0D) {
+					playerEntity.heal(16);
+				} else if (entity.getMaxHealth() > 255.0D && entity.getMaxHealth() <= 270.0D) {
+					playerEntity.heal(17);
+				} else if (entity.getMaxHealth() > 270.0D && entity.getMaxHealth() <= 285.0D) {
+					playerEntity.heal(18);
+				} else if (entity.getMaxHealth() > 285.0D && entity.getMaxHealth() <= 300.0D) {
+					playerEntity.heal(19);
+				} else if (entity.getMaxHealth() > 300.0D) {
+					playerEntity.heal(20);
+				}
 				item.damageItem(stack, 1, playerEntity, (player) -> {
 					player.sendBreakAnimation(EquipmentSlotType.OFFHAND);
 				});
@@ -124,6 +165,5 @@ public class CommonEvents {
 		}
 
 	}
-
 
 }

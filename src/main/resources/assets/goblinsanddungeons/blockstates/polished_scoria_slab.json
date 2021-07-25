@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "goblinsanddungeons:block/polished_scoria_slab"
+    },
+    "type=double": {
+      "model": "goblinsanddungeons:block/polished_scoria"
+    },
+    "type=top": {
+      "model": "goblinsanddungeons:block/polished_scoria_slab_top"
+    }
+  }
+}

@@ -25,34 +25,45 @@ import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IInventoryChangedListener;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 
-public class GobloEntity extends GoblinEntity {
+public class GobloEntity extends GoblinEntity implements IInventoryChangedListener {
 
 	private static final DataParameter<Boolean> SLEEPING = EntityDataManager.createKey(GobloEntity.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> HAS_CHICKEN = EntityDataManager.createKey(GobloEntity.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Byte> STATUS = EntityDataManager.createKey(GobloEntity.class, DataSerializers.BYTE);
 	public int eatTicks;
+	private Inventory inventory;
+	@SuppressWarnings("unused")
+	private net.minecraftforge.common.util.LazyOptional<?> itemHandler = null;
 
 	public GobloEntity(EntityType<? extends GobloEntity> type, World worldIn) {
 		super(type, worldIn);
 		this.setCanPickUpLoot(true);
+		this.initInventory();
 	}
 
 	public boolean isSleeping() {
@@ -97,8 +108,70 @@ public class GobloEntity extends GoblinEntity {
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
 	}
 
+	protected void initInventory() {
+		Inventory inventory = this.inventory;
+		this.inventory = new Inventory(this.getInventorySize());
+		if (inventory != null) {
+			inventory.removeListener(this);
+			int i = Math.min(inventory.getSizeInventory(), this.inventory.getSizeInventory());
+
+			for(int j = 0; j < i; ++j) {
+				ItemStack itemstack = inventory.getStackInSlot(j);
+				if (!itemstack.isEmpty()) {
+					this.inventory.setInventorySlotContents(j, itemstack.copy());
+				}
+			}
+		}
+
+		this.inventory.addListener(this);
+		this.func_230275_fc_();
+		this.itemHandler = net.minecraftforge.common.util.LazyOptional.of(() -> new net.minecraftforge.items.wrapper.InvWrapper(this.inventory));
+	}
+
+	protected void func_230275_fc_() {
+		if (!this.world.isRemote) {
+			this.setWatchableBoolean(4, !this.inventory.getStackInSlot(0).isEmpty());
+		}
+	}
+
+	protected boolean getWatchableBoolean(int p_110233_1_) {
+		return (this.dataManager.get(STATUS) & p_110233_1_) != 0;
+	}
+
+	protected void setWatchableBoolean(int p_110208_1_, boolean p_110208_2_) {
+		byte b0 = this.dataManager.get(STATUS);
+		if (p_110208_2_) {
+			this.dataManager.set(STATUS, (byte)(b0 | p_110208_1_));
+		} else {
+			this.dataManager.set(STATUS, (byte)(b0 & ~p_110208_1_));
+		}
+
+	}
+
 	public static AttributeModifierMap.MutableAttribute createAttributes() {
 		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 14.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.2F).createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 25.0D);
+	}
+
+	private void spawnItem(ItemStack stackIn) {
+		ItemEntity itementity = new ItemEntity(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), stackIn);
+		this.world.addEntity(itementity);
+	}
+
+	protected void updateEquipmentIfNeeded(ItemEntity itemEntity) {
+		ItemStack itemstack = itemEntity.getItem();
+		if (this.canEquipItem(itemstack)) {
+			int i = itemstack.getCount();
+			if (i > 1) {
+				this.spawnItem(itemstack.split(i - 1));
+			}
+			this.triggerItemPickupTrigger(itemEntity);
+			this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack.split(1));
+			this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 2.0F;
+			this.onItemPickup(itemEntity, itemstack.getCount());
+			itemEntity.remove();
+			this.eatTicks = 0;
+		}
+
 	}
 
 	public boolean attackEntityAsMob(Entity entityIn) {
@@ -111,9 +184,10 @@ public class GobloEntity extends GoblinEntity {
 		}
 		return flag;
 	}
-	
+
 	protected void registerData() {
 		super.registerData();
+		this.dataManager.register(STATUS, (byte)0);
 		this.dataManager.register(SLEEPING, false);
 		this.dataManager.register(HAS_CHICKEN, false);
 	}
@@ -122,14 +196,56 @@ public class GobloEntity extends GoblinEntity {
 		super.writeAdditional(compound);
 		compound.putBoolean("IsSleeping", this.isSleeping());
 		compound.putBoolean("HasChicken", this.hasChicken());
+		ListNBT listnbt = new ListNBT();
+
+		for(int i = 2; i < this.inventory.getSizeInventory(); ++i) {
+			ItemStack itemstack = this.inventory.getStackInSlot(i);
+			if (!itemstack.isEmpty()) {
+				CompoundNBT compoundnbt = new CompoundNBT();
+				compoundnbt.putByte("Slot", (byte)i);
+				itemstack.write(compoundnbt);
+				listnbt.add(compoundnbt);
+			}
+		}
+
+		compound.put("Items", listnbt);
 	}
 
 	public void readAdditional(CompoundNBT compound) {
 		super.readAdditional(compound);
 		this.setSleeping(compound.getBoolean("IsSleeping"));
 		this.setHasChicken(compound.getBoolean("HasChicken"));
+		ListNBT listnbt = compound.getList("Items", 10);
+		this.initInventory();
+
+		for(int i = 0; i < listnbt.size(); ++i) {
+			CompoundNBT compoundnbt = listnbt.getCompound(i);
+			int j = compoundnbt.getByte("Slot") & 255;
+			if (j >= 2 && j < this.inventory.getSizeInventory()) {
+				this.inventory.setInventorySlotContents(j, ItemStack.read(compoundnbt));
+			}
+		}
 	}
-	
+
+	protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
+		super.dropSpecialItems(source, looting, recentlyHitIn);
+		this.inventory.func_233543_f_().forEach(this::entityDropItem);
+	}
+
+	protected ItemStack func_234436_k_(ItemStack p_234436_1_) {
+		return this.inventory.addItem(p_234436_1_);
+	}
+
+	protected boolean func_234437_l_(ItemStack p_234437_1_) {
+		return this.inventory.func_233541_b_(p_234437_1_);
+	}
+
+	protected void func_234416_a_(ServerWorld p_234416_1_) {
+		super.func_234496_c_(this);
+		this.inventory.func_233543_f_().forEach(this::entityDropItem);
+		super.func_234416_a_(p_234416_1_);
+	}
+
 	@OnlyIn(Dist.CLIENT)
 	public void handleStatusUpdate(byte id) {
 		if (id == 45) {
@@ -146,6 +262,15 @@ public class GobloEntity extends GoblinEntity {
 
 	}
 
+	protected int getInventorySize() {
+		return 256;
+	}
+
+	protected void dropInventory() {
+		super.dropInventory();
+	}
+
+
 	public SoundEvent getEatSound(ItemStack itemStackIn) {
 		return SoundEvents.ENTITY_FOX_EAT;
 	}
@@ -158,22 +283,25 @@ public class GobloEntity extends GoblinEntity {
 		if (!this.world.isRemote && this.isAlive() && this.isServerWorld()) {
 			++this.eatTicks;
 			ItemStack itemstack = this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
+			ItemStack air = Items.AIR.getDefaultInstance();
 			if (this.canEatItem(itemstack)) {
-				
-				if (this.eatTicks > 100 && itemstack.getItem() == Items.BEETROOT) {
-					ItemStack itemstack1 = itemstack.onItemUseFinish(this.world, this);
-					if (!itemstack1.isEmpty()) {
-						this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack1);
+				if (this.eatTicks > 100 && itemstack.getItem().isFood()) {
+					if (itemstack.getItem() == Items.BEETROOT) {
+						ItemStack itemstack1 = itemstack.onItemUseFinish(this.world, this);
+						if (!itemstack1.isEmpty()) {
+							this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack1);
+						}
+						this.setSleeping(true);
 					}
-					this.setSleeping(true);
-					itemstack.shrink(1);
 					this.eatTicks = 0;
+					itemstack.shrink(1);
 				} else if (this.eatTicks > 100) {
 					ItemStack itemstack1 = itemstack.onItemUseFinish(this.world, this);
 					if (!itemstack1.isEmpty()) {
 						this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack1);
 					}
-					itemstack.shrink(1);
+					this.inventory.addItem(itemstack);
+					this.setItemStackToSlot(EquipmentSlotType.MAINHAND, air);
 					this.eatTicks = 0;
 				} else if (this.eatTicks > 60 && this.rand.nextFloat() < 0.1F) {
 					this.playSound(this.getEatSound(itemstack), 1.0F, 1.0F);
@@ -185,11 +313,11 @@ public class GobloEntity extends GoblinEntity {
 		if (!this.isBeingRidden()) {
 			this.setHasChicken(false);
 		}
-	      Vector3d vector3d = this.getMotion();
+		Vector3d vector3d = this.getMotion();
 
 		if (!this.onGround && vector3d.y < 0.0D && this.hasChicken()) {
-	         this.setMotion(vector3d.mul(1.0D, 0.6D, 1.0D));
-	      }
+			this.setMotion(vector3d.mul(1.0D, 0.6D, 1.0D));
+		}
 
 		if (this.isSleeping()) {
 			this.setMotion(vector3d.mul(0.0D, 0.0D, 0.0D));
@@ -213,19 +341,6 @@ public class GobloEntity extends GoblinEntity {
 		Item item = stack.getItem();
 		ItemStack itemstack = this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
 		return itemstack.isEmpty() && !this.hasChicken() && !this.isSleeping() || this.eatTicks > 0 && item.isFood() && !itemstack.getItem().isFood();
-	}
-
-	protected void updateEquipmentIfNeeded(ItemEntity itemEntity) {
-		ItemStack itemstack = itemEntity.getItem();
-		if (this.canEquipItem(itemstack)) {
-			this.triggerItemPickupTrigger(itemEntity);
-			this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack.split(1));
-			this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 2.0F;
-			this.onItemPickup(itemEntity, itemstack.getCount());
-			itemEntity.remove();
-			this.eatTicks = 0;
-		}
-
 	}
 
 	class PickUpChickenGoal extends Goal {
@@ -307,7 +422,7 @@ public class GobloEntity extends GoblinEntity {
 			}
 
 		}
-		
+
 		public void startExecuting() {
 			List<ItemEntity> list = GobloEntity.this.world.getEntitiesWithinAABB(ItemEntity.class, GobloEntity.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
 			if (!list.isEmpty()) {
@@ -367,7 +482,7 @@ public class GobloEntity extends GoblinEntity {
 		}
 
 	}
-	
+
 	public boolean isOnSameTeam(Entity entityIn) {
 		if (super.isOnSameTeam(entityIn)) {
 			return true;
@@ -376,6 +491,10 @@ public class GobloEntity extends GoblinEntity {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public void onInventoryChanged(IInventory invBasic) {
 	}
 
 }

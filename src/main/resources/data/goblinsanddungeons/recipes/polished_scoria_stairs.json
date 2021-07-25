@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "goblinsanddungeons:polished_scoria"
+    }
+  },
+  "result": {
+    "item": "goblinsanddungeons:polished_scoria_stairs",
+    "count": 4
+  }
+}
