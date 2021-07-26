@@ -2,7 +2,8 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "goblinsanddungeons:chiseled_scoria"
+      "goblinsanddungeons:polished_scoria_wall",
+		"goblinsanddungeons:polished_scoria_wall_from_polished_scoria_stonecutting"
     ]
   },
   "criteria": {
@@ -11,7 +12,7 @@
       "conditions": {
         "items": [
           {
-            "item": "goblinsanddungeons:polished_scoria_slab"
+            "item": "goblinsanddungeons:polished_scoria"
           }
         ]
       }
@@ -19,7 +20,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "goblinsanddungeons:chiseled_scoria"
+        "recipe": "goblinsanddungeons:polished_scoria_wall"
       }
     }
   },
