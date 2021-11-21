@@ -32,7 +32,8 @@ public class ItemInit {
 	public static final RegistryObject<Item> OGRE_TUSK = REGISTER.register("ogre_tusk", () -> new Item(new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 
 	public static final RegistryObject<Item> GOBLIN_EYE = REGISTER.register("goblin_eye", () -> new Item(new Item.Properties()));
-	
+	public static final RegistryObject<Item> STAFF_AMETHYST = REGISTER.register("staff_amethyst", () -> new Item(new Item.Properties()));
+
 	public static final RegistryObject<Item> GOBLIN_SOUL_BULLET = REGISTER.register("goblin_soul_bullet", () -> new GoblinSoulBulletItem(new Item.Properties()));
 
 	public static final RegistryObject<BlockItem> URN = REGISTER.register("urn", () -> new BlockItem(BlockInit.URN.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
@@ -55,5 +56,7 @@ public class ItemInit {
 	public static final RegistryObject<Item> RING_OF_STEALTH = REGISTER.register("ring_of_stealth", () -> new StealthRingItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1)));
 	public static final RegistryObject<Item> RING_OF_EXPERIENCE = REGISTER.register("ring_of_experience", () -> new StealthRingItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1)));
 	public static final RegistryObject<Item> RING_OF_GLORY = REGISTER.register("ring_of_glory", () -> new StealthRingItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1)));
+	
+	
 	
 }

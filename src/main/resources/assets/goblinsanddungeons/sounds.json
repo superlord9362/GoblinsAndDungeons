@@ -9,6 +9,36 @@
 			}
 		]
 	},
+	"ogre_hurt": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.ogre_hurt",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:ogre/ogre_hurt",
+				"stream": true
+			}
+		]
+	},
+	"ogre_death": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.ogre_death",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:ogre/ogre_death",
+				"stream": true
+			}
+		]
+	},
+	"ogre_roar": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.ogre_roar",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:ogre/ogre_roar",
+				"stream": true
+			}
+		]
+	},
 	"garch_idle": {
 		"category": "neutral",
 		"subtitle": "goblinsanddungeons.subtitle.garch_idle",
@@ -165,6 +195,214 @@
 		"sounds": [
 			{
 				"name": "goblinsanddungeons:mimic/mimic_death",
+				"stream": true
+			}
+		]
+	},
+	"gobber_idle": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.gobber_idle",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:gobber/gobber_idle",
+				"stream": true
+			}
+		]
+	},
+	"gobber_hurt": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.gobber_hurt",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:gobber/gobber_hurt",
+				"stream": true
+			}
+		]
+	},
+	"gobber_death": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.gobber_death",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:gobber/gobber_death",
+				"stream": true
+			}
+		]
+	},
+	"gobber_snoring": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.gobber_snoring",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:gobber/gobber_snoring",
+				"stream": true
+			}
+		]
+	},
+	"goblo_idle": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.goblo_idle",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:goblo/goblo_idle"
+			}
+		]
+	},
+	"goblo_hurt": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.goblo_hurt",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:goblo/goblo_hurt",
+				"stream": true
+			}
+		]
+	},
+	"goblo_death": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.goblo_death",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:goblo/goblo_death",
+				"stream": true
+			}
+		]
+	},
+	"goblo_snoring": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.goblo_snoring",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:goblo/goblo_snoring",
+				"stream": true
+			}
+		]
+	},
+	"goblo_eating": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.goblo_eating",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:goblo/goblo_eating",
+				"stream": true
+			}
+		]
+	},
+	"goblin_king_idle": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.goblin_king_idle",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:goblin_king/goblin_king_idle"
+			}
+		]
+	},
+	"goblin_king_hurt": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.goblin_king_hurt",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:goblin_king/goblin_king_hurt",
+				"stream": true
+			}
+		]
+	},
+	"goblin_king_death": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.goblin_king_death",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:goblin_king/goblin_king_death",
+				"stream": true
+			}
+		]
+	},
+	"goblin_king_laugh": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.goblin_king_laugh",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:goblin_king/goblin_king_laugh",
+				"stream": true
+			}
+		]
+	},
+	"urn_place": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.urn_place",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:urn/urn_place",
+				"stream": true
+			}
+		]
+	},
+	"spell_casting": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.spell_casting",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:magic/spell_casting",
+				"stream": true
+			}
+		]
+	},
+	"soul_bullet_launch": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.soul_bullet_launch",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:magic/soul_bullet_launch",
+				"stream": true
+			}
+		]
+	},
+	"soul_bullet_collision": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.soul_bullet_collision",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:magic/soul_bullet_collision",
+				"stream": true
+			}
+		]
+	},
+	"urn_break": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.urn_break",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:urn/urn_break",
+				"stream": true
+			}
+		]
+	},
+	"urn_fall": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.urn_fall",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:urn/urn_fall",
+				"stream": true
+			}
+		]
+	},
+	"urn_hit": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.urn_hit",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:urn/urn_hit",
+				"stream": true
+			}
+		]
+	},
+	"urn_step": {
+		"category": "neutral",
+		"subtitle": "goblinsanddungeons.subtitle.urn_step",
+		"sounds": [
+			{
+				"name": "goblinsanddungeons:urn/urn_step",
 				"stream": true
 			}
 		]

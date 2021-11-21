@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.entity.model.IHasArm;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -15,7 +17,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class GoblinKingModel<T extends LivingEntity> extends EntityModel<T> {
+public class GoblinKingModel<T extends LivingEntity> extends EntityModel<T>  implements IHasArm {
     public ModelRenderer Body;
     public ModelRenderer Head;
     public ModelRenderer RightArm;
@@ -92,4 +94,18 @@ public class GoblinKingModel<T extends LivingEntity> extends EntityModel<T> {
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;
     }
+    
+    public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) {
+		float f = sideIn == HandSide.RIGHT ? 1.0F : -1.0F;
+		ModelRenderer modelrenderer = this.getArmForSide(sideIn);
+		modelrenderer.rotationPointX += f;
+		modelrenderer.translateRotate(matrixStackIn);
+		modelrenderer.rotationPointX -= f;
+		matrixStackIn.translate(-0.55, 0.5, 0.1);
+		matrixStackIn.scale(1F, 1F, 1F);
+	}
+
+	protected ModelRenderer getArmForSide(HandSide side) {
+		return side == HandSide.LEFT ? this.RightArm : this.LeftArm;
+	}
 }

@@ -23,7 +23,7 @@ public class BlockInit {
 	
 	public static final DeferredRegister<Block> REGISTER = DeferredRegister.create(ForgeRegistries.BLOCKS, GoblinsAndDungeons.MOD_ID);
 
-    public static final RegistryObject<Block> URN = REGISTER.register("urn", () -> new UrnBlock(AbstractBlock.Properties.create(Material.ROCK, MaterialColor.BROWN_TERRACOTTA).sound(SoundType.STONE).hardnessAndResistance(0.3F).notSolid()));
+    public static final RegistryObject<Block> URN = REGISTER.register("urn", () -> new UrnBlock(AbstractBlock.Properties.create(Material.ROCK, MaterialColor.BROWN_TERRACOTTA).sound(SoundTypeInit.URN).hardnessAndResistance(0.3F).notSolid()));
 
     public static final RegistryObject<Block> SCORIA = REGISTER.register("scoria", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).sound(SoundType.STONE).setRequiresTool().hardnessAndResistance(1.5F, 6.0F)));
     public static final RegistryObject<Block> POLISHED_SCORIA = REGISTER.register("polished_scoria", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).sound(SoundType.STONE).setRequiresTool().hardnessAndResistance(1.5F, 6.0F)));

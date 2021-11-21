@@ -6,10 +6,9 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.FallingBlock;
 import net.minecraft.block.IWaterLoggable;
+import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -19,7 +18,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.pathfinding.PathType;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.stats.Stats;
@@ -33,37 +36,31 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class UrnBlock extends FallingBlock implements IWaterLoggable {
+public class UrnBlock extends Block implements IWaterLoggable {
 
 	public static final BooleanProperty EXPLODING = BooleanProperty.create("exploding");
 	public static final BooleanProperty HAS_WATER = BooleanProperty.create("water");
 	public static final BooleanProperty HAS_LAVA = BooleanProperty.create("lava");
+	public static final BooleanProperty HAS_POTION = BooleanProperty.create("potion");
+	public static final IntegerProperty POTION_TYPE = IntegerProperty.create("type", 0, 199);
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	public UrnBlock(AbstractBlock.Properties properties) {
 		super(properties);
-		this.setDefaultState(this.stateContainer.getBaseState().with(EXPLODING, false).with(HAS_WATER, false).with(HAS_LAVA, false).with(WATERLOGGED, Boolean.valueOf(false)));
+		this.setDefaultState(this.stateContainer.getBaseState().with(EXPLODING, false).with(HAS_WATER, false).with(HAS_LAVA, false).with(WATERLOGGED, Boolean.valueOf(false)).with(HAS_POTION, false));
 	}
 
 	@Nullable
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		FluidState fluidstate = context.getWorld().getFluidState(context.getPos());
 		boolean flag = fluidstate.getFluid() == Fluids.WATER;
-		return super.getStateForPlacement(context).with(EXPLODING, false).with(HAS_WATER, false).with(HAS_LAVA, false).with(WATERLOGGED, Boolean.valueOf(flag));
+		return super.getStateForPlacement(context).with(EXPLODING, false).with(HAS_WATER, false).with(HAS_LAVA, false).with(WATERLOGGED, Boolean.valueOf(flag)).with(HAS_POTION, false);
 	}
 
-	protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return !state.getCollisionShape(worldIn, pos).project(Direction.UP).isEmpty() || state.isSolidSide(worldIn, pos, Direction.UP);
-	}
 
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		BlockPos blockpos = pos.down();
-		return this.isValidGround(worldIn.getBlockState(blockpos), worldIn, blockpos);
-	}
-
+	@SuppressWarnings("deprecation")
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
 		if (!stateIn.isValidPosition(worldIn, currentPos)) {
 			return Blocks.AIR.getDefaultState();
@@ -76,17 +73,6 @@ public class UrnBlock extends FallingBlock implements IWaterLoggable {
 		}
 	}
 
-	protected void onStartFalling(FallingBlockEntity fallingEntity) {
-		fallingEntity.setHurtEntities(true);
-	}
-
-	public void onEndFalling(World worldIn, BlockPos pos, BlockState fallingState, BlockState hitState, FallingBlockEntity fallingBlock) {
-		if (!fallingBlock.isSilent()) {
-			worldIn.playEvent(1031, pos, 0);
-		}
-
-	}
-
 	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
 		return false;
 	}
@@ -97,11 +83,11 @@ public class UrnBlock extends FallingBlock implements IWaterLoggable {
 	}
 
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		builder.add(EXPLODING, HAS_WATER, HAS_LAVA, WATERLOGGED);
+		builder.add(EXPLODING, HAS_WATER, HAS_LAVA, WATERLOGGED, HAS_POTION, POTION_TYPE);
 	}
 
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		if (this.hasTnT(state) || this.hasLava(state) || this.hasWater(state)/** || state.get(HAS_ITEM)*/) {
+		if (this.hasTnT(state) || this.hasLava(state) || this.hasWater(state) || this.hasPotion(state)) {
 			return ActionResultType.CONSUME;
 		} else {
 			ItemStack stack = player.getHeldItem(handIn);
@@ -134,6 +120,16 @@ public class UrnBlock extends FallingBlock implements IWaterLoggable {
 				}
 				return ActionResultType.func_233537_a_(worldIn.isRemote);
 			}
+			if (item == Items.POTION) {
+				worldIn.setBlockState(pos, state.with(HAS_POTION, Boolean.valueOf(true)).with(POTION_TYPE, Effect.getId(PotionUtils.getEffectsFromStack(stack).get(0).getPotion())));
+
+				if (!player.abilities.isCreativeMode) {
+					stack.shrink(1);
+					ItemStack bucket = new ItemStack(Items.GLASS_BOTTLE);
+					player.addItemStackToInventory(bucket);
+				}
+				return ActionResultType.func_233537_a_(worldIn.isRemote);
+			}
 			return ActionResultType.CONSUME;
 		}
 	}
@@ -155,6 +151,17 @@ public class UrnBlock extends FallingBlock implements IWaterLoggable {
 		if (this.hasLava(state)) {
 			worldIn.setBlockState(pos, Blocks.LAVA.getDefaultState());
 		}
+		if (this.hasPotion(state)) {
+			AreaEffectCloudEntity areaeffectcloudentity = new AreaEffectCloudEntity(worldIn, pos.getX(), pos.getY(), pos.getZ());
+			areaeffectcloudentity.setRadius(2.5F);
+			areaeffectcloudentity.setRadiusOnUse(-0.5F);
+			areaeffectcloudentity.setWaitTime(10);
+			areaeffectcloudentity.setDuration(areaeffectcloudentity.getDuration() / 2);
+			areaeffectcloudentity.setRadiusPerTick(-areaeffectcloudentity.getRadius() / (float)areaeffectcloudentity.getDuration());
+			areaeffectcloudentity.addEffect(new EffectInstance(Effect.get(getPotionType(state)), 300));
+			player.addPotionEffect(new EffectInstance(Effect.get(getPotionType(state))));
+			worldIn.addEntity(areaeffectcloudentity);
+		}
 		spawnDrops(state, worldIn, pos, te, player, stack);
 	}
 
@@ -169,6 +176,14 @@ public class UrnBlock extends FallingBlock implements IWaterLoggable {
 
 	public boolean hasLava(BlockState state) {
 		return state.get(HAS_LAVA);
+	}
+
+	public boolean hasPotion(BlockState state) {
+		return state.get(HAS_POTION);
+	}
+
+	public int getPotionType(BlockState state) {
+		return state.get(POTION_TYPE);
 	}
 
 	@Deprecated //Forge: Prefer using IForgeBlock#catchFire

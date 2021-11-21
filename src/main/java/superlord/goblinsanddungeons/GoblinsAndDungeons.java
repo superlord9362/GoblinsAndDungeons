@@ -37,12 +37,16 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import superlord.goblinsanddungeons.compat.QuarkFlagRecipeCondition;
 import superlord.goblinsanddungeons.compat.RegistryHelper;
+import superlord.goblinsanddungeons.config.GDConfigHolder;
+import superlord.goblinsanddungeons.config.GoblinsDungeonsConfig;
 import superlord.goblinsanddungeons.entity.GarchEntity;
 import superlord.goblinsanddungeons.entity.GobEntity;
 import superlord.goblinsanddungeons.entity.GobKingEntity;
@@ -69,6 +73,7 @@ public class GoblinsAndDungeons {
 	public static final RegistryHelper REGISTRY_HELPER = new RegistryHelper(MOD_ID);
 	
 	public GoblinsAndDungeons() {
+		final ModLoadingContext modLoadingContext = ModLoadingContext.get();
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		bus.addListener(this::registerCommon);
 		bus.addListener(this::setup);
@@ -76,13 +81,14 @@ public class GoblinsAndDungeons {
 
 		REGISTRY_HELPER.getDeferredBlockRegister().register(bus);
 		REGISTRY_HELPER.getDeferredItemRegister().register(bus);
-		ItemInit.REGISTER.register(bus);
 		BlockInit.REGISTER.register(bus);
+		ItemInit.REGISTER.register(bus);
 		EntityInit.REGISTER.register(bus);
 		StructureInit.REGISTER.register(bus);
 		EffectInit.EFFECTS.register(bus);
 		EffectInit.POTIONS.register(bus);
-
+		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, GDConfigHolder.CLIENT_SPEC);
+		modLoadingContext.registerConfig(ModConfig.Type.SERVER, GDConfigHolder.SERVER_SPEC);
 		IEventBus forgeBus = MinecraftForge.EVENT_BUS;
 		forgeBus.addListener(EventPriority.NORMAL, this::addDimensionalSpacing);
 		forgeBus.addListener(EventPriority.HIGH, this::biomeModification);
@@ -95,7 +101,7 @@ public class GoblinsAndDungeons {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void registerBiomes(BiomeLoadingEvent event) {
 		if (event.getCategory() == Biome.Category.PLAINS || event.getCategory() == Biome.Category.SWAMP || event.getCategory() == Biome.Category.TAIGA || event.getCategory() == Biome.Category.FOREST) {
-			event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EntityInit.OGRE.get(), 2, 1, 1));
+			event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EntityInit.OGRE.get(), GoblinsDungeonsConfig.ogreSpawnWeight, 1, 1));
 		}
 	}
 

@@ -39,6 +39,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
@@ -47,6 +49,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
+import superlord.goblinsanddungeons.init.SoundInit;
 
 public class GobberEntity extends GoblinEntity implements ICrossbowUser {
 
@@ -197,6 +200,22 @@ public class GobberEntity extends GoblinEntity implements ICrossbowUser {
 
 	public void func_230283_U__() {
 		this.idleTime = 0;
+	}
+	
+	protected SoundEvent getAmbientSound() {
+		if (this.isSleeping()) {
+			return SoundInit.GOBBER_SNORING;
+		} else {
+			return SoundInit.GOBBER_IDLE;
+		}
+	}
+
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return SoundInit.GOBBER_HURT;
+	}
+
+	protected SoundEvent getDeathSound() {
+		return SoundInit.GOBBER_DEATH;
 	}
 
 	public void writeAdditional(CompoundNBT compound) {

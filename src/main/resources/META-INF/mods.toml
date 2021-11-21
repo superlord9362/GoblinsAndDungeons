@@ -3,9 +3,9 @@ loaderVersion="[35,)" #mandatory This is typically bumped every Minecraft versio
 license="All rights reserved"
 [[mods]] #mandatory
 modId="goblinsanddungeons" #mandatory
-version="1.0.0" #mandatory
+version="1.0.1" #mandatory
 displayName="Goblins & Dungeons" #mandatory
-credits="superlord9362 (code) and Weastian (art)" #optional
+credits="superlord9362 (code and voice acting), Weastian (art), Ralof (art), Crimes Against Art (art), Mr. Esuoh (noises and voice acting), and Ninni (voice acting)" #optional
 authors="superlord9362" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''Goblins & Dungeons is a mod about dungeons and mythical creatures, with the purpose of giving the player a more complete and adventurous story throughout the game. The mod iss mainly inspired by D&D type of RPG’s and the whole concept of dungeons.'''

@@ -37,8 +37,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.RangedInteger;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.TickRangeConverter;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -64,7 +64,8 @@ public class OgreEntity extends GoblinEntity {
 	private static final DataParameter<Boolean> BUTT_SMASH = EntityDataManager.createKey(OgreEntity.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> CAN_BUTT_SMASH = EntityDataManager.createKey(OgreEntity.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> CAN_ROAR = EntityDataManager.createKey(OgreEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> CAN_ATTACK = EntityDataManager.createKey(OgreEntity.class, DataSerializers.BOOLEAN);
+	private int roarTicks = 1800;
+	private int buttSmashTicks = 900;
 
 	public OgreEntity(EntityType<? extends OgreEntity> type, World worldIn) {
 		super(type, worldIn);
@@ -93,6 +94,14 @@ public class OgreEntity extends GoblinEntity {
 	protected SoundEvent getAmbientSound() {
 		return SoundInit.OGRE_IDLE;
 	}
+	
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return SoundInit.OGRE_HURT;
+	}
+
+	protected SoundEvent getDeathSound() {
+		return SoundInit.OGRE_DEATH;
+	}
 
 	public boolean canDespawn(double distanceToClosestPlayer) {
 		return false;
@@ -112,14 +121,6 @@ public class OgreEntity extends GoblinEntity {
 
 	private void setFallingOnButt(boolean buttSmash) {
 		this.dataManager.set(BUTT_SMASH, buttSmash);
-	}
-	
-	public boolean canAttack() {
-		return this.dataManager.get(CAN_ATTACK);
-	}
-	
-	private void setAttacking(boolean canAttack) {
-		this.dataManager.set(CAN_ATTACK, canAttack);
 	}
 	
 	public boolean canRoar() {
@@ -148,7 +149,6 @@ public class OgreEntity extends GoblinEntity {
 		this.dataManager.register(BUTT_SMASH, false);
 		this.dataManager.register(CAN_ROAR, false);
 		this.dataManager.register(CAN_BUTT_SMASH, false);
-		this.dataManager.register(CAN_ATTACK, false);
 	}
 
 	public void writeAdditional(CompoundNBT compound) {
@@ -157,7 +157,6 @@ public class OgreEntity extends GoblinEntity {
 		compound.putBoolean("ButtSmash", this.isFallingOnButt());
 		compound.putBoolean("CanRoar", this.canRoar());
 		compound.putBoolean("CanButtSmash", this.canButtSmash());
-		compound.putBoolean("CanAttack", this.canAttack());
 	}
 
 	public void readAdditional(CompoundNBT compound) {
@@ -165,7 +164,6 @@ public class OgreEntity extends GoblinEntity {
 		this.setRoaring(compound.getBoolean("IsRoaring"));
 		this.setFallingOnButt(compound.getBoolean("ButtSmash"));
 		this.setCanButtSmash(compound.getBoolean("CanButtSmash"));
-		this.setAttacking(compound.getBoolean("CanAttack"));
 		this.setCanRoar(compound.getBoolean("CanRoar"));
 	}
 
@@ -176,6 +174,12 @@ public class OgreEntity extends GoblinEntity {
 		}
 		if (this.attackTimer > 200 || this.getAttackTarget() == null) {
 			this.attackTimer = 0;
+		}
+		if (buttSmashTicks > 0) {
+			buttSmashTicks--;
+		}
+		if(roarTicks > 0) {
+			roarTicks--;
 		}
 	}
 
@@ -219,7 +223,6 @@ public class OgreEntity extends GoblinEntity {
 			this.applyEnchantments(this, entityIn);
 		}
 
-		this.playSound(SoundEvents.ENTITY_IRON_GOLEM_ATTACK, 1.0F, 1.0F);
 		return flag;
 	}
 
@@ -227,12 +230,7 @@ public class OgreEntity extends GoblinEntity {
 	 * Called when the entity is attacked.
 	 */
 	public boolean attackEntityFrom(DamageSource source, float amount) {
-		IronGolemEntity.Cracks irongolementity$cracks = this.func_226512_l_();
 		boolean flag = super.attackEntityFrom(source, amount);
-		if (flag && this.func_226512_l_() != irongolementity$cracks) {
-			this.playSound(SoundEvents.ENTITY_IRON_GOLEM_DAMAGE, 1.0F, 1.0F);
-		}
-
 		return flag;
 	}
 
@@ -261,29 +259,11 @@ public class OgreEntity extends GoblinEntity {
 	
 	public void tick() {
 		super.tick();
-		int RoarCoolDownTicks = 0;
-		int ButtSmashCoolDownTicks = 0;
-		int attack = this.rand.nextInt(99);
-		if (attack >= 95 && RoarCoolDownTicks == 0) {
-			this.setCanButtSmash(false);
-			this.setAttacking(false);
+		if (roarTicks == 0) {
 			this.setCanRoar(true);
-			RoarCoolDownTicks = 300;
-		} else if(attack >= 90 && attack < 95) {
-			this.setCanRoar(false);
-			this.setAttacking(false);
+		}
+		if (buttSmashTicks == 0) {
 			this.setCanButtSmash(true);
-			ButtSmashCoolDownTicks = 600;
-		} else {
-			this.setAttacking(true);
-			this.setCanButtSmash(false);
-			this.setCanRoar(false);
-		}
-		if (RoarCoolDownTicks != 0) {
-			RoarCoolDownTicks--;
-		}
-		if (ButtSmashCoolDownTicks != 0) {
-			ButtSmashCoolDownTicks--;
 		}
 	}
 
@@ -300,22 +280,21 @@ public class OgreEntity extends GoblinEntity {
 		
 		@Override
 		public boolean shouldExecute() {
-			if (OgreEntity.this.getAttackTarget() != null && OgreEntity.this.canAttack()) return true;
+			if (OgreEntity.this.getAttackTarget() != null) return true;
 			else return false;
 		}
 		
 		@Override
 		public boolean shouldContinueExecuting() {
-			if (OgreEntity.this.getAttackTarget() == null || !OgreEntity.this.canAttack()) return false;
+			if (OgreEntity.this.getAttackTarget() == null || OgreEntity.this.canButtSmash() || OgreEntity.this.canRoar()) return false;
 			else return true;
 		}
 		
 	}
 
 	class RoarGoal extends Goal {
-
-		public int timer;
-
+		int timer = 0;
+		
 		@Override
 		public boolean shouldExecute() {
 			if (OgreEntity.this.getAttackTarget() != null && OgreEntity.this.canRoar()) {
@@ -327,12 +306,17 @@ public class OgreEntity extends GoblinEntity {
 
 		public void tick() {
 			timer++;
+			if (timer == 50) {
+				this.resetTask();
+			}
 		}
 
 		public void startExecuting() {
 			OgreEntity.this.setRoaring(true);
 			LivingEntity entity = OgreEntity.this.getAttackTarget();
-			entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 600));
+			world.playSound((PlayerEntity) null, OgreEntity.this.getPosition(), SoundInit.OGRE_ROAR, SoundCategory.HOSTILE, 2, 1);
+			OgreEntity.this.playSound(SoundInit.OGRE_ROAR, 1, 1);
+			entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 300, 1));
 		}
 
 		@Override
@@ -341,9 +325,12 @@ public class OgreEntity extends GoblinEntity {
 			else return true;
 		}
 
+		@Override
 		public void resetTask() {
-			timer = 0;
+			super.resetTask();
 			OgreEntity.this.setRoaring(false);
+			OgreEntity.this.roarTicks = 1800;
+			timer = 0;
 		}
 
 	}
@@ -437,16 +424,19 @@ public class OgreEntity extends GoblinEntity {
 					}
 				}
 			}
+			if (ogre.isAirBorne) {
+				ogre.setFallingOnButt(true);
+			} else {
+				ogre.setFallingOnButt(false);
+				this.resetTask();
+			}
 		}
 
-		public void startExecuting() {
-			ogre.setFallingOnButt(true);
-		}
-		
+		@Override
 		public void resetTask() {
-			ogre.setFallingOnButt(false);
-			ogre.setMotion(0, 0, 0);
-			this.hasJumped = false;
+			super.resetTask();
+			ogre.buttSmashTicks = 900;
+			ogre.setCanButtSmash(false);
 		}
 
 	}

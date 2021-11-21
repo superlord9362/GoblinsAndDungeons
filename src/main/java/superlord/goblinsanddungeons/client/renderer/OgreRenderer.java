@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.model.OgreModel;
 import superlord.goblinsanddungeons.client.model.SittingOgreModel;
@@ -16,12 +17,13 @@ import superlord.goblinsanddungeons.entity.OgreEntity;
 public class OgreRenderer extends MobRenderer<OgreEntity, EntityModel<OgreEntity>> {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/ogre.png");
+	private static final ResourceLocation SHREK = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/ogre_shrek.png");
 	private static final OgreModel<?> OGRE = new OgreModel<>();
 	private static final SittingOgreModel<?> FALLING_OGRE = new SittingOgreModel<>();
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public OgreRenderer() {
-		super(Minecraft.getInstance().getRenderManager(), OGRE, 0.375F);
+		super(Minecraft.getInstance().getRenderManager(), OGRE, 2.125F);
 		this.addLayer(new HeldItemLayer(this));
 	}
 	
@@ -36,7 +38,12 @@ public class OgreRenderer extends MobRenderer<OgreEntity, EntityModel<OgreEntity
 
 	@Override
 	public ResourceLocation getEntityTexture(OgreEntity entity) {
+		String s = TextFormatting.getTextWithoutFormattingCodes(entity.getName().getString());
+		if (s != null && "Shrek".equals(s)) {
+			return SHREK;
+		} else {
 			return TEXTURE;
+		}
 	}
 
 }

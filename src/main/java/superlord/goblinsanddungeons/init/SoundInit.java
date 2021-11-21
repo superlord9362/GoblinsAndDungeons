@@ -12,6 +12,9 @@ import superlord.goblinsanddungeons.GoblinsAndDungeons;
 public class SoundInit {
 	
 	public static final SoundEvent OGRE_IDLE;
+	public static final SoundEvent OGRE_HURT;
+	public static final SoundEvent OGRE_DEATH;
+	public static final SoundEvent OGRE_ROAR;
 	
 	public static final SoundEvent GARCH_IDLE;
 	public static final SoundEvent GARCH_HURT;
@@ -34,9 +37,38 @@ public class SoundInit {
 	public static final SoundEvent MIMIC_HURT;
 	public static final SoundEvent MIMIC_DEATH;
 	
+	public static final SoundEvent GOBBER_IDLE;
+	public static final SoundEvent GOBBER_HURT;
+	public static final SoundEvent GOBBER_DEATH;
+	public static final SoundEvent GOBBER_SNORING;
+	
+	public static final SoundEvent GOBLO_IDLE;
+	public static final SoundEvent GOBLO_HURT;
+	public static final SoundEvent GOBLO_DEATH;
+	public static final SoundEvent GOBLO_SNORING;
+	public static final SoundEvent GOBLO_EATING;
+	
+	public static final SoundEvent GOBLIN_KING_IDLE;
+	public static final SoundEvent GOBLIN_KING_LAUGH;
+	public static final SoundEvent GOBLIN_KING_HURT;
+	public static final SoundEvent GOBLIN_KING_DEATH;
+	
+	public static final SoundEvent SPELL_CASTING;
+	public static final SoundEvent SOUL_BULLET_LAUNCH;
+	public static final SoundEvent SOUL_BULLET_COLLISION;
+
+	public static final SoundEvent URN_PLACE;
+	public static final SoundEvent URN_FALL;
+	public static final SoundEvent URN_HIT;
+	public static final SoundEvent URN_BREAK;
+	public static final SoundEvent URN_STEP;
+	
 	@SubscribeEvent
 	public static void registerSounds(final RegistryEvent.Register<SoundEvent> evt) {
 		evt.getRegistry().register(OGRE_IDLE);
+		evt.getRegistry().register(OGRE_HURT);
+		evt.getRegistry().register(OGRE_DEATH);
+		evt.getRegistry().register(OGRE_ROAR);
 		evt.getRegistry().register(GARCH_IDLE);
 		evt.getRegistry().register(GARCH_HURT);
 		evt.getRegistry().register(GARCH_DEATH);
@@ -53,6 +85,27 @@ public class SoundInit {
 		evt.getRegistry().register(MIMIC_IDLE);
 		evt.getRegistry().register(MIMIC_HURT);
 		evt.getRegistry().register(MIMIC_DEATH);
+		evt.getRegistry().register(GOBBER_IDLE);
+		evt.getRegistry().register(GOBBER_HURT);
+		evt.getRegistry().register(GOBBER_DEATH);
+		evt.getRegistry().register(GOBBER_SNORING);
+		evt.getRegistry().register(GOBLO_IDLE);
+		evt.getRegistry().register(GOBLO_HURT);
+		evt.getRegistry().register(GOBLO_DEATH);
+		evt.getRegistry().register(GOBLO_SNORING);
+		evt.getRegistry().register(GOBLO_EATING);
+		evt.getRegistry().register(GOBLIN_KING_IDLE);
+		evt.getRegistry().register(GOBLIN_KING_LAUGH);
+		evt.getRegistry().register(GOBLIN_KING_HURT);
+		evt.getRegistry().register(GOBLIN_KING_DEATH);
+		evt.getRegistry().register(SPELL_CASTING);
+		evt.getRegistry().register(SOUL_BULLET_LAUNCH);
+		evt.getRegistry().register(SOUL_BULLET_COLLISION);
+		evt.getRegistry().register(URN_PLACE);
+		evt.getRegistry().register(URN_BREAK);
+		evt.getRegistry().register(URN_FALL);
+		evt.getRegistry().register(URN_HIT);
+		evt.getRegistry().register(URN_STEP);
 	}
 	
 	private static SoundEvent createEvent(final String soundName) {
@@ -62,6 +115,9 @@ public class SoundInit {
 	
 	static {
 		OGRE_IDLE = createEvent("ogre_idle");
+		OGRE_HURT = createEvent("ogre_hurt");
+		OGRE_DEATH = createEvent("ogre_death");
+		OGRE_ROAR = createEvent("ogre_roar");
 		GARCH_IDLE = createEvent("garch_idle");
 		GARCH_HURT = createEvent("garch_hurt");
 		GARCH_DEATH = createEvent("garch_death");
@@ -78,6 +134,27 @@ public class SoundInit {
 		MIMIC_IDLE = createEvent("mimic_idle");
 		MIMIC_HURT = createEvent("mimic_hurt");
 		MIMIC_DEATH = createEvent("mimic_death");
+		GOBBER_IDLE = createEvent("gobber_idle");
+		GOBBER_HURT = createEvent("gobber_hurt");
+		GOBBER_DEATH = createEvent("gobber_death");
+		GOBBER_SNORING = createEvent("gobber_snoring");
+		GOBLO_IDLE = createEvent("goblo_idle");
+		GOBLO_HURT = createEvent("goblo_hurt");
+		GOBLO_DEATH = createEvent("goblo_death");
+		GOBLO_SNORING = createEvent("goblo_snoring");
+		GOBLO_EATING = createEvent("goblo_eating");
+		GOBLIN_KING_IDLE = createEvent("goblin_king_idle");
+		GOBLIN_KING_HURT = createEvent("goblin_king_hurt");
+		GOBLIN_KING_DEATH = createEvent("goblin_king_death");
+		GOBLIN_KING_LAUGH = createEvent("goblin_king_laugh");
+		SPELL_CASTING = createEvent("spell_casting");
+		SOUL_BULLET_LAUNCH = createEvent("soul_bullet_launch");
+		SOUL_BULLET_COLLISION = createEvent("soul_bullet_collision");
+		URN_PLACE = createEvent("urn_place");
+		URN_BREAK = createEvent("urn_break");
+		URN_FALL = createEvent("urn_fall");
+		URN_HIT = createEvent("urn_hit");
+		URN_STEP = createEvent("urn_step");
 	}
 
 }

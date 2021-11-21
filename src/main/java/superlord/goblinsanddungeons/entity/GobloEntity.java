@@ -40,7 +40,6 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -49,6 +48,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
+import superlord.goblinsanddungeons.init.SoundInit;
 
 public class GobloEntity extends GoblinEntity implements IInventoryChangedListener {
 
@@ -106,6 +106,22 @@ public class GobloEntity extends GoblinEntity implements IInventoryChangedListen
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractRaiderEntity.class, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
+	}
+	
+	protected SoundEvent getAmbientSound() {
+		if (this.isSleeping()) {
+			return SoundInit.GOBLO_SNORING;
+		} else {
+			return SoundInit.GOBLO_IDLE;
+		}
+	}
+
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return SoundInit.GOBLO_HURT;
+	}
+
+	protected SoundEvent getDeathSound() {
+		return SoundInit.GOBLO_DEATH;
 	}
 
 	protected void initInventory() {
@@ -272,7 +288,7 @@ public class GobloEntity extends GoblinEntity implements IInventoryChangedListen
 
 
 	public SoundEvent getEatSound(ItemStack itemStackIn) {
-		return SoundEvents.ENTITY_FOX_EAT;
+		return SoundInit.GOBLO_EATING;
 	}
 
 	/**
@@ -303,7 +319,7 @@ public class GobloEntity extends GoblinEntity implements IInventoryChangedListen
 					this.inventory.addItem(itemstack);
 					this.setItemStackToSlot(EquipmentSlotType.MAINHAND, air);
 					this.eatTicks = 0;
-				} else if (this.eatTicks > 60 && this.rand.nextFloat() < 0.1F) {
+				} else if (this.eatTicks > 60 && this.rand.nextFloat() < 0.1F && this.hasItemInSlot(EquipmentSlotType.MAINHAND)) {
 					this.playSound(this.getEatSound(itemstack), 1.0F, 1.0F);
 					this.world.setEntityState(this, (byte)45);
 				}

@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
+import superlord.goblinsanddungeons.config.GoblinsDungeonsConfig;
 import superlord.goblinsanddungeons.world.structures.LargeGoblinCampStructure;
 import superlord.goblinsanddungeons.world.structures.MediumGoblinCampStructure;
 import superlord.goblinsanddungeons.world.structures.RuinedKeepStructure;
@@ -36,10 +37,10 @@ public class StructureInit {
 	public static final RegistryObject<Structure<NoFeatureConfig>> RUINED_KEEP = REGISTER.register("ruined_keep", () -> (new RuinedKeepStructure(NoFeatureConfig.field_236558_a_)));
 	
 	public static void setupStructures() {
-		setupMapSpacingAndLand(SMALL_GOBLIN_CAMP.get(), new StructureSeparationSettings(100, 50, 2538959), true);
-		setupMapSpacingAndLand(MEDIUM_GOBLIN_CAMP.get(), new StructureSeparationSettings(100, 50, 2895726), true);
-		setupMapSpacingAndLand(LARGE_GOBLIN_CAMP.get(), new StructureSeparationSettings(100, 50, 2716364), true);
-		setupMapSpacingAndLand(RUINED_KEEP.get(), new StructureSeparationSettings(100, 50, 2827153), true);
+		setupMapSpacingAndLand(SMALL_GOBLIN_CAMP.get(), new StructureSeparationSettings(GoblinsDungeonsConfig.smallGoblinCampMaxDistance, GoblinsDungeonsConfig.smallGoblinCampMinDistance, 2538959), true);
+		setupMapSpacingAndLand(MEDIUM_GOBLIN_CAMP.get(), new StructureSeparationSettings(GoblinsDungeonsConfig.mediumGoblinCampMaxDistance, GoblinsDungeonsConfig.mediumGoblinCampMinDistance, 2895726), true);
+		setupMapSpacingAndLand(LARGE_GOBLIN_CAMP.get(), new StructureSeparationSettings(GoblinsDungeonsConfig.largeGoblinCampMaxDistance, GoblinsDungeonsConfig.largeGoblinCampMinDistance, 2716364), true);
+		setupMapSpacingAndLand(RUINED_KEEP.get(), new StructureSeparationSettings(GoblinsDungeonsConfig.ruinedKeepMaxDistance, GoblinsDungeonsConfig.ruinedKeepMinDistance, 2827153), true);
 	}
 
 	public static <F extends Structure<?>> void setupMapSpacingAndLand(F structure, StructureSeparationSettings structureSeparationSettings, boolean transformSurroundingLand) {

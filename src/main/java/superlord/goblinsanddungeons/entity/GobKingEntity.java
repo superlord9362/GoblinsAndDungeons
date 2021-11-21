@@ -1,10 +1,9 @@
 package superlord.goblinsanddungeons.entity;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
@@ -27,17 +26,16 @@ import net.minecraft.entity.monster.AbstractRaiderEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.ClimberPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -47,10 +45,12 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
-import net.minecraft.world.server.ServerWorld;
+import superlord.goblinsanddungeons.entity.event.GobKingTeleportEvent;
 import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.EntityInit;
 import superlord.goblinsanddungeons.init.ItemInit;
+import superlord.goblinsanddungeons.init.ParticleInit;
+import superlord.goblinsanddungeons.init.SoundInit;
 
 public class GobKingEntity extends GoblinEntity implements IRangedAttackMob {
 
@@ -62,6 +62,27 @@ public class GobKingEntity extends GoblinEntity implements IRangedAttackMob {
 
 	protected PathNavigator createNavigator(World worldIn) {
 		return new ClimberPathNavigator(this, worldIn);
+	}
+
+	protected SoundEvent getAmbientSound() {
+		int laugh = rand.nextInt(5);
+		if (laugh == 0) {
+			return SoundInit.GOBLIN_KING_LAUGH;
+		} else {
+			return SoundInit.GOBLIN_KING_IDLE;
+		}
+	}
+
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return SoundInit.GOBLIN_KING_HURT;
+	}
+
+	protected SoundEvent getDeathSound() {
+		return SoundInit.GOBLIN_KING_DEATH;
+	}
+	
+	public void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
+		this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemInit.STAFF_AMETHYST.get()));
 	}
 
 	protected void registerGoals() {
@@ -106,7 +127,6 @@ public class GobKingEntity extends GoblinEntity implements IRangedAttackMob {
 		super.tick();
 		int i = rand.nextInt(999);
 		if (this.getAttackTarget() != null && i == 0) {
-			System.out.println("Hoo hoo");
 			int goblin = rand.nextInt(5);
 			if (goblin == 0) {
 				GobEntity gob = new GobEntity(EntityInit.GOB.get(), world);
@@ -165,16 +185,6 @@ public class GobKingEntity extends GoblinEntity implements IRangedAttackMob {
 
 	protected void updateAITasks() {
 		this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
-		Effect effect = Effects.WEAKNESS;
-		List<ServerPlayerEntity> list = ((ServerWorld)this.world).getPlayers((p_210138_1_) -> {
-			return this.getDistanceSq(p_210138_1_) < 2500.0D && p_210138_1_.interactionManager.survivalOrAdventure();
-		});
-
-		for(ServerPlayerEntity serverplayerentity : list) {
-			if (!serverplayerentity.isPotionActive(effect) || serverplayerentity.getActivePotionEffect(effect).getAmplifier() < 2 || serverplayerentity.getActivePotionEffect(effect).getDuration() < 1200) {
-				serverplayerentity.addPotionEffect(new EffectInstance(effect, 6000, 2));
-			}
-		}
 	}
 
 	public void addTrackingPlayer(ServerPlayerEntity player) {
@@ -223,6 +233,8 @@ public class GobKingEntity extends GoblinEntity implements IRangedAttackMob {
 		double d3 = target.getPosZ() - this.getPosZ();
 		float f = MathHelper.sqrt(d1 * d1 + d3 * d3) * 0.2F;
 		soulBullet.shoot(d1, d2 + (double)f, d3, 1F, 12.0F);
+		world.playSound((PlayerEntity) null, this.getPosition(), SoundInit.SOUL_BULLET_LAUNCH, SoundCategory.HOSTILE, 1, 1);
+		this.playSound(SoundInit.SOUL_BULLET_LAUNCH, 1, 1);
 		this.world.addEntity(soulBullet);
 	}
 
@@ -258,19 +270,73 @@ public class GobKingEntity extends GoblinEntity implements IRangedAttackMob {
 		boolean flag = blockstate.getMaterial().blocksMovement();
 		boolean flag1 = blockstate.getFluidState().isTagged(FluidTags.WATER);
 		if (flag && !flag1) {
-			net.minecraftforge.event.entity.living.EnderTeleportEvent event = new net.minecraftforge.event.entity.living.EnderTeleportEvent(this, x, y, z, 0);
+			GobKingTeleportEvent event = new GobKingTeleportEvent(this, x, y, z, 0);
 			if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event)) return false;
 			boolean flag2 = this.attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
 			if (flag2 && !this.isSilent()) {
-				this.world.playSound((PlayerEntity)null, this.prevPosX, this.prevPosY, this.prevPosZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
-				this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
+				this.world.playSound((PlayerEntity)null, this.prevPosX, this.prevPosY, this.prevPosZ, SoundInit.SPELL_CASTING, this.getSoundCategory(), 1.0F, 1.0F);
+				this.playSound(SoundInit.SPELL_CASTING, 1.0F, 1.0F);
 			}
-
 			return flag2;
 		} else {
 			return false;
 		}
 	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	public boolean attemptTeleport(double x, double y, double z, boolean p_213373_7_) {
+	      double d0 = this.getPosX();
+	      double d1 = this.getPosY();
+	      double d2 = this.getPosZ();
+	      double d3 = y;
+	      boolean flag = false;
+	      BlockPos blockpos = new BlockPos(x, y, z);
+	      World world = this.world;
+	      if (world.isBlockLoaded(blockpos)) {
+	         boolean flag1 = false;
+
+	         while(!flag1 && blockpos.getY() > 0) {
+	            BlockPos blockpos1 = blockpos.down();
+	            BlockState blockstate = world.getBlockState(blockpos1);
+	            if (blockstate.getMaterial().blocksMovement()) {
+	               flag1 = true;
+	            } else {
+	               --d3;
+	               blockpos = blockpos1;
+	            }
+	         }
+
+	         if (flag1) {
+	            this.setPositionAndUpdate(x, d3, z);
+	            if (world.hasNoCollisions(this) && !world.containsAnyLiquid(this.getBoundingBox())) {
+	               flag = true;
+	            }
+	         }
+	      }
+
+	      if (!flag) {
+	         this.setPositionAndUpdate(d0, d1, d2);
+	         return false;
+	      } else {
+	    	  for(int j = 0; j < 128; ++j) {
+					double d4 = (double)j / 127.0D;
+					float f = (this.rand.nextFloat() - 0.5F) * 0.2F;
+					float f1 = (this.rand.nextFloat() - 0.5F) * 0.2F;
+					float f2 = (this.rand.nextFloat() - 0.5F) * 0.2F;
+					double d5 = MathHelper.lerp(d4, this.prevPosX, this.getPosX()) + (this.rand.nextDouble() - 0.5D) * (double)this.getWidth() * 2.0D;
+					double d6 = MathHelper.lerp(d4, this.prevPosY, this.getPosY()) + this.rand.nextDouble() * (double)this.getHeight();
+					double d7 = MathHelper.lerp(d4, this.prevPosZ, this.getPosZ()) + (this.rand.nextDouble() - 0.5D) * (double)this.getWidth() * 2.0D;
+		            this.world.addParticle(ParticleInit.gobSoulBullet, d5, d6, d7, (double)f, (double)f1, (double)f2);
+				}
+
+	         if (this instanceof CreatureEntity) {
+	            ((CreatureEntity)this).getNavigator().clearPath();
+	         }
+
+	         return true;
+	      }
+	   }
 
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		boolean flag = super.attackEntityFrom(source, amount);

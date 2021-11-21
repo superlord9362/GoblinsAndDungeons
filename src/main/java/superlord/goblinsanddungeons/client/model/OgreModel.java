@@ -115,19 +115,6 @@ public class OgreModel<T extends Entity> extends EntityModel<OgreEntity> {
 
 	@Override
 	public void setRotationAngles(OgreEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		this.Jaw.rotateAngleX = 0F;
-		this.Head.rotateAngleX = 0F;
-		this.Body.rotateAngleX = 0F;
-		this.LeftArm.rotateAngleZ = 0F;
-		this.LeftArm.rotateAngleX = 0F;
-		this.RightArm.rotateAngleZ = 0F;
-		this.RightArm.rotateAngleX = 0F;
-		this.Head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
-		this.Head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
-		this.RightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-		this.LeftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-		this.RightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-		this.LeftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 		if (entityIn.isRoaring()) {
 			this.Jaw.rotateAngleX = 0.35F;
 			this.Head.rotateAngleX = -0.4F;
@@ -136,6 +123,20 @@ public class OgreModel<T extends Entity> extends EntityModel<OgreEntity> {
 			this.LeftArm.rotateAngleX = 0.3F;
 			this.RightArm.rotateAngleZ = 0.5F;
 			this.RightArm.rotateAngleX = 0.3F;
+		} else {
+			this.Jaw.rotateAngleX = 0F;
+			this.Head.rotateAngleX = 0F;
+			this.Body.rotateAngleX = 0F;
+			this.LeftArm.rotateAngleZ = 0F;
+			this.LeftArm.rotateAngleX = 0F;
+			this.RightArm.rotateAngleZ = 0F;
+			this.RightArm.rotateAngleX = 0F;
+			this.Head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
+			this.Head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
+			this.RightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+			this.LeftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+			this.RightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+			this.LeftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 		}
 	}
 	/**

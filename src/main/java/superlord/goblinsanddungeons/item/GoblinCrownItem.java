@@ -1,8 +1,13 @@
 package superlord.goblinsanddungeons.item;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.LivingEntity;
@@ -15,6 +20,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -51,6 +59,15 @@ public class GoblinCrownItem extends ArmorItem {
 			} else {
 				monsters.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 1200, 0, false, false));
 			}
+		}
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+		if (InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), 340) || InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), 344)) {
+			tooltip.add(new TranslationTextComponent("goblin_crown").mergeStyle(TextFormatting.GRAY));
+		} else {
+			tooltip.add(new TranslationTextComponent("shift").mergeStyle(TextFormatting.GRAY));
 		}
 	}
 

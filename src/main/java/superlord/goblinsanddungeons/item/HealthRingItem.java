@@ -1,18 +1,29 @@
 package superlord.goblinsanddungeons.item;
 
+import java.util.List;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.IArmorMaterial;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.common.util.GDArmorMaterial;
 
@@ -33,6 +44,15 @@ public class HealthRingItem extends ArmorItem {
 
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
 		return equipmentSlot == EquipmentSlotType.OFFHAND ? this.attributeModifiers : super.getAttributeModifiers(equipmentSlot);
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+		if (InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), 340) || InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), 344)) {
+			tooltip.add(new TranslationTextComponent("health_ring").mergeStyle(TextFormatting.GRAY));
+		} else {
+			tooltip.add(new TranslationTextComponent("shift").mergeStyle(TextFormatting.GRAY));
+		}
 	}
 
 }
