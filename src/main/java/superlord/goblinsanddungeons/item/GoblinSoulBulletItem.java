@@ -8,9 +8,9 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import superlord.goblinsanddungeons.entity.GoblinSoulBulletEntity;
+import superlord.goblinsanddungeons.init.SoundInit;
 
 public class GoblinSoulBulletItem extends Item {
 	
@@ -20,7 +20,7 @@ public class GoblinSoulBulletItem extends Item {
 	
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getHeldItem(hand);
-		world.playSound((PlayerEntity)null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_SHULKER_SHOOT, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+		world.playSound((PlayerEntity)null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundInit.SOUL_BULLET_LAUNCH, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 		if (!world.isRemote) {
 			GoblinSoulBulletEntity soulBullet = new GoblinSoulBulletEntity(world, player);
 			soulBullet.getItem();

@@ -2,8 +2,10 @@ package superlord.goblinsanddungeons.init;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.block.SlabBlock;
+import net.minecraft.block.SoulSandBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.block.WallBlock;
@@ -13,6 +15,7 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
+import superlord.goblinsanddungeons.blocks.SoulAshCampfireBlock;
 import superlord.goblinsanddungeons.blocks.UrnBlock;
 import superlord.goblinsanddungeons.compat.RegistryHelper;
 import superlord.goblinsanddungeons.compat.VerticalSlabBlock;
@@ -42,6 +45,11 @@ public class BlockInit {
     public static final RegistryObject<Block> SCORIA_WALL = REGISTER.register("scoria_wall", () -> new WallBlock(AbstractBlock.Properties.create(Material.ROCK).sound(SoundType.STONE).setRequiresTool().hardnessAndResistance(1.5F, 6.0F)));
     public static final RegistryObject<Block> POLISHED_SCORIA_WALL = REGISTER.register("polished_scoria_wall", () -> new WallBlock(AbstractBlock.Properties.create(Material.ROCK).sound(SoundType.STONE).setRequiresTool().hardnessAndResistance(1.5F, 6.0F)));
     public static final RegistryObject<Block> SCORIA_BRICK_WALL = REGISTER.register("scoria_brick_wall", () -> new WallBlock(AbstractBlock.Properties.create(Material.ROCK).sound(SoundType.STONE).setRequiresTool().hardnessAndResistance(1.5F, 6.0F)));
+
+    public static final RegistryObject<Block> ASHED_SOUL_SAND = REGISTER.register("ashed_soul_sand", () -> new SoulSandBlock(AbstractBlock.Properties.from(Blocks.SOUL_SAND)));
+    
+    public static final RegistryObject<Block> SOUL_ASH_CAMPFIRE = REGISTER.register("soul_ash_campfire", () -> new SoulAshCampfireBlock(true, 1, AbstractBlock.Properties.from(Blocks.CAMPFIRE)));
+    public static final RegistryObject<Block> SOUL_ASH_SOUL_CAMPFIRE = REGISTER.register("soul_ash_soul_campfire", () -> new SoulAshCampfireBlock(false, 2, AbstractBlock.Properties.from(Blocks.SOUL_CAMPFIRE)));
 
     public static final RegistryObject<Block> CHISELED_SCORIA_BRICKS = HELPER.createCompatBlock("quark", "chiseled_scoria_bricks", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).sound(SoundType.STONE).setRequiresTool().hardnessAndResistance(1.5F, 6.0F)), GoblinsAndDungeons.GROUP);
     public static final RegistryObject<Block> SCORIA_PILLAR = HELPER.createCompatBlock("quark", "scoria_pillar", () -> new RotatedPillarBlock(AbstractBlock.Properties.create(Material.ROCK).sound(SoundType.STONE).setRequiresTool().hardnessAndResistance(1.5F, 6.0F)), GoblinsAndDungeons.GROUP);

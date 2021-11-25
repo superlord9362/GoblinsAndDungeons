@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "goblinsanddungeons:blocks/soul_ash_top",
+    "bottom": "minecraft:block/soul_sand",
+    "side": "goblinsanddungeons:blocks/soul_ash_side"
+  }
+}

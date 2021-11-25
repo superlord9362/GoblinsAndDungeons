@@ -32,6 +32,7 @@ public class EffectInit {
 		BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.AWKWARD)), Ingredient.fromItems(ItemInit.OGRE_TUSK.get()), PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), OGRES_MIGHT.get()));
 		BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), OGRES_MIGHT.get())), Ingredient.fromItems(Items.GLOWSTONE_DUST), PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), OGRES_MIGHT_STRONG.get()));
 		BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), OGRES_MIGHT.get())), Ingredient.fromItems(Items.REDSTONE), PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), OGRES_MIGHT_LONG.get()));
+		BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.AWKWARD)), Ingredient.fromItems(ItemInit.SOUL_ASH.get()), PotionUtils.addPotionToItemStack(new ItemStack(ItemInit.BOTTLED_SOULS.get()), Potions.EMPTY));
 	}
 	
 }

@@ -14,6 +14,7 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -43,6 +44,12 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import superlord.goblinsanddungeons.client.util.CManaMovementPacket;
+import superlord.goblinsanddungeons.common.util.SManaStatsPacket;
 import superlord.goblinsanddungeons.compat.QuarkFlagRecipeCondition;
 import superlord.goblinsanddungeons.compat.RegistryHelper;
 import superlord.goblinsanddungeons.config.GDConfigHolder;
@@ -62,6 +69,7 @@ import superlord.goblinsanddungeons.init.EffectInit;
 import superlord.goblinsanddungeons.init.EntityInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.StructureInit;
+import superlord.goblinsanddungeons.init.TileEntityInit;
 import superlord.goblinsanddungeons.world.GoblinsAndDungeonsFeatures;
 
 @Mod(GoblinsAndDungeons.MOD_ID)
@@ -71,6 +79,14 @@ public class GoblinsAndDungeons {
 	public static final String MOD_ID = "goblinsanddungeons";
 	public static final Logger LOGGER = LogManager.getLogger();
 	public static final RegistryHelper REGISTRY_HELPER = new RegistryHelper(MOD_ID);
+	private static final String PROTOCOL_VERSION = "1";
+	public static final SimpleChannel NETWORK_WRAPPER = NetworkRegistry.ChannelBuilder
+			.named(new ResourceLocation("goblinsanddungeons", "main_channel"))
+			.clientAcceptedVersions(PROTOCOL_VERSION::equals)
+			.serverAcceptedVersions(PROTOCOL_VERSION::equals)
+			.networkProtocolVersion(() -> PROTOCOL_VERSION)
+			.simpleChannel();
+	private static int packetsRegistered = 0;
 	
 	public GoblinsAndDungeons() {
 		final ModLoadingContext modLoadingContext = ModLoadingContext.get();
@@ -78,7 +94,6 @@ public class GoblinsAndDungeons {
 		bus.addListener(this::registerCommon);
 		bus.addListener(this::setup);
 		CraftingHelper.register(new QuarkFlagRecipeCondition.Serializer());
-
 		REGISTRY_HELPER.getDeferredBlockRegister().register(bus);
 		REGISTRY_HELPER.getDeferredItemRegister().register(bus);
 		BlockInit.REGISTER.register(bus);
@@ -87,6 +102,7 @@ public class GoblinsAndDungeons {
 		StructureInit.REGISTER.register(bus);
 		EffectInit.EFFECTS.register(bus);
 		EffectInit.POTIONS.register(bus);
+		TileEntityInit.REGISTER.register(bus);
 		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, GDConfigHolder.CLIENT_SPEC);
 		modLoadingContext.registerConfig(ModConfig.Type.SERVER, GDConfigHolder.SERVER_SPEC);
 		IEventBus forgeBus = MinecraftForge.EVENT_BUS;
@@ -104,8 +120,14 @@ public class GoblinsAndDungeons {
 			event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EntityInit.OGRE.get(), GoblinsDungeonsConfig.ogreSpawnWeight, 1, 1));
 		}
 	}
+	
+	public static ResourceLocation location(String name) {
+		return new ResourceLocation(MOD_ID, name);
+	}
 
 	public void setup(final FMLCommonSetupEvent event) {
+		NETWORK_WRAPPER.registerMessage(packetsRegistered++, SManaStatsPacket.class, SManaStatsPacket::encode, SManaStatsPacket::decode, SManaStatsPacket::handle);
+		NETWORK_WRAPPER.registerMessage(packetsRegistered++, CManaMovementPacket.class, CManaMovementPacket::encode, CManaMovementPacket::decode, CManaMovementPacket::handle);
 		event.enqueueWork(() -> {
 			StructureInit.setupStructures();
 			StructureInit.registerStructurePieces();
@@ -182,6 +204,23 @@ public class GoblinsAndDungeons {
 			tempMap.putIfAbsent(StructureInit.LARGE_GOBLIN_CAMP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.LARGE_GOBLIN_CAMP.get()));
 			tempMap.putIfAbsent(StructureInit.RUINED_KEEP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.RUINED_KEEP.get()));
 			serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
+		}
+	}
+	
+	public static <MSG> void sendMSGToServer(MSG message) {
+		GoblinsAndDungeons.NETWORK_WRAPPER.sendToServer(message);
+	}
+
+	public static <MSG> void sendMSGToAll(MSG message) {
+		for (ServerPlayerEntity player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
+			sendNonLocal(message, player);
+		}
+	}
+
+	@SuppressWarnings("unlikely-arg-type")
+	public static <MSG> void sendNonLocal(MSG msg, ServerPlayerEntity player) {
+		if (player.server.isDedicatedServer() || !player.getName().equals(player.server.getServerOwner())) {
+			NETWORK_WRAPPER.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 		}
 	}
 

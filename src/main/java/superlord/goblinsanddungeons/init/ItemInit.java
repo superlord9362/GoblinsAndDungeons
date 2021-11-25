@@ -12,6 +12,8 @@ import superlord.goblinsanddungeons.item.GoblinCrownItem;
 import superlord.goblinsanddungeons.item.GoblinSoulBulletItem;
 import superlord.goblinsanddungeons.item.GoblinsAndDungeonsSpawnEggItem;
 import superlord.goblinsanddungeons.item.HealthRingItem;
+import superlord.goblinsanddungeons.item.SoulBottleItem;
+import superlord.goblinsanddungeons.item.StaffItem;
 import superlord.goblinsanddungeons.item.StealthRingItem;
 
 public class ItemInit {
@@ -32,10 +34,12 @@ public class ItemInit {
 	public static final RegistryObject<Item> OGRE_TUSK = REGISTER.register("ogre_tusk", () -> new Item(new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 
 	public static final RegistryObject<Item> GOBLIN_EYE = REGISTER.register("goblin_eye", () -> new Item(new Item.Properties()));
-	public static final RegistryObject<Item> STAFF_AMETHYST = REGISTER.register("staff_amethyst", () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> STAFF_AMETHYST = REGISTER.register("staff_amethyst", () -> new StaffItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1).maxDamage(250)));
+	public static final RegistryObject<Item> SOUL_ASH = REGISTER.register("soul_ash", () -> new Item(new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+	public static final RegistryObject<Item> BOTTLED_SOULS = REGISTER.register("bottled_souls", () -> new SoulBottleItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1)));
 
 	public static final RegistryObject<Item> GOBLIN_SOUL_BULLET = REGISTER.register("goblin_soul_bullet", () -> new GoblinSoulBulletItem(new Item.Properties()));
-
+	
 	public static final RegistryObject<BlockItem> URN = REGISTER.register("urn", () -> new BlockItem(BlockInit.URN.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<BlockItem> SCORIA = REGISTER.register("scoria", () -> new BlockItem(BlockInit.SCORIA.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<BlockItem> SCORIA_BRICKS = REGISTER.register("scoria_bricks", () -> new BlockItem(BlockInit.SCORIA_BRICKS.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
@@ -52,6 +56,8 @@ public class ItemInit {
 	public static final RegistryObject<BlockItem> SCORIA_BRICK_WALL = REGISTER.register("scoria_brick_wall", () -> new BlockItem(BlockInit.SCORIA_BRICK_WALL.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<BlockItem> POLISHED_SCORIA_WALL = REGISTER.register("polished_scoria_wall", () -> new BlockItem(BlockInit.POLISHED_SCORIA_WALL.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
 
+	public static final RegistryObject<BlockItem> ASHED_SOUL_SAND = REGISTER.register("ashed_soul_sand", () -> new BlockItem(BlockInit.ASHED_SOUL_SAND.get(), new Item.Properties().group(GoblinsAndDungeons.GROUP)));
+	
 	public static final RegistryObject<Item> RING_OF_HEALTH = REGISTER.register("ring_of_health", () -> new HealthRingItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1)));
 	public static final RegistryObject<Item> RING_OF_STEALTH = REGISTER.register("ring_of_stealth", () -> new StealthRingItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1)));
 	public static final RegistryObject<Item> RING_OF_EXPERIENCE = REGISTER.register("ring_of_experience", () -> new StealthRingItem(new Item.Properties().group(GoblinsAndDungeons.GROUP).maxStackSize(1)));

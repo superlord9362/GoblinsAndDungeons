@@ -6,6 +6,8 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -28,17 +30,20 @@ import net.minecraft.item.MerchantOffer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.entity.GoblinEntity;
 import superlord.goblinsanddungeons.entity.ai.FollowOgreGoal;
+import superlord.goblinsanddungeons.init.BlockInit;
 import superlord.goblinsanddungeons.init.GDMapInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.StructureInit;
@@ -62,6 +67,39 @@ public class CommonEvents {
 		}
 		if (event.getEntity() instanceof DonkeyEntity) {
 			((MobEntity) event.getEntity()).goalSelector.addGoal(4, new FollowOgreGoal((AnimalEntity)event.getEntity(), 1.0F));
+		}
+	}
+	
+	@SubscribeEvent
+	public static void convertCampfire(BlockEvent.EntityPlaceEvent event) {
+		BlockPos pos = event.getPos();
+		IWorld world = event.getWorld();
+		Block block = event.getPlacedBlock().getBlock();
+		if (block == Blocks.SOUL_SAND && world.getBlockState(pos.down()).getBlock() == Blocks.CAMPFIRE) {
+			world.setBlockState(pos.down(), BlockInit.SOUL_ASH_CAMPFIRE.get().getDefaultState(), 0);
+		}
+		if (block == Blocks.SOUL_SAND && world.getBlockState(pos.down()).getBlock() == Blocks.SOUL_CAMPFIRE) {
+			world.setBlockState(pos.down(), BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get().getDefaultState(), 0);
+		}
+		if (block == Blocks.CAMPFIRE && world.getBlockState(pos.up()).getBlock() == Blocks.SOUL_SAND) {
+			world.setBlockState(pos, BlockInit.SOUL_ASH_CAMPFIRE.get().getDefaultState(), 0);
+		}
+
+		if (block == Blocks.SOUL_CAMPFIRE && world.getBlockState(pos.up()).getBlock() == Blocks.SOUL_SAND) {
+			world.setBlockState(pos, BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get().getDefaultState(), 0);
+		}
+	}
+	
+	@SubscribeEvent
+	public static void convertCampfireBack(BlockEvent.BreakEvent event) {
+		BlockPos pos = event.getPos();
+		IWorld world = event.getWorld();
+		Block block = world.getBlockState(pos).getBlock();
+		if ((block == Blocks.SOUL_SAND || block == BlockInit.ASHED_SOUL_SAND.get()) && world.getBlockState(pos.down()).getBlock() == BlockInit.SOUL_ASH_CAMPFIRE.get()) {
+			world.setBlockState(pos.down(), Blocks.CAMPFIRE.getDefaultState(), 0);
+		}
+		if ((block == Blocks.SOUL_SAND || block == BlockInit.ASHED_SOUL_SAND.get()) && world.getBlockState(pos.down()).getBlock() == BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get()) {
+			world.setBlockState(pos.down(), Blocks.SOUL_CAMPFIRE.getDefaultState(), 0);
 		}
 	}
 

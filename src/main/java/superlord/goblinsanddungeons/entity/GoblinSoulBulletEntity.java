@@ -48,7 +48,7 @@ public class GoblinSoulBulletEntity extends ProjectileItemEntity {
 			}
 		}
 	}
-
+	
 	private void spawnParticles(int particleCount) {
 		this.world.addParticle(ParticleInit.gobSoulBullet, true, this.getPosX() - 0.1, this.getPosY() - 1, this.getPosZ() - 0.1 , 0, 0, 0);
 	}

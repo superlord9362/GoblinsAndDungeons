@@ -31,12 +31,18 @@
 	"block.goblinsanddungeons.polished_scoria_wall": "Polished Scoria Wall",
 	"block.goblinsanddungeons.scoria_brick_wall": "Scoria Brick Wall",
 	
+	"block.goblinsanddungeons.ashed_soul_sand": "Ashed Soul Sand",
+	"item.goblinsanddungeons.soul_ash": "Soul Ash",
+	
 	"block.goblinsanddungeons.scoria_vertical_slab": "Scoria Vertical Slab",
 	"block.goblinsanddungeons.polished_scoria_vertical_slab": "Polished Scoria Vertical Slab",
 	"block.goblinsanddungeons.scoria_brick_vertical_slab": "Scoria Brick Vertical Slab",
 	"block.goblinsanddungeons.chiseled_scoria_bricks": "Chiseled Scoria Bricks",
 	"block.goblinsanddungeons.scoria_pillar": "Scoria Pillar",
 	"block.goblinsanddungeons.scoria_pavement": "Scoria Pavement",
+	
+	"block.goblinsanddungeons.soul_ash_campfire": "Campfire",
+	"block.goblinsanddungeons.soul_ash_soul_campfire": "Soul Campfire",
 	
 	"item.goblinsanddungeons.ogre_tusk": "Ogre Tusk",
 	"item.goblinsanddungeons.goblin_eye": "Goblin Eye",
