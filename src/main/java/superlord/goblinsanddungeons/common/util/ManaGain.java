@@ -23,12 +23,6 @@ public class ManaGain {
 		private boolean alwaysEdible;
 		ManaSystem mana = new ManaSystem();
 
-		public ManaGain.Builder saturation(float saturationIn) {
-			this.saturation = saturationIn;
-			saturationIn = mana.getManaFilledLevel();
-			return this;
-		}
-
 		public ManaGain.Builder setAlwaysEdible() {
 			this.alwaysEdible = true;
 			return this;

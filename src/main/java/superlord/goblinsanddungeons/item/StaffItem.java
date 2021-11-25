@@ -35,7 +35,8 @@ public class StaffItem extends Item {
 				stack.damageItem(1, player, (p_220009_1_) -> {
 	                p_220009_1_.sendBreakAnimation(player.getActiveHand());
 	             });
-				ManaStats.getManaStats(player).setManaLevel(ManaStats.getManaStats(player).manaLevel - 1);;
+				ManaStats.getManaStats(player).addStats(-1);;;
+				System.out.println(ManaStats.getManaStats(player).getManaLevel());
 			}
 		}
 		return ActionResult.func_233538_a_(stack, world.isRemote());

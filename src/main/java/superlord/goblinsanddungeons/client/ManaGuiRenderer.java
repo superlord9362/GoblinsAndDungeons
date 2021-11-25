@@ -74,16 +74,12 @@ public class ManaGuiRenderer {
 				int l = (int) ManaStats.getManaStats(player).getManaLevel();
 				int j6 = getRenderMountHealth(livingentity);
 				if (j6 == 0) {
-					mc.getProfiler().startSection("thirst");
+					mc.getProfiler().startSection("mana");
 					mc.getTextureManager().bindTexture(GUI_ICONS);
 					for(int k6 = 0; k6 < 10; ++k6) {
 						int i7 = k1;
 						int k7 = 16;
 						int i8 = 0;
-						
-						if (ManaStats.getManaStats(player).getManaFilledLevel() <= 0.0F && gui().getTicks() % (l * 3 + 1) == 0) {
-							i7 = k1 + (rand.nextInt(3) - 1);
-						}
 						
 						int k8 = j1 - k6 * 8 - 9;
 						gui().blit(event.getMatrixStack(), k8, i7 - 10 + moveUp, 16 + i8 * 9, 54, 9, 9);
