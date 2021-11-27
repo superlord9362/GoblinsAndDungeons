@@ -2,6 +2,7 @@ package superlord.goblinsanddungeons.common.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 
@@ -24,6 +25,18 @@ public class ManaStats {
 		CompoundNBT compound2 = new CompoundNBT();
 		manaStats.write(compound2);
 		getModNBT(entity).put(manaStatsID, compound2);
+	}
+	
+	public static void addStatsOnSpawn(PlayerEntity player) {
+		if (player != null) {
+			CompoundNBT compound;
+			compound = getOrCreateModNBT(player);
+			if (player.isAlive()) {
+				if (!compound.contains(manaStatsID)) {
+					setManaStats(player, new ManaSystem());
+				}
+			}
+		}
 	}
 	
 	public static String getModDataString() {
