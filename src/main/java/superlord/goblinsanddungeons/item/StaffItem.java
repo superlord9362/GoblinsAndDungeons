@@ -5,12 +5,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.FoodStats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import superlord.goblinsanddungeons.common.util.ManaStats;
-import superlord.goblinsanddungeons.common.util.ManaSystem;
 import superlord.goblinsanddungeons.entity.GoblinSoulBulletEntity;
 import superlord.goblinsanddungeons.init.SoundInit;
 
