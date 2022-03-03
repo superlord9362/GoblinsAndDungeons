@@ -1,9 +1,9 @@
 package superlord.goblinsanddungeons.init;
 
-import net.minecraft.entity.CreatureAttribute;
+import net.minecraft.world.entity.MobType;
 
-public class CreatureAttributeInit extends CreatureAttribute {
+public class CreatureAttributeInit extends MobType {
 	
-	   public static final CreatureAttribute GOBLIN = new CreatureAttribute();
+	   public static final MobType GOBLIN = new MobType();
 
 }

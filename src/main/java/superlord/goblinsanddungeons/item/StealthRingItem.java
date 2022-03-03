@@ -4,44 +4,46 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.common.util.GDArmorMaterial;
 import superlord.goblinsanddungeons.init.ItemInit;
 
 public class StealthRingItem extends ArmorItem {
 
-	public static final IArmorMaterial MATERIAL = new GDArmorMaterial(GoblinsAndDungeons.MOD_ID + ":stealth_ring", 7, new int[] {0, 0, 0, 0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN, 0.0F, null);
+	public static final ArmorMaterial MATERIAL = new GDArmorMaterial(GoblinsAndDungeons.MOD_ID + ":stealth_ring", 7, new int[] {0, 0, 0, 0}, 0, SoundEvents.ARMOR_EQUIP_CHAIN, 0.0F, null);
 
 	public StealthRingItem(Properties builderIn) {
-		super(MATERIAL, EquipmentSlotType.OFFHAND, builderIn);
+		super(MATERIAL, EquipmentSlot.OFFHAND, builderIn);
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		if (InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), 340) || InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), 344)) {
-			if (stack.getItem() == ItemInit.RING_OF_STEALTH.get()) {
-				tooltip.add(new TranslationTextComponent("stealth_ring").mergeStyle(TextFormatting.GRAY));
+    public void appendHoverText(ItemStack p_77624_1_, @Nullable Level p_77624_2_, List<Component> p_77624_3_, TooltipFlag p_77624_4_) {
+        super.appendHoverText(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
+        if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 340) || InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 344)) {
+			if (p_77624_1_.getItem() == ItemInit.RING_OF_STEALTH.get()) {
+				p_77624_3_.add(new TranslatableComponent("stealth_ring").withStyle(ChatFormatting.GRAY));
+			}	
+			if (p_77624_1_.getItem() == ItemInit.RING_OF_EXPERIENCE.get()) {
+				p_77624_3_.add(new TranslatableComponent("experience_ring").withStyle(ChatFormatting.GRAY));
 			}
-			if (stack.getItem() == ItemInit.RING_OF_EXPERIENCE.get()) {
-				tooltip.add(new TranslationTextComponent("experience_ring").mergeStyle(TextFormatting.GRAY));
-			}
-			if (stack.getItem() == ItemInit.RING_OF_GLORY.get()) {
-				tooltip.add(new TranslationTextComponent("glory_ring").mergeStyle(TextFormatting.GRAY));
+			if (p_77624_1_.getItem() == ItemInit.RING_OF_GLORY.get()) {
+				p_77624_3_.add(new TranslatableComponent("glory_ring").withStyle(ChatFormatting.GRAY));
 			}
 		} else {
-			tooltip.add(new TranslationTextComponent("shift").mergeStyle(TextFormatting.GRAY));
+			p_77624_3_.add(new TranslatableComponent("shift").withStyle(ChatFormatting.GRAY));
 		}
 	}
 

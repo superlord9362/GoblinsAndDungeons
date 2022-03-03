@@ -7,49 +7,53 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.mojang.serialization.Codec;
 
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.MobSpawnInfo;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.FlatChunkGenerator;
-import net.minecraft.world.gen.GenerationStage.Decoration;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.settings.DimensionStructuresSettings;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.FlatLevelSource;
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
-import superlord.goblinsanddungeons.client.util.CManaMovementPacket;
-import superlord.goblinsanddungeons.common.util.SManaStatsPacket;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
+import superlord.goblinsanddungeons.client.ClientProxy;
+import superlord.goblinsanddungeons.client.renderer.ManaGUIRenderer;
+import superlord.goblinsanddungeons.common.CommonProxy;
 import superlord.goblinsanddungeons.compat.QuarkFlagRecipeCondition;
 import superlord.goblinsanddungeons.compat.RegistryHelper;
 import superlord.goblinsanddungeons.config.GDConfigHolder;
@@ -64,10 +68,10 @@ import superlord.goblinsanddungeons.entity.HobGobEntity;
 import superlord.goblinsanddungeons.entity.MimicEntity;
 import superlord.goblinsanddungeons.entity.OgreEntity;
 import superlord.goblinsanddungeons.init.BlockInit;
-import superlord.goblinsanddungeons.init.ConfiguredStructureInit;
 import superlord.goblinsanddungeons.init.EffectInit;
 import superlord.goblinsanddungeons.init.EntityInit;
 import superlord.goblinsanddungeons.init.ItemInit;
+import superlord.goblinsanddungeons.init.PacketInit;
 import superlord.goblinsanddungeons.init.StructureInit;
 import superlord.goblinsanddungeons.init.TileEntityInit;
 import superlord.goblinsanddungeons.world.GoblinsAndDungeonsFeatures;
@@ -86,38 +90,38 @@ public class GoblinsAndDungeons {
 			.serverAcceptedVersions(PROTOCOL_VERSION::equals)
 			.networkProtocolVersion(() -> PROTOCOL_VERSION)
 			.simpleChannel();
-	private static int packetsRegistered = 0;
+	public static GoblinsAndDungeons instance;
+    @SuppressWarnings("deprecation")
+	public static CommonProxy PROXY = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 	
 	public GoblinsAndDungeons() {
+		instance = this;
 		final ModLoadingContext modLoadingContext = ModLoadingContext.get();
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-		bus.addListener(this::registerCommon);
 		bus.addListener(this::setup);
+        bus.addListener(this::registerEntityAttributes);
+        bus.addListener(this::clientRegistries);
 		CraftingHelper.register(new QuarkFlagRecipeCondition.Serializer());
 		REGISTRY_HELPER.getDeferredBlockRegister().register(bus);
 		REGISTRY_HELPER.getDeferredItemRegister().register(bus);
 		BlockInit.REGISTER.register(bus);
 		ItemInit.REGISTER.register(bus);
 		EntityInit.REGISTER.register(bus);
-		StructureInit.REGISTER.register(bus);
 		EffectInit.EFFECTS.register(bus);
 		EffectInit.POTIONS.register(bus);
 		TileEntityInit.REGISTER.register(bus);
+		PacketInit.registerPackets();
 		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, GDConfigHolder.CLIENT_SPEC);
 		modLoadingContext.registerConfig(ModConfig.Type.SERVER, GDConfigHolder.SERVER_SPEC);
 		IEventBus forgeBus = MinecraftForge.EVENT_BUS;
 		forgeBus.addListener(EventPriority.NORMAL, this::addDimensionalSpacing);
 		forgeBus.addListener(EventPriority.HIGH, this::biomeModification);
 	}
-
-	private void registerCommon(FMLCommonSetupEvent event) {
-		registerEntityAttributes();
-	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void registerBiomes(BiomeLoadingEvent event) {
-		if (event.getCategory() == Biome.Category.PLAINS || event.getCategory() == Biome.Category.SWAMP || event.getCategory() == Biome.Category.TAIGA || event.getCategory() == Biome.Category.FOREST) {
-			event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EntityInit.OGRE.get(), GoblinsDungeonsConfig.ogreSpawnWeight, 1, 1));
+		if (event.getCategory() == Biome.BiomeCategory.PLAINS || event.getCategory() == Biome.BiomeCategory.SWAMP || event.getCategory() == Biome.BiomeCategory.TAIGA || event.getCategory() == Biome.BiomeCategory.FOREST) {
+			event.getSpawns().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(EntityInit.OGRE.get(), GoblinsDungeonsConfig.ogreSpawnWeight, 1, 1));
 		}
 	}
 	
@@ -125,110 +129,106 @@ public class GoblinsAndDungeons {
 		return new ResourceLocation(MOD_ID, name);
 	}
 
-	public void setup(final FMLCommonSetupEvent event) {
-		NETWORK_WRAPPER.registerMessage(packetsRegistered++, SManaStatsPacket.class, SManaStatsPacket::encode, SManaStatsPacket::decode, SManaStatsPacket::handle);
-		NETWORK_WRAPPER.registerMessage(packetsRegistered++, CManaMovementPacket.class, CManaMovementPacket::encode, CManaMovementPacket::decode, CManaMovementPacket::handle);
-		event.enqueueWork(() -> {
-			StructureInit.setupStructures();
-			StructureInit.registerStructurePieces();
-			ConfiguredStructureInit.registerConfiguredStructures();
-
-			WorldGenRegistries.NOISE_SETTINGS.getEntries().forEach(settings -> {
-				Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().getStructures().func_236195_a_();
-
-				if (structureMap instanceof ImmutableMap){
-					Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
-					tempMap.put(StructureInit.SMALL_GOBLIN_CAMP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.SMALL_GOBLIN_CAMP.get()));
-					tempMap.put(StructureInit.MEDIUM_GOBLIN_CAMP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.MEDIUM_GOBLIN_CAMP.get()));
-					tempMap.put(StructureInit.LARGE_GOBLIN_CAMP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.LARGE_GOBLIN_CAMP.get()));
-					tempMap.put(StructureInit.RUINED_KEEP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.RUINED_KEEP.get()));
-					settings.getValue().getStructures().field_236193_d_ = tempMap;
-				}
-				else {
-					structureMap.put(StructureInit.SMALL_GOBLIN_CAMP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.SMALL_GOBLIN_CAMP.get()));
-					structureMap.put(StructureInit.MEDIUM_GOBLIN_CAMP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.MEDIUM_GOBLIN_CAMP.get()));
-					structureMap.put(StructureInit.LARGE_GOBLIN_CAMP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.LARGE_GOBLIN_CAMP.get()));
-					structureMap.put(StructureInit.RUINED_KEEP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.RUINED_KEEP.get()));
-				}
-			});
-		});
-		EffectInit.brewingRecipes();
-        EntitySpawnPlacementRegistry.register(EntityInit.OGRE.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawn);
+	private static void associateBiomeToConfiguredStructure(Map<StructureFeature<?>, HashMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> structureToMultiMap, ConfiguredStructureFeature<?, ?> configuredStructureFeature, ResourceKey<Biome> biomeRegistryKey) {
+		structureToMultiMap.putIfAbsent(configuredStructureFeature.feature, HashMultimap.create());
+		HashMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>> configuredStructureToBiomeMultiMap = structureToMultiMap.get(configuredStructureFeature.feature);
+		if (configuredStructureToBiomeMultiMap.containsValue(biomeRegistryKey)) {
+			
+		} else {
+			configuredStructureToBiomeMultiMap.put(configuredStructureFeature, biomeRegistryKey);
+		}
 	}
 
-	private void registerEntityAttributes() {
-		GlobalEntityTypeAttributes.put(EntityInit.GOB.get(), GobEntity.createAttributes().create());
-		GlobalEntityTypeAttributes.put(EntityInit.HOBGOB.get(), HobGobEntity.createAttributes().create());
-		GlobalEntityTypeAttributes.put(EntityInit.GOBLO.get(), GobloEntity.createAttributes().create());
-		GlobalEntityTypeAttributes.put(EntityInit.GARCH.get(), GarchEntity.createAttributes().create());
-		GlobalEntityTypeAttributes.put(EntityInit.GOOM.get(), GoomEntity.createAttributes().create());
-		GlobalEntityTypeAttributes.put(EntityInit.GOBBER.get(), GobberEntity.createAttributes().create());
-		GlobalEntityTypeAttributes.put(EntityInit.OGRE.get(), OgreEntity.createAttributes().create());
-		GlobalEntityTypeAttributes.put(EntityInit.GOB_KING.get(), GobKingEntity.createAttributes().create());
-		GlobalEntityTypeAttributes.put(EntityInit.MIMIC.get(), MimicEntity.createAttributes().create());
+	public void setup(final FMLCommonSetupEvent event) {
+		EffectInit.brewingRecipes();
+		SpawnPlacements.register(EntityInit.OGRE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkAnyLightMonsterSpawnRules);
+	}
+	
+	public void clientRegistries(final FMLClientSetupEvent event) {
+		ManaGUIRenderer.registerOverlays();
+	}
+
+    private void registerEntityAttributes(EntityAttributeCreationEvent event) {
+    	event.put(EntityInit.GOB.get(), GobEntity.createAttributes().build());
+		event.put(EntityInit.HOBGOB.get(), HobGobEntity.createAttributes().build());
+		event.put(EntityInit.GOBLO.get(), GobloEntity.createAttributes().build());
+		event.put(EntityInit.GARCH.get(), GarchEntity.createAttributes().build());
+		event.put(EntityInit.GOOM.get(), GoomEntity.createAttributes().build());
+		event.put(EntityInit.GOBBER.get(), GobberEntity.createAttributes().build());
+		event.put(EntityInit.OGRE.get(), OgreEntity.createAttributes().build());
+		event.put(EntityInit.GOB_KING.get(), GobKingEntity.createAttributes().build());
+		event .put(EntityInit.MIMIC.get(), MimicEntity.createAttributes().build());
 	}
 
 	public void biomeModification(final BiomeLoadingEvent event) {
-		if(event.getCategory() == Biome.Category.PLAINS || event.getCategory() == Biome.Category.FOREST || event.getCategory() == Biome.Category.TAIGA) {
-			event.getGeneration().getStructures().add(() -> ConfiguredStructureInit.CONFIGURED_SMALL_GOBLIN_CAMP);
-			event.getGeneration().getStructures().add(() -> ConfiguredStructureInit.CONFIGURED_MEDIUM_GOBLIN_CAMP);
-			event.getGeneration().getStructures().add(() -> ConfiguredStructureInit.CONFIGURED_LARGE_GOBLIN_CAMP);
-			event.getGeneration().getStructures().add(() -> ConfiguredStructureInit.CONFIGURED_RUINED_KEEP);
-		}
-		event.getGeneration().getFeatures(Decoration.UNDERGROUND_ORES).add(() -> GoblinsAndDungeonsFeatures.ORE_SCORIA);
+		event.getGeneration().getFeatures(Decoration.UNDERGROUND_ORES).add(() -> GoblinsAndDungeonsFeatures.ORE_SCORIA_LOWER);
+		event.getGeneration().getFeatures(Decoration.UNDERGROUND_ORES).add(() -> GoblinsAndDungeonsFeatures.ORE_SCORIA_UPPER);
 	}
 
 	private static Method GETCODEC_METHOD;
-	@SuppressWarnings({ "unchecked", "resource" })
+	@SuppressWarnings("unchecked")
 	public void addDimensionalSpacing(final WorldEvent.Load event) {
-		if(event.getWorld() instanceof ServerWorld){
-			ServerWorld serverWorld = (ServerWorld)event.getWorld();
-
-			try {
-				if(GETCODEC_METHOD == null) GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "getCodec");
-				ResourceLocation cgRL = Registry.CHUNK_GENERATOR_CODEC.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(serverWorld.getChunkProvider().generator));
-				if(cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
-			}
-			catch(Exception e){
-				GoblinsAndDungeons.LOGGER.error("Was unable to check if " + serverWorld.getDimensionKey().getLocation() + " is using Terraforged's ChunkGenerator.");
-			}
-
-			if(serverWorld.getChunkProvider().getChunkGenerator() instanceof FlatChunkGenerator &&
-					serverWorld.getDimensionKey().equals(World.OVERWORLD)){
+		if (event.getWorld() instanceof ServerLevel serverLevel) {
+			ChunkGenerator chunkGenerator = serverLevel.getChunkSource().getGenerator();
+			if (chunkGenerator instanceof FlatLevelSource && serverLevel.dimension().equals(Level.OVERWORLD)) {
 				return;
 			}
 
-			Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
-			tempMap.putIfAbsent(StructureInit.SMALL_GOBLIN_CAMP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.SMALL_GOBLIN_CAMP.get()));
-			tempMap.putIfAbsent(StructureInit.MEDIUM_GOBLIN_CAMP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.MEDIUM_GOBLIN_CAMP.get()));
-			tempMap.putIfAbsent(StructureInit.LARGE_GOBLIN_CAMP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.LARGE_GOBLIN_CAMP.get()));
-			tempMap.putIfAbsent(StructureInit.RUINED_KEEP.get(), DimensionStructuresSettings.field_236191_b_.get(StructureInit.RUINED_KEEP.get()));
-			serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
+			StructureSettings worldStructureConfig = chunkGenerator.getSettings();
+
+			HashMap<StructureFeature<?>, HashMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> structureToMultiMap = new HashMap<>();
+
+			for (Map.Entry<ResourceKey<Biome>, Biome> biomeEntry : serverLevel.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY).entrySet()) {
+
+				Biome.BiomeCategory biomeCategory = biomeEntry.getValue().getBiomeCategory();
+				if (biomeCategory == Biome.BiomeCategory.PLAINS || biomeCategory == Biome.BiomeCategory.FOREST || biomeCategory == Biome.BiomeCategory.TAIGA) {
+					if (BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.OVERWORLD) && (BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.FOREST) || BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.PLAINS)) && !BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.UNDERGROUND) && !BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.OCEAN) && !BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.RIVER) && !BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.MOUNTAIN) && !BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.HILLS)) {
+						associateBiomeToConfiguredStructure(structureToMultiMap, StructureInit.SMALL_GOBLIN_CAMP_FEATURE, biomeEntry.getKey());
+						associateBiomeToConfiguredStructure(structureToMultiMap, StructureInit.MEDIUM_GOBLIN_CAMP_FEATURE, biomeEntry.getKey());
+						associateBiomeToConfiguredStructure(structureToMultiMap, StructureInit.LARGE_GOBLIN_CAMP_FEATURE, biomeEntry.getKey());
+						associateBiomeToConfiguredStructure(structureToMultiMap, StructureInit.RUINED_KEEP_FEATURE, biomeEntry.getKey());
+					}
+				}
+			}
+			ImmutableMap.Builder<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> tempStructureToMultiMap = ImmutableMap.builder();
+			worldStructureConfig.configuredStructures.entrySet().stream().filter(entry -> !structureToMultiMap.containsKey(entry.getKey())).forEach(tempStructureToMultiMap::put);
+
+			structureToMultiMap.forEach((key, value) -> tempStructureToMultiMap.put(key, ImmutableMultimap.copyOf(value)));
+
+			worldStructureConfig.configuredStructures = tempStructureToMultiMap.build();
+
+
+			try {
+				if (GETCODEC_METHOD == null)
+					GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "codec");
+				ResourceLocation cgRL = Registry.CHUNK_GENERATOR.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(chunkGenerator));
+				if (cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
+			} catch (Exception e) {
+			}
+
+			if (chunkGenerator instanceof FlatLevelSource &&
+					serverLevel.dimension().equals(Level.OVERWORLD)) {
+				return;
+			}
+
+			Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(worldStructureConfig.structureConfig());
+			tempMap.putIfAbsent(StructureInit.SMALL_GOBLIN_CAMP, StructureSettings.DEFAULTS.get(StructureInit.SMALL_GOBLIN_CAMP));
+			tempMap.putIfAbsent(StructureInit.MEDIUM_GOBLIN_CAMP, StructureSettings.DEFAULTS.get(StructureInit.MEDIUM_GOBLIN_CAMP));
+			tempMap.putIfAbsent(StructureInit.LARGE_GOBLIN_CAMP, StructureSettings.DEFAULTS.get(StructureInit.LARGE_GOBLIN_CAMP));
+			tempMap.putIfAbsent(StructureInit.RUINED_KEEP, StructureSettings.DEFAULTS.get(StructureInit.RUINED_KEEP));
+			worldStructureConfig.structureConfig = tempMap;
 		}
 	}
-	
-	public static <MSG> void sendMSGToServer(MSG message) {
-		GoblinsAndDungeons.NETWORK_WRAPPER.sendToServer(message);
-	}
 
-	public static <MSG> void sendMSGToAll(MSG message) {
-		for (ServerPlayerEntity player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
-			sendNonLocal(message, player);
-		}
-	}
-
-	@SuppressWarnings("unlikely-arg-type")
-	public static <MSG> void sendNonLocal(MSG msg, ServerPlayerEntity player) {
-		if (player.server.isDedicatedServer() || !player.getName().equals(player.server.getServerOwner())) {
-			NETWORK_WRAPPER.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
-		}
-	}
-
-	public final static ItemGroup GROUP = new ItemGroup("goblinsanddungeons_item_group") {
+	public final static CreativeModeTab GROUP = new CreativeModeTab("goblinsanddungeons_item_group") {
 		@Override
-		public ItemStack createIcon() {
+		public ItemStack makeIcon() {
 			return new ItemStack(ItemInit.GOBLIN_CROWN.get());
 		}
 	};
+	
+	public static GoblinsAndDungeons getInstance() {
+		return instance;
+	}
 
 }

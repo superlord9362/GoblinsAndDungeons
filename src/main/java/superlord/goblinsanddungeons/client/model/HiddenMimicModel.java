@@ -1,12 +1,17 @@
 package superlord.goblinsanddungeons.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.goblinsanddungeons.entity.MimicEntity;
@@ -17,66 +22,52 @@ import superlord.goblinsanddungeons.entity.MimicEntity;
  */
 @OnlyIn(Dist.CLIENT)
 public class HiddenMimicModel<T extends Entity> extends EntityModel<MimicEntity> {
-    public ModelRenderer Base;
-    public ModelRenderer Head;
-    public ModelRenderer RightLeg;
-    public ModelRenderer LeftLeg;
-    public ModelRenderer Top;
-    public ModelRenderer lock;
-    public ModelRenderer Leftear;
-    public ModelRenderer Rightear;
+	private final ModelPart LeftLeg;
+	private final ModelPart Head;
+	private final ModelPart RightLeg;
+	private final ModelPart Base;
 
-    public HiddenMimicModel() {
-        this.textureWidth = 64;
-        this.textureHeight = 64;
-        this.RightLeg = new ModelRenderer(this, 6, 26);
-        this.RightLeg.setRotationPoint(-2.0F, 15.0F, 0.0F);
-        this.RightLeg.addBox(-1.0F, 0.0F, -1.0F, 2.0F, 5.0F, 2.0F, 0.0F, 0.0F, 0.0F);
-        this.lock = new ModelRenderer(this, 0, 0);
-        this.lock.setRotationPoint(0.0F, -2.0F, -14.0F);
-        this.lock.addBox(-1.0F, 0.0F, -1.0F, 2.0F, 4.0F, 1.0F, 0.0F, 0.0F, 0.0F);
-        this.Rightear = new ModelRenderer(this, 24, 47);
-        this.Rightear.mirror = true;
-        this.Rightear.setRotationPoint(-4.0F, -5.0F, 0.0F);
-        this.Rightear.addBox(-3.0F, 0.0F, 0.0F, 3.0F, 3.0F, 1.0F, 0.0F, 0.0F, 0.0F);
-        this.Head = new ModelRenderer(this, 0, 43);
-        this.Head.setRotationPoint(0.0F, 17.0F, 0.0F);
-        this.Head.addBox(-4.0F, -6.0F, -4.0F, 8.0F, 6.0F, 8.0F, 0.0F, 0.0F, 0.0F);
-        this.Base = new ModelRenderer(this, 0, 19);
-        this.Base.setRotationPoint(0.0F, 14.0F, 0.0F);
-        this.Base.addBox(-7.0F, 0.0F, -7.0F, 14.0F, 10.0F, 14.0F, 0.0F, 0.0F, 0.0F);
-        this.Top = new ModelRenderer(this, 0, 0);
-        this.Top.setRotationPoint(0.0F, 1.0F, 7.0F);
-        this.Top.addBox(-7.0F, -5.0F, -14.0F, 14.0F, 5.0F, 14.0F, 0.0F, 0.0F, 0.0F);
-        this.LeftLeg = new ModelRenderer(this, 6, 26);
-        this.LeftLeg.mirror = true;
-        this.LeftLeg.setRotationPoint(2.0F, 15.0F, 0.0F);
-        this.LeftLeg.addBox(-1.0F, 0.0F, -1.0F, 2.0F, 5.0F, 2.0F, 0.0F, 0.0F, 0.0F);
-        this.Leftear = new ModelRenderer(this, 24, 47);
-        this.Leftear.setRotationPoint(4.0F, -5.0F, 0.0F);
-        this.Leftear.addBox(0.0F, 0.0F, 0.0F, 3.0F, 3.0F, 1.0F, 0.0F, 0.0F, 0.0F);
-        this.Top.addChild(this.lock);
-        this.Head.addChild(this.Rightear);
-        this.Base.addChild(this.Top);
-        this.Head.addChild(this.Leftear);
-    }
+	public HiddenMimicModel(ModelPart root) {
+		this.LeftLeg = root.getChild("LeftLeg");
+		this.Head = root.getChild("Head");
+		this.RightLeg = root.getChild("RightLeg");
+		this.Base = root.getChild("Base");
+	}
 
-    @Override
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) { 
-        ImmutableList.of(this.RightLeg, this.Head, this.Base, this.LeftLeg).forEach((modelRenderer) -> { 
-            modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        });
-    }
+	@SuppressWarnings("unused")
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
 
-    @Override
-    public void setRotationAngles(MimicEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {}
+		PartDefinition LeftLeg = partdefinition.addOrReplaceChild("LeftLeg", CubeListBuilder.create().texOffs(6, 26).mirror().addBox(-1.0F, 0.0F, -1.0F, 2.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-2.0F, 19.0F, 0.0F));
 
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
-    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
-    }
+		PartDefinition Head = partdefinition.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(0, 43).addBox(-4.0F, 1.0F, -4.0F, 8.0F, 6.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 13.0F, 0.0F));
+
+		PartDefinition Rightear = Head.addOrReplaceChild("Rightear", CubeListBuilder.create().texOffs(24, 47).addBox(0.0F, 6.0F, 0.0F, 3.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(4.0F, -5.0F, 0.0F));
+
+		PartDefinition Leftear = Head.addOrReplaceChild("Leftear", CubeListBuilder.create().texOffs(24, 47).mirror().addBox(-3.0F, 6.0F, 0.0F, 3.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-4.0F, -5.0F, 0.0F));
+
+		PartDefinition RightLeg = partdefinition.addOrReplaceChild("RightLeg", CubeListBuilder.create().texOffs(6, 26).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 19.0F, 0.0F));
+
+		PartDefinition Base = partdefinition.addOrReplaceChild("Base", CubeListBuilder.create().texOffs(0, 19).addBox(-7.0F, 3.0F, -7.0F, 14.0F, 10.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 11.0F, 0.0F));
+
+		PartDefinition Top = Base.addOrReplaceChild("Top", CubeListBuilder.create().texOffs(0, 0).addBox(-7.0F, -1.5F, -14.0F, 14.0F, 5.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -0.5F, 7.0F));
+
+		PartDefinition lock = Top.addOrReplaceChild("lock", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, 1.5F, 0.0F, 2.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -15.0F));
+
+		return LayerDefinition.create(meshdefinition, 64, 64);
+	}
+
+	@Override
+	public void setupAnim(MimicEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+
+	}
+
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		LeftLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		Head.render(poseStack, buffer, packedLight, packedOverlay);
+		RightLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		Base.render(poseStack, buffer, packedLight, packedOverlay);
+	}
 }

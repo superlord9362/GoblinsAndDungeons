@@ -19,7 +19,7 @@
     "ruined_keep": {
       "trigger": "minecraft:location",
       "conditions": {
-        "feature": "goblinsanddungeons:ruined_keep"
+        "feature": "goblinsanddungeons:ruined_keep_feature"
       }
     }
   },

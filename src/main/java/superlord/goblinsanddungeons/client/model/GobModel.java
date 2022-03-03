@@ -1,14 +1,21 @@
 package superlord.goblinsanddungeons.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.entity.model.IHasArm;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.math.MathHelper;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+
+import net.minecraft.client.model.ArmedModel;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.goblinsanddungeons.entity.GobEntity;
@@ -18,89 +25,81 @@ import superlord.goblinsanddungeons.entity.GobEntity;
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class GobModel<T extends Entity> extends EntityModel<GobEntity> implements IHasArm {
-    public ModelRenderer Body;
-    public ModelRenderer Rightleg;
-    public ModelRenderer Leftleg;
-    public ModelRenderer RightArm;
-    public ModelRenderer LeftArm;
-    public ModelRenderer Head;
-    public ModelRenderer Gobhat;
-    public ModelRenderer RightEar;
-    public ModelRenderer LeftEar;
+public class GobModel extends EntityModel<GobEntity> implements ArmedModel {
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "custom_model"), "main");
+	private final ModelPart Body;
+	private final ModelPart RightLeg;
+	private final ModelPart Head;
+	private final ModelPart RightArm;
+	private final ModelPart LeftLeg;
+	private final ModelPart LeftArm;
 
-    public GobModel() {
-        this.textureWidth = 64;
-        this.textureHeight = 32;
-        this.LeftEar = new ModelRenderer(this, 22, 3);
-        this.LeftEar.setRotationPoint(4.0F, -4.0F, 1.0F);
-        this.LeftEar.addBox(0.0F, 0.0F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-        this.Rightleg = new ModelRenderer(this, 8, 19);
-        this.Rightleg.setRotationPoint(1.0F, 20.0F, 0.0F);
-        this.Rightleg.addBox(-1.0F, 0.0F, -1.0F, 2.0F, 4.0F, 2.0F, 0.0F, 0.0F, 0.0F);
-        this.LeftArm = new ModelRenderer(this, 12, 12);
-        this.LeftArm.setRotationPoint(-2.0F, 16.0F, 0.0F);
-        this.LeftArm.addBox(-2.0F, -1.0F, -1.0F, 2.0F, 5.0F, 2.0F, 0.0F, 0.0F, 0.0F);
-        this.RightArm = new ModelRenderer(this, 12, 12);
-        this.RightArm.mirror = true;
-        this.RightArm.setRotationPoint(2.0F, 16.0F, 0.0F);
-        this.RightArm.addBox(0.0F, -1.0F, -1.0F, 2.0F, 5.0F, 2.0F, 0.0F, 0.0F, 0.0F);
-        this.RightEar = new ModelRenderer(this, 22, 0);
-        this.RightEar.setRotationPoint(-4.0F, -4.0F, 1.0F);
-        this.RightEar.addBox(-3.0F, 0.0F, -1.0F, 3.0F, 3.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-        this.Leftleg = new ModelRenderer(this, 0, 19);
-        this.Leftleg.setRotationPoint(-1.0F, 20.0F, 0.0F);
-        this.Leftleg.addBox(-1.0F, 0.0F, -1.0F, 2.0F, 4.0F, 2.0F, 0.0F, 0.0F, 0.0F);
-        this.Head = new ModelRenderer(this, 0, 0);
-        this.Head.setRotationPoint(0.0F, 15.0F, 0.0F);
-        this.Head.addBox(-4.0F, -6.0F, -3.0F, 8.0F, 6.0F, 6.0F, 0.0F, 0.0F, 0.0F);
-        this.Gobhat = new ModelRenderer(this, 48, 0);
-        this.Gobhat.setRotationPoint(0.0F, -6.0F, -1.0F);
-        this.Gobhat.addBox(-2.0F, -3.0F, 0.0F, 4.0F, 3.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.Body = new ModelRenderer(this, 0, 12);
-        this.Body.setRotationPoint(0.0F, 15.0F, 0.0F);
-        this.Body.addBox(-2.0F, 0.0F, -1.0F, 4.0F, 5.0F, 2.0F, 0.0F, 0.0F, 0.0F);
-        this.Head.addChild(this.LeftEar);
-        this.Head.addChild(this.RightEar);
-        this.Head.addChild(this.Gobhat);
-    }
+	public GobModel(ModelPart root) {
+		this.Body = root.getChild("Body");
+		this.RightLeg = root.getChild("RightLeg");
+		this.RightArm = root.getChild("RightArm");
+		this.LeftLeg = root.getChild("LeftLeg");
+		this.LeftArm = root.getChild("LeftArm");
+		this.Head = Body.getChild("Head");
+	}
 
-    @Override
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) { 
-        ImmutableList.of(this.Rightleg, this.LeftArm, this.RightArm, this.Leftleg, this.Head, this.Body).forEach((modelRenderer) -> { 
-            modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        });
-    }
+	@SuppressWarnings("unused")
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
 
-    @Override
-    public void setRotationAngles(GobEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.Rightleg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        this.Leftleg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-        this.RightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-        this.LeftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-    }
+		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 12).addBox(-2.0F, 0.0F, -1.0F, 4.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 15.0F, 0.0F));
 
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
-    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
-    }
+		PartDefinition Head = Body.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -6.0F, -3.0F, 8.0F, 6.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition GobHat = Head.addOrReplaceChild("GobHat", CubeListBuilder.create().texOffs(48, 0).addBox(-2.0F, -3.0F, -2.0F, 4.0F, 3.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -6.0F, 1.0F));
+
+		PartDefinition RightEar = Head.addOrReplaceChild("RightEar", CubeListBuilder.create().texOffs(22, 0).addBox(-3.0F, 0.0F, 0.0F, 3.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(-4.0F, -4.0F, 0.0F));
+
+		PartDefinition LeftEar = Head.addOrReplaceChild("LeftEar", CubeListBuilder.create().texOffs(22, 3).addBox(0.0F, 0.0F, 0.0F, 3.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(4.0F, -4.0F, 0.0F));
+
+		PartDefinition RightLeg = partdefinition.addOrReplaceChild("RightLeg", CubeListBuilder.create().texOffs(8, 19).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(1.0F, 20.0F, 0.0F));
+
+		PartDefinition RightArm = partdefinition.addOrReplaceChild("RightArm", CubeListBuilder.create().texOffs(20, 12).addBox(0.0F, -1.0F, -1.0F, 2.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 16.0F, 0.0F));
+
+		PartDefinition LeftLeg = partdefinition.addOrReplaceChild("LeftLeg", CubeListBuilder.create().texOffs(0, 19).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-1.0F, 20.0F, 0.0F));
+
+		PartDefinition LeftArm = partdefinition.addOrReplaceChild("LeftArm", CubeListBuilder.create().texOffs(12, 12).addBox(-2.0F, -1.0F, -1.0F, 2.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.0F, 16.0F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 64, 32);
+	}
+
+	@Override
+	public void setupAnim(GobEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		this.RightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+        this.LeftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+        this.RightArm.xRot = Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+        this.LeftArm.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		this.Head.xRot = headPitch * ((float)Math.PI / 180F);
+		this.Head.yRot = netHeadYaw * ((float)Math.PI / 180F);
+	}
+
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		Body.render(poseStack, buffer, packedLight, packedOverlay);
+		RightLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		RightArm.render(poseStack, buffer, packedLight, packedOverlay);
+		LeftLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		LeftArm.render(poseStack, buffer, packedLight, packedOverlay);
+	}
     
-    public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) {
-		float f = sideIn == HandSide.RIGHT ? 1.0F : -1.0F;
-		ModelRenderer modelrenderer = this.getArmForSide(sideIn);
-		modelrenderer.rotationPointX += f;
-		modelrenderer.translateRotate(matrixStackIn);
-		modelrenderer.rotationPointX -= f;
+    public void translateToHand(HumanoidArm sideIn, PoseStack matrixStackIn) {
+		float f = sideIn == HumanoidArm.RIGHT ? 1.0F : -1.0F;
+		ModelPart modelrenderer = this.getArmForSide(sideIn);
+		modelrenderer.x += f;
+		modelrenderer.translateAndRotate(matrixStackIn);
+		modelrenderer.x -= f;
 		matrixStackIn.translate(-0.075, -0.225, 0);
 		matrixStackIn.scale(0.75F, 0.75F, 0.75F);
 	}
 
-	protected ModelRenderer getArmForSide(HandSide side) {
-		return side == HandSide.LEFT ? this.RightArm : this.LeftArm;
+	protected ModelPart getArmForSide(HumanoidArm side) {
+		return side == HumanoidArm.LEFT ? this.RightArm : this.LeftArm;
 	}
 	
 }

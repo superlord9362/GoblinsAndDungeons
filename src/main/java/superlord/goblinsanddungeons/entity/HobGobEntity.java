@@ -3,69 +3,69 @@ package superlord.goblinsanddungeons.entity;
 import java.util.EnumSet;
 import java.util.List;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.FleeSunGoal;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.RestrictSunGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.AbstractRaiderEntity;
-import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.entity.passive.CowEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.PigEntity;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.passive.horse.DonkeyEntity;
-import net.minecraft.entity.passive.horse.HorseEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FleeSunGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.horse.Donkey;
+import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
 public class HobGobEntity extends GoblinEntity {
 	
-	public HobGobEntity(EntityType<? extends HobGobEntity> type, World worldIn) {
+	public HobGobEntity(EntityType<? extends HobGobEntity> type, Level worldIn) {
 		super(type, worldIn);
 	}
 	
-	public static AttributeModifierMap.MutableAttribute createAttributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 20.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.22F).createMutableAttribute(Attributes.ATTACK_DAMAGE, 6.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 25.0D);
+	public static AttributeSupplier.Builder createAttributes() {
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.MOVEMENT_SPEED, (double)0.22F).add(Attributes.ATTACK_DAMAGE, 6.0D).add(Attributes.FOLLOW_RANGE, 25.0D);
 	}
 
 	public boolean canDespawn(double distanceToClosestPlayer) {
 		return false;
 	}
 	
-	public boolean attackEntityAsMob(Entity entityIn) {
-		boolean flag = super.attackEntityAsMob(entityIn);
+	public boolean doHurtTarget(Entity entityIn) {
+		boolean flag = super.doHurtTarget(entityIn);
 		if (flag) {
-			float f = this.world.getDifficultyForLocation(this.getPosition()).getAdditionalDifficulty();
-			if (this.getHeldItemMainhand().isEmpty() && this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
-				entityIn.setFire(2 * (int)f);
+			float f = this.level.getCurrentDifficultyAt(this.blockPosition()).getEffectiveDifficulty();
+			if (this.getMainHandItem().isEmpty() && this.isOnFire() && this.random.nextFloat() < f * 0.3F) {
+				entityIn.setSecondsOnFire(2 * (int)f);
 			}
 		}
 
 		return flag;
 	}
 
-	public boolean preventDespawn() {
-		return super.preventDespawn();
+	public boolean requiresCustomPersistence() {
+		return super.requiresCustomPersistence();
 	}
 
 	protected SoundEvent getAmbientSound() {
@@ -81,14 +81,14 @@ public class HobGobEntity extends GoblinEntity {
 	}
 
 	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
+	public ItemStack getPickedResult(HitResult target) {
 		return new ItemStack(ItemInit.HOBGOB_SPAWN_EGG.get());
 	}
 	
-	public boolean isOnSameTeam(Entity entityIn) {
-		if (super.isOnSameTeam(entityIn)) {
+	public boolean isAlliedTo(Entity entityIn) {
+		if (super.isAlliedTo(entityIn)) {
 			return true;
-		} else if (entityIn instanceof LivingEntity && ((LivingEntity)entityIn).getCreatureAttribute() == CreatureAttributeInit.GOBLIN) {
+		} else if (entityIn instanceof LivingEntity && ((LivingEntity)entityIn).getMobType() == CreatureAttributeInit.GOBLIN) {
 			return this.getTeam() == null && entityIn.getTeam() == null;
 		} else {
 			return false;
@@ -99,22 +99,22 @@ public class HobGobEntity extends GoblinEntity {
 		super.registerGoals();
 		this.goalSelector.addGoal(2, new RestrictSunGoal(this));
 		this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
-		this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-		this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-		this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
+		this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
 		this.targetSelector.addGoal(2, new HobGobEntity.ThrowGoblinGoal(this));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractRaiderEntity.class, true));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, SheepEntity.class, true));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, CowEntity.class, true));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PigEntity.class, true));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, ChickenEntity.class, true));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, HorseEntity.class, true));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, DonkeyEntity.class, true));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Raider.class, true));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Sheep.class, true));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Cow.class, true));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Pig.class, true));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Chicken.class, true));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Horse.class, true));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Donkey.class, true));
 	}
 	
 	class ThrowGoblinGoal extends Goal {
@@ -122,14 +122,14 @@ public class HobGobEntity extends GoblinEntity {
 		HobGobEntity hobgob;
 
 		public ThrowGoblinGoal(HobGobEntity hobgob) {
-			this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
+			this.setFlags(EnumSet.of(Goal.Flag.MOVE));
 			this.hobgob = hobgob;
 		}
 
 		@Override
-		public boolean shouldExecute() {
-			List<PlayerEntity> player = hobgob.world.getEntitiesWithinAABB(PlayerEntity.class, hobgob.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
-			if (!player.isEmpty() && hobgob.getRevengeTarget() == null) {
+		public boolean canUse() {
+			List<Player> player = hobgob.level.getEntitiesOfClass(Player.class, hobgob.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			if (!player.isEmpty() && hobgob.getTarget() == null) {
 				return true;
 			} else {
 				return false;
@@ -137,7 +137,7 @@ public class HobGobEntity extends GoblinEntity {
 		}
 		
 		public boolean shouldContinueExecuting() {
-			if (hobgob.getRevengeTarget() != null) {
+			if (hobgob.getTarget() != null) {
 				return false;
 			} else {
 				return true;
@@ -146,158 +146,28 @@ public class HobGobEntity extends GoblinEntity {
 		}
 
 		public void tick() {
-			List<GobEntity> gob1 = hobgob.world.getEntitiesWithinAABB(GobEntity.class, hobgob.getBoundingBox().grow(1.0D, 1.0D, 1.0D));
+			List<GobEntity> gob1 = hobgob.level.getEntitiesOfClass(GobEntity.class, hobgob.getBoundingBox().inflate(1.0D, 1.0D, 1.0D));
 			if (!gob1.isEmpty()){
-				if(hobgob.getHorizontalFacing() == Direction.NORTH) {
+				if(hobgob.getDirection() == Direction.NORTH) {
 					GobEntity gobEntity = gob1.get(0);
-					gobEntity.setMotion(0.0D, 1.0D, -2.0D);
+					gobEntity.setDeltaMovement(0.0D, 1.0D, -2.0D);
 				}
-				if (hobgob.getHorizontalFacing() == Direction.WEST) {
+				if (hobgob.getDirection() == Direction.WEST) {
 					GobEntity gobEntity = gob1.get(0);
-					gobEntity.setMotion(-2.0D, 1.0D, 0.0D);
+					gobEntity.setDeltaMovement(-2.0D, 1.0D, 0.0D);
 				}
-				if (hobgob.getHorizontalFacing() == Direction.SOUTH) {
+				if (hobgob.getDirection() == Direction.SOUTH) {
 					GobEntity gobEntity = gob1.get(0);
-					gobEntity.setMotion(0.0D, 1.0D, 2.0D);
+					gobEntity.setDeltaMovement(0.0D, 1.0D, 2.0D);
 				}
-				if (hobgob.getHorizontalFacing() == Direction.EAST) {
+				if (hobgob.getDirection() == Direction.EAST) {
 					GobEntity gobEntity = gob1.get(0);
-					gobEntity.setMotion(2.0D, 1.0D, 0.0D);
+					gobEntity.setDeltaMovement(2.0D, 1.0D, 0.0D);
 				}
 					
 			}
 		}
 	}
-	
-	/**
 
-	public HobGobEntity(EntityType<? extends HobGobEntity> type, World worldIn) {
-		super(type, worldIn);
-	}
-
-	protected void registerGoals() {
-		super.registerGoals();
-		this.goalSelector.addGoal(2, new RestrictSunGoal(this));
-		this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
-		this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-		this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-		this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
-		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-		this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 1.0D, true));
-		//this.goalSelector.addGoal(4, new HobGobEntity.ThrowGoblinGoal(this));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, SheepEntity.class, true));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, CowEntity.class, true));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PigEntity.class, true));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, ChickenEntity.class, true));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, HorseEntity.class, true));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, DonkeyEntity.class, true));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
-	}
-
-	public static AttributeModifierMap.MutableAttribute createAttributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 20.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.22F).createMutableAttribute(Attributes.ATTACK_DAMAGE, 6.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 25.0D);
-	}
-
-	public boolean canDespawn(double distanceToClosestPlayer) {
-		return false;
-	}
-	
-	public boolean attackEntityAsMob(Entity entityIn) {
-		boolean flag = super.attackEntityAsMob(entityIn);
-		if (flag) {
-			float f = this.world.getDifficultyForLocation(this.getPosition()).getAdditionalDifficulty();
-			if (this.getHeldItemMainhand().isEmpty() && this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
-				entityIn.setFire(2 * (int)f);
-			}
-		}
-
-		return flag;
-	}
-
-	public boolean preventDespawn() {
-		return super.preventDespawn();
-	}
-
-	protected SoundEvent getAmbientSound() {
-		return SoundInit.HOBGOB_IDLE;
-	}
-
-	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return SoundInit.HOBGOB_HURT;
-	}
-
-	protected SoundEvent getDeathSound() {
-		return SoundInit.HOBGOB_DEATH;
-	}
-
-	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
-		return new ItemStack(ItemInit.HOBGOB_SPAWN_EGG.get());
-	}
-
-	class ThrowGoblinGoal extends Goal {
-
-		HobGobEntity hobgob;
-
-		public ThrowGoblinGoal(HobGobEntity hobgob) {
-			this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
-			this.hobgob = hobgob;
-		}
-
-		@Override
-		public boolean shouldExecute() {
-			List<PlayerEntity> player = hobgob.world.getEntitiesWithinAABB(PlayerEntity.class, hobgob.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
-			if (!player.isEmpty() && hobgob.getRevengeTarget() == null) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		
-		public boolean shouldContinueExecuting() {
-			if (hobgob.getRevengeTarget() != null) {
-				return false;
-			} else {
-				return true;
-			}
-
-		}
-
-		public void tick() {
-			List<GobEntity> gob1 = hobgob.world.getEntitiesWithinAABB(GobEntity.class, hobgob.getBoundingBox().grow(1.0D, 1.0D, 1.0D));
-			if (!gob1.isEmpty()){
-				if(hobgob.getHorizontalFacing() == Direction.NORTH) {
-					GobEntity gobEntity = gob1.get(0);
-					gobEntity.setMotion(0.0D, 1.0D, 2.0D);
-				}
-				if (hobgob.getHorizontalFacing() == Direction.WEST) {
-					GobEntity gobEntity = gob1.get(0);
-					gobEntity.setMotion(2.0D, 1.0D, 0.0D);
-				}
-				if (hobgob.getHorizontalFacing() == Direction.SOUTH) {
-					GobEntity gobEntity = gob1.get(0);
-					gobEntity.setMotion(0.0D, 1.0D, -2.0D);
-				}
-				if (hobgob.getHorizontalFacing() == Direction.EAST) {
-					GobEntity gobEntity = gob1.get(0);
-					gobEntity.setMotion(-2.0D, 1.0D, 0.0D);
-				}
-					
-			}
-		}
-	}
-	
-	public boolean isOnSameTeam(Entity entityIn) {
-		if (super.isOnSameTeam(entityIn)) {
-			return true;
-		} else if (entityIn instanceof LivingEntity && ((LivingEntity)entityIn).getCreatureAttribute() == CreatureAttributeInit.GOBLIN) {
-			return this.getTeam() == null && entityIn.getTeam() == null;
-		} else {
-			return false;
-		}
-	}
-	
-	*/
 
 }

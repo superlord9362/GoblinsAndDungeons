@@ -1,35 +1,6 @@
 package superlord.goblinsanddungeons.entity.tile;
 
-import java.util.Optional;
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.inventory.IClearable;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CampfireCookingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import superlord.goblinsanddungeons.blocks.SoulAshCampfireBlock;
-import superlord.goblinsanddungeons.init.BlockInit;
-import superlord.goblinsanddungeons.init.TileEntityInit;
-
-public class SoulAshCampfireTileEntity extends TileEntity implements IClearable, ITickableTileEntity {
+public class SoulAshCampfireTileEntity {} /**extends TileEntity implements IClearable, ITickableTileEntity {
 	private final NonNullList<ItemStack> inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 	private final int[] cookingTimes = new int[4];
 	private final int[] cookingTotalTimes = new int[4];
@@ -70,11 +41,6 @@ public class SoulAshCampfireTileEntity extends TileEntity implements IClearable,
 		}
 	}
 
-
-	/**
-	 * Individually tracks the cooking of each item, then spawns the finished product in-world and clears the
-	 * corresponding held item.
-	 */
 	@SuppressWarnings("unused")
 	private void cookAndDrop() {
 		for(int i = 0; i < this.inventory.size(); ++i) {
@@ -127,9 +93,6 @@ public class SoulAshCampfireTileEntity extends TileEntity implements IClearable,
 		}
 	}
 
-	/**
-	 * Returns a NonNullList<ItemStack> of items currently held in the campfire.
-	 */
 	public NonNullList<ItemStack> getInventory() {
 		return this.inventory;
 	}
@@ -163,19 +126,11 @@ public class SoulAshCampfireTileEntity extends TileEntity implements IClearable,
 		return compound;
 	}
 
-	/**
-	 * Retrieves packet to send to the client whenever this Tile Entity is resynced via World.notifyBlockUpdate. For
-	 * modded TE's, this packet comes back to you clientside in {@link #onDataPacket}
-	 */
 	@Nullable
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		return new SUpdateTileEntityPacket(this.pos, 13, this.getUpdateTag());
 	}
 
-	/**
-	 * Get an NBT compound to sync to the client with SPacketChunkData, used for initial loading of the chunk or when
-	 * many blocks change at once. This compound comes back to you clientside in {@link handleUpdateTag}
-	 */
 	public CompoundNBT getUpdateTag() {
 		return this.writeItems(new CompoundNBT());
 	}
@@ -218,4 +173,4 @@ public class SoulAshCampfireTileEntity extends TileEntity implements IClearable,
 		}
 
 	}
-}
+}*/

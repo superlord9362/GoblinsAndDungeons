@@ -2,12 +2,12 @@ package superlord.goblinsanddungeons.common.util;
 
 import java.util.function.Supplier;
 
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.crafting.Ingredient;
 
-public class GDArmorMaterial implements IArmorMaterial {
+public class GDArmorMaterial implements ArmorMaterial {
 	
 	private static final int[] MAX_DAMAGE_ARRAY = new int[] {15, 18, 17, 13};
 	private final String name;
@@ -29,27 +29,27 @@ public class GDArmorMaterial implements IArmorMaterial {
 	}
 
 	@Override
-	public int getDurability(EquipmentSlotType slotIn) {
+	public int getDurabilityForSlot(EquipmentSlot slotIn) {
 		return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * this.maxDamageFactor;
 	}
 
 	@Override
-	public int getDamageReductionAmount(EquipmentSlotType slotIn) {
+	public int getDefenseForSlot(EquipmentSlot slotIn) {
 		return damageReductionAmountArray[slotIn.getIndex()];
 	}
 
 	@Override
-	public int getEnchantability() {
+	public int getEnchantmentValue() {
 		return this.enchantability;
 	}
 
 	@Override
-	public SoundEvent getSoundEvent() {
+	public SoundEvent getEquipSound() {
 		return this.soundEvent;
 	}
 
 	@Override
-	public Ingredient getRepairMaterial() {
+	public Ingredient getRepairIngredient() {
 		return this.repairMaterial.get();
 	}
 

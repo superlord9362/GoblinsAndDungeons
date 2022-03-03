@@ -1,7 +1,7 @@
 package superlord.goblinsanddungeons.init;
 
-import net.minecraft.block.SoundType;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.level.block.SoundType;
 
 public class SoundTypeInit extends SoundType {
 

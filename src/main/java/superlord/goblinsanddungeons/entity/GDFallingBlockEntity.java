@@ -2,31 +2,31 @@ package superlord.goblinsanddungeons.entity;
 
 import java.util.Optional;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MoverType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.network.NetworkHooks;
 
 public class GDFallingBlockEntity extends Entity {
 	
 	public static float GRAVITY = 0.1f;
 	public double prevMotionX, prevMotionY, prevMotionZ;
 	
-	private static final DataParameter<Optional<BlockState>> BLOCK_STATE = EntityDataManager.createKey(GDFallingBlockEntity.class, DataSerializers.OPTIONAL_BLOCK_STATE);
-	private static final DataParameter<Integer> DURATION = EntityDataManager.createKey(GDFallingBlockEntity.class, DataSerializers.VARINT);
-	private static final DataParameter<Integer> TICKS_EXISTED = EntityDataManager.createKey(GDFallingBlockEntity.class, DataSerializers.VARINT);
-	private static final DataParameter<String> MODE = EntityDataManager.createKey(GDFallingBlockEntity.class, DataSerializers.STRING);
-	private static final DataParameter<Float> ANIM = EntityDataManager.createKey(GDFallingBlockEntity.class, DataSerializers.FLOAT);
+	private static final EntityDataAccessor<Optional<BlockState>> BLOCK_STATE = SynchedEntityData.defineId(GDFallingBlockEntity.class, EntityDataSerializers.BLOCK_STATE);
+	private static final EntityDataAccessor<Integer> DURATION = SynchedEntityData.defineId(GDFallingBlockEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> TICKS_EXISTED = SynchedEntityData.defineId(GDFallingBlockEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<String> MODE = SynchedEntityData.defineId(GDFallingBlockEntity.class, EntityDataSerializers.STRING);
+	private static final EntityDataAccessor<Float> ANIM = SynchedEntityData.defineId(GDFallingBlockEntity.class, EntityDataSerializers.FLOAT);
 
 	public enum EnumFallingState {
 		MOBILE,
@@ -36,19 +36,19 @@ public class GDFallingBlockEntity extends Entity {
 	public float animY = 0;
 	public float prevAnimY = 0;
 	
-	public GDFallingBlockEntity(EntityType<?> entityType, World world) {
+	public GDFallingBlockEntity(EntityType<?> entityType, Level world) {
 		super(entityType, world);
-		setBlock(Blocks.DIRT.getDefaultState());
+		setBlock(Blocks.DIRT.defaultBlockState());
 		setDuration(70);
 	}
 	
-	public GDFallingBlockEntity(EntityType<?> type, World world, int duration, BlockState state) {
+	public GDFallingBlockEntity(EntityType<?> type, Level world, int duration, BlockState state) {
 		super(type, world);
 		setBlock(state);
 		setDuration(duration);
 	}
 	
-	public GDFallingBlockEntity(EntityType<?> type, World world, BlockState state, float vy) {
+	public GDFallingBlockEntity(EntityType<?> type, Level world, BlockState state, float vy) {
 		super(type, world);
 		setBlock(state);
 		setMode(EnumFallingState.POP_UP);
@@ -57,113 +57,113 @@ public class GDFallingBlockEntity extends Entity {
 	
 	@Override
 	public void onAddedToWorld() {
-		if (getMotion().getX() > 0 || getMotion().getZ() > 0) rotationYaw = (float) ((180F / Math.PI) * Math.atan2(getMotion().getX(), getMotion().getZ()));
-		rotationPitch += rand.nextFloat() * 360;
+		if (getDeltaMovement().x() > 0 || getDeltaMovement().z() > 0) animY = (float) ((180F / Math.PI) * Math.atan2(getDeltaMovement().x(), getDeltaMovement().z()));
+		yRotO += random.nextFloat() * 360;
 		super.onAddedToWorld();
 	}
 	
 	@Override
 	public void tick() {
 		if (getMode() == EnumFallingState.POP_UP) {
-			setMotion(0, 0, 0);
+			setDeltaMovement(0, 0, 0);
 		}
-		prevMotionX = getMotion().x;
-		prevMotionY = getMotion().y;
-		prevMotionZ = getMotion().z;
+		prevMotionX = getDeltaMovement().x;
+		prevMotionY = getDeltaMovement().y;
+		prevMotionZ = getDeltaMovement().z;
 		super.tick();
 		if (getMode() == EnumFallingState.MOBILE) {
-			setMotion(getMotion().subtract(0, GRAVITY, 0));
-			if (onGround) setMotion(getMotion().scale(0.7));
-			else rotationPitch += 15;
-			this.move(MoverType.SELF, this.getMotion());
-			if (ticksExisted > getDuration()) remove();
+			setDeltaMovement(getDeltaMovement().subtract(0, GRAVITY, 0));
+			if (onGround) setDeltaMovement(getDeltaMovement().scale(0.7));
+			else yRotO += 15;
+			this.move(MoverType.SELF, this.getDeltaMovement());
+			if (tickCount > getDuration()) remove(RemovalReason.DISCARDED);
 		} else {
 			float animVY = getAnimVY();
 			prevAnimY = animY;
 			animY += animVY;
 			setAnimVY(animVY - GRAVITY);
-			if (animY < -0.5) remove();
+			if (animY < -0.5) remove(RemovalReason.DISCARDED);
 		}
 	}
 	
 	@Override
-	protected void registerData() {
-		getDataManager().register(BLOCK_STATE, Optional.of(Blocks.DIRT.getDefaultState()));
-		getDataManager().register(DURATION, 70);
-		getDataManager().register(TICKS_EXISTED, 0);
-		getDataManager().register(MODE, EnumFallingState.MOBILE.toString());
-		getDataManager().register(ANIM, 1F);
+	protected void defineSynchedData() {
+		this.entityData.define(BLOCK_STATE, Optional.of(Blocks.DIRT.defaultBlockState()));
+		this.entityData.define(DURATION, 70);
+		this.entityData.define(TICKS_EXISTED, 0);
+		this.entityData.define(MODE, EnumFallingState.MOBILE.toString());
+		this.entityData.define(ANIM, 1F);
 	}
 	
 	@Override
-	protected void readAdditional(CompoundNBT compound) {
-		INBT blockStateCompound = compound.get("block");
+	protected void readAdditionalSaveData(CompoundTag compound) {
+		Tag blockStateCompound = compound.get("block");
 		if (blockStateCompound != null) {
-			BlockState blockState = NBTUtil.readBlockState((CompoundNBT)blockStateCompound);
+			BlockState blockState = NbtUtils.readBlockState((CompoundTag)blockStateCompound);
 			setBlock(blockState);
 		}
 		setDuration(compound.getInt("duration"));
-		ticksExisted = compound.getInt("ticksExisted");
-		getDataManager().set(MODE, compound.getString("mode"));
+		tickCount = compound.getInt("ticksExisted");
+		this.entityData.set(MODE, compound.getString("mode"));
 		setAnimVY(compound.getFloat("vy"));
 	}
 	
 	@Override
-	protected void writeAdditional(CompoundNBT compound) {
+	protected void addAdditionalSaveData(CompoundTag compound) {
 		BlockState blockState = getBlock();
-		if (blockState != null) compound.put("block", NBTUtil.writeBlockState(blockState));
+		if (blockState != null) compound.put("block", NbtUtils.writeBlockState(blockState));
 		compound.putInt("duration", getDuration());
-		compound.putInt("ticksExisted", ticksExisted);
-		compound.putString("mode", getDataManager().get(MODE));
-		compound.putFloat("vy", getDataManager().get(ANIM));
+		compound.putInt("ticksExisted", tickCount);
+		compound.putString("mode", this.entityData.get(MODE));
+		compound.putFloat("vy", this.entityData.get(ANIM));
 	}
 	
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 	
 	public BlockState getBlock() {
-		Optional<BlockState> bsOp = getDataManager().get(BLOCK_STATE);
+		Optional<BlockState> bsOp = this.entityData.get(BLOCK_STATE);
 		return bsOp.orElse(null);
 	}
 	
 	public void setBlock(BlockState state) {
-		getDataManager().set(BLOCK_STATE, Optional.of(state));
+		this.entityData.set(BLOCK_STATE, Optional.of(state));
 	}
 	
 	public int getDuration() {
-		return getDataManager().get(DURATION);
+		return this.entityData.get(DURATION);
 	}
 	
 	public void setDuration(int duration) {
-		getDataManager().set(DURATION, duration);
+		this.entityData.set(DURATION, duration);
 	}
 	
 	public int getTicksExisted() {
-		return getDataManager().get(TICKS_EXISTED);
+		return this.entityData.get(TICKS_EXISTED);
 	}
 	
 	public void setTicksExisted(int ticksExisted) {
-		getDataManager().set(TICKS_EXISTED, ticksExisted);
+		this.entityData.set(TICKS_EXISTED, ticksExisted);
 	}
 	
 	public EnumFallingState getMode() {
-		String mode = getDataManager().get(MODE);
+		String mode = this.entityData.get(MODE);
 		if (mode.isEmpty()) return EnumFallingState.MOBILE;
-		return EnumFallingState.valueOf(getDataManager().get(MODE));
+		return EnumFallingState.valueOf(this.entityData.get(MODE));
 	}
 	
 	private void setMode(EnumFallingState mode) {
-		getDataManager().set(MODE, mode.toString());
+		this.entityData.set(MODE, mode.toString());
 	}
 	
 	public float getAnimVY() {
-		return getDataManager().get(ANIM);
+		return this.entityData.get(ANIM);
 	}
 	
 	private void setAnimVY(float vy) {
-		getDataManager().set(ANIM, vy);
+		this.entityData.set(ANIM, vy);
 	}
 	
 }

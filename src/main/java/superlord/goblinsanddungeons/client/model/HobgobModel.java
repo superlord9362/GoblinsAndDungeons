@@ -2,14 +2,22 @@ package superlord.goblinsanddungeons.client.model;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.MathHelper;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.goblinsanddungeons.entity.GobEntity;
@@ -21,95 +29,78 @@ import superlord.goblinsanddungeons.entity.HobGobEntity;
  */
 @OnlyIn(Dist.CLIENT)
 public class HobgobModel<T extends Entity> extends EntityModel<HobGobEntity> {
-    public ModelRenderer Body;
-    public ModelRenderer RightLeg;
-    public ModelRenderer LeftLeg;
-    public ModelRenderer RightArm;
-    public ModelRenderer LeftArm;
-    public ModelRenderer Head;
-    public ModelRenderer nose;
-    public ModelRenderer Hair;
-    public ModelRenderer Beard;
-    public ModelRenderer Rightear;
-    public ModelRenderer Leftear;
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "custom_model"), "main");
+	private final ModelPart LeftLeg;
+	private final ModelPart RightArm;
+	private final ModelPart Head;
+	private final ModelPart RightLeg;
+	private final ModelPart LeftArm;
+	private final ModelPart Body;
 
-    public HobgobModel() {
-        this.textureWidth = 64;
-        this.textureHeight = 64;
-        this.Leftear = new ModelRenderer(this, 36, 27);
-        this.Leftear.setRotationPoint(4.0F, -4.0F, -3.0F);
-        this.Leftear.addBox(0.0F, 0.0F, 0.0F, 4.0F, 2.0F, 1.0F, 0.0F, 0.0F, 0.0F);
-        this.Beard = new ModelRenderer(this, 14, 46);
-        this.Beard.setRotationPoint(0.0F, 0.0F, -3.0F);
-        this.Beard.addBox(-5.0F, -2.0F, -3.0F, 10.0F, 8.0F, 5.0F, 0.0F, 0.0F, 0.0F);
-        this.Head = new ModelRenderer(this, 0, 0);
-        this.Head.setRotationPoint(0.0F, -3.0F, -3.0F);
-        this.Head.addBox(-4.0F, -5.0F, -7.0F, 8.0F, 8.0F, 10.0F, 0.0F, 0.0F, 0.0F);
-        this.Body = new ModelRenderer(this, 0, 18);
-        this.Body.setRotationPoint(0.0F, -3.0F, 0.0F);
-        this.Body.addBox(-6.0F, 0.0F, -6.0F, 12.0F, 16.0F, 12.0F, 0.0F, 0.0F, 0.0F);
-        this.RightLeg = new ModelRenderer(this, 0, 46);
-        this.RightLeg.setRotationPoint(-3.0F, 13.0F, 0.0F);
-        this.RightLeg.addBox(-2.0F, 0.0F, -2.0F, 3.0F, 11.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.Hair = new ModelRenderer(this, 36, 1);
-        this.Hair.setRotationPoint(0.0F, -1.0F, 3.0F);
-        this.Hair.addBox(-4.0F, -4.0F, 0.0F, 8.0F, 8.0F, 6.0F, 0.0F, 0.0F, 0.0F);
-        this.nose = new ModelRenderer(this, 26, 0);
-        this.nose.setRotationPoint(0.0F, -3.0F, -7.0F);
-        this.nose.addBox(-2.0F, -1.0F, -4.0F, 4.0F, 3.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.RightArm = new ModelRenderer(this, 48, 26);
-        this.RightArm.setRotationPoint(-6.0F, 0.0F, 0.0F);
-        this.RightArm.addBox(-3.0F, -2.0F, -2.0F, 3.0F, 21.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.LeftLeg = new ModelRenderer(this, 0, 46);
-        this.LeftLeg.mirror = true;
-        this.LeftLeg.setRotationPoint(3.0F, 13.0F, 0.0F);
-        this.LeftLeg.addBox(-1.0F, 0.0F, -2.0F, 3.0F, 11.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.LeftArm = new ModelRenderer(this, 48, 26);
-        this.LeftArm.mirror = true;
-        this.LeftArm.setRotationPoint(6.0F, 0.0F, 0.0F);
-        this.LeftArm.addBox(0.0F, -2.0F, -2.0F, 3.0F, 21.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.Rightear = new ModelRenderer(this, 36, 27);
-        this.Rightear.mirror = true;
-        this.Rightear.setRotationPoint(-4.0F, -4.0F, -3.0F);
-        this.Rightear.addBox(-4.0F, 0.0F, 0.0F, 4.0F, 2.0F, 1.0F, 0.0F, 0.0F, 0.0F);
-        this.Head.addChild(this.Leftear);
-        this.Head.addChild(this.Beard);
-        this.Head.addChild(this.Hair);
-        this.Head.addChild(this.nose);
-        this.Head.addChild(this.Rightear);
-    }
+	public HobgobModel(ModelPart root) {
+		this.LeftLeg = root.getChild("LeftLeg");
+		this.RightArm = root.getChild("RightArm");
+		this.Head = root.getChild("Head");
+		this.RightLeg = root.getChild("RightLeg");
+		this.LeftArm = root.getChild("LeftArm");
+		this.Body = root.getChild("Body");
+	}
 
-    @Override
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) { 
-        ImmutableList.of(this.Head, this.Body, this.RightLeg, this.RightArm, this.LeftLeg, this.LeftArm).forEach((modelRenderer) -> { 
-            modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        });
-    }
+	@SuppressWarnings("unused")
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
 
-    @Override
-    public void setRotationAngles(HobGobEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    	this.RightArm.rotateAngleX = 0.0F;
-    	this.LeftArm.rotateAngleX = 0.0F;
-    	this.Head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
-        this.Head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
-        this.RightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        this.LeftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-        this.RightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-        this.LeftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        List<GobEntity> gob1 = entityIn.world.getEntitiesWithinAABB(GobEntity.class, entityIn.getBoundingBox().grow(1.0D, 1.0D, 1.0D));
-		List<PlayerEntity> player = entityIn.world.getEntitiesWithinAABB(PlayerEntity.class, entityIn.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
-		if (!gob1.isEmpty() && !player.isEmpty() && entityIn.getRevengeTarget() == null){
-			this.RightArm.rotateAngleX = -MathHelper.abs(-0.5F * 2F * MathHelper.sin((1F * ageInTicks) / 10));
-			this.LeftArm.rotateAngleX = -MathHelper.abs(-0.5F * 2F * MathHelper.sin((1F * ageInTicks) / 10));
+		PartDefinition LeftLeg = partdefinition.addOrReplaceChild("LeftLeg", CubeListBuilder.create().texOffs(0, 46).addBox(-2.0F, 0.0F, -2.0F, 3.0F, 11.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.0F, 13.0F, 0.0F));
+
+		PartDefinition RightArm = partdefinition.addOrReplaceChild("RightArm", CubeListBuilder.create().texOffs(48, 26).mirror().addBox(0.0F, -2.0F, -2.0F, 3.0F, 21.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(6.0F, 0.0F, 0.0F));
+
+		PartDefinition Head = partdefinition.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -5.0F, -7.0F, 8.0F, 8.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, -3.0F));
+
+		PartDefinition Leftear = Head.addOrReplaceChild("Leftear", CubeListBuilder.create().texOffs(36, 27).mirror().addBox(-4.0F, 0.0F, 0.0F, 4.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-4.0F, -4.0F, -3.0F));
+
+		PartDefinition Beard = Head.addOrReplaceChild("Beard", CubeListBuilder.create().texOffs(14, 46).addBox(-5.0F, -2.0F, -3.0F, 10.0F, 8.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -3.0F));
+
+		PartDefinition Hair = Head.addOrReplaceChild("Hair", CubeListBuilder.create().texOffs(36, 1).addBox(-4.0F, -4.0F, 0.0F, 8.0F, 8.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, 3.0F));
+
+		PartDefinition nose = Head.addOrReplaceChild("nose", CubeListBuilder.create().texOffs(26, 0).addBox(-2.0F, -1.0F, -4.0F, 4.0F, 3.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, -7.0F));
+
+		PartDefinition Rightear = Head.addOrReplaceChild("Rightear", CubeListBuilder.create().texOffs(36, 27).addBox(0.0F, 0.0F, 0.0F, 4.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(4.0F, -4.0F, -3.0F));
+
+		PartDefinition RightLeg = partdefinition.addOrReplaceChild("RightLeg", CubeListBuilder.create().texOffs(0, 46).mirror().addBox(-1.0F, 0.0F, -2.0F, 3.0F, 11.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(3.0F, 13.0F, 0.0F));
+
+		PartDefinition LeftArm = partdefinition.addOrReplaceChild("LeftArm", CubeListBuilder.create().texOffs(48, 26).addBox(-3.0F, -2.0F, -2.0F, 3.0F, 21.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-6.0F, 0.0F, 0.0F));
+
+		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 18).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 16.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 64, 64);
+	}
+
+	@Override
+	public void setupAnim(HobGobEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		this.RightArm.xRot = 0.0F;
+		this.LeftArm.xRot = 0.0F;
+		this.Head.xRot = headPitch * ((float)Math.PI / 180F);
+		this.Head.yRot = netHeadYaw * ((float)Math.PI / 180F);
+		this.RightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		this.LeftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+		this.RightArm.xRot = Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+		this.LeftArm.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		List<GobEntity> gob1 = entity.level.getEntitiesOfClass(GobEntity.class, entity.getBoundingBox().inflate(1.0D, 1.0D, 1.0D));
+		List<Player> player = entity.level.getEntitiesOfClass(Player.class, entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+		if (!gob1.isEmpty() && !player.isEmpty() && entity.getTarget() == null){
+			this.RightArm.xRot = -Mth.abs(-0.5F * 2F * Mth.sin((1F * ageInTicks) / 10));
+			this.LeftArm.xRot = -Mth.abs(-0.5F * 2F * Mth.sin((1F * ageInTicks) / 10));
 		}
-    }
+	}
 
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
-    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
-    }
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		LeftLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		RightArm.render(poseStack, buffer, packedLight, packedOverlay);
+		Head.render(poseStack, buffer, packedLight, packedOverlay);
+		RightLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		LeftArm.render(poseStack, buffer, packedLight, packedOverlay);
+		Body.render(poseStack, buffer, packedLight, packedOverlay);
+	}
 }

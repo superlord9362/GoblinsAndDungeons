@@ -5,48 +5,48 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.MoveTowardsTargetGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.AbstractRaiderEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SEntityVelocityPacket;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.RangedInteger;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.TickRangeConverter;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.util.TimeUtil;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.MoveTowardsTargetGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.goblinsanddungeons.init.CreatureAttributeInit;
@@ -56,39 +56,39 @@ import superlord.goblinsanddungeons.init.SoundInit;
 
 public class OgreEntity extends GoblinEntity {
 
-	private static final RangedInteger field_234196_bu_ = TickRangeConverter.convertRange(20, 39);
+	private static final UniformInt field_234196_bu_ = TimeUtil.rangeOfSeconds(20, 39);
 	private int field_234197_bv_;
 	private UUID field_234198_bw_;
 	private int attackTimer;
-	private static final DataParameter<Boolean> ROARING = EntityDataManager.createKey(OgreEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> BUTT_SMASH = EntityDataManager.createKey(OgreEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> CAN_BUTT_SMASH = EntityDataManager.createKey(OgreEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> CAN_ROAR = EntityDataManager.createKey(OgreEntity.class, DataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> ROARING = SynchedEntityData.defineId(OgreEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> BUTT_SMASH = SynchedEntityData.defineId(OgreEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> CAN_BUTT_SMASH = SynchedEntityData.defineId(OgreEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> CAN_ROAR = SynchedEntityData.defineId(OgreEntity.class, EntityDataSerializers.BOOLEAN);
 	private int roarTicks = 1800;
 	private int buttSmashTicks = 900;
 
-	public OgreEntity(EntityType<? extends OgreEntity> type, World worldIn) {
+	public OgreEntity(EntityType<? extends OgreEntity> type, Level worldIn) {
 		super(type, worldIn);
-		this.stepHeight = 1.0F;
+		this.maxUpStep = 1.0F;
 	}
 
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new OgreEntity.AttackGoal(this, 1.0D, true));
 		this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.9D, 32.0F));
-		this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-		this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-		this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+		this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractRaiderEntity.class, true));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Raider.class, true));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
 		this.targetSelector.addGoal(1, new OgreEntity.RoarGoal());
 		this.targetSelector.addGoal(1, new OgreEntity.ButtSmashGoal(this));
 	}
 
-	public static AttributeModifierMap.MutableAttribute createAttributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 200.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.15F).createMutableAttribute(Attributes.ATTACK_DAMAGE, 10.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 25.0D).createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 25.0D);
+	public static AttributeSupplier.Builder createAttributes() {
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(Attributes.MOVEMENT_SPEED, (double)0.15F).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.FOLLOW_RANGE, 25.0D).add(Attributes.KNOCKBACK_RESISTANCE, 25.0D);
 	}
 
 	protected SoundEvent getAmbientSound() {
@@ -108,71 +108,71 @@ public class OgreEntity extends GoblinEntity {
 	}
 
 	public boolean isRoaring() {
-		return this.dataManager.get(ROARING);
+		return this.entityData.get(ROARING);
 	}
 
 	private void setRoaring(boolean isRoaring) {
-		this.dataManager.set(ROARING, isRoaring);
+		this.entityData.set(ROARING, isRoaring);
 	}
 
 	public boolean isFallingOnButt() {
-		return this.dataManager.get(BUTT_SMASH);
+		return this.entityData.get(BUTT_SMASH);
 	}
 
 	private void setFallingOnButt(boolean buttSmash) {
-		this.dataManager.set(BUTT_SMASH, buttSmash);
+		this.entityData.set(BUTT_SMASH, buttSmash);
 	}
 	
 	public boolean canRoar() {
-		return this.dataManager.get(CAN_ROAR);
+		return this.entityData.get(CAN_ROAR);
 	}
 	
 	private void setCanRoar(boolean canRoar) {
-		this.dataManager.set(CAN_ROAR, canRoar);
+		this.entityData.set(CAN_ROAR, canRoar);
 	}
 	
 	public boolean canButtSmash() {
-		return this.dataManager.get(CAN_BUTT_SMASH);
+		return this.entityData.get(CAN_BUTT_SMASH);
 	}
 	
 	private void setCanButtSmash(boolean canButtSmash) {
-		this.dataManager.set(CAN_BUTT_SMASH, canButtSmash);
+		this.entityData.set(CAN_BUTT_SMASH, canButtSmash);
 	}
 
-	public boolean preventDespawn() {
-		return super.preventDespawn();
+	public boolean requiresCustomPersistence() {
+		return super.requiresCustomPersistence();
 	}
 
-	protected void registerData() {
-		super.registerData();
-		this.dataManager.register(ROARING, false);
-		this.dataManager.register(BUTT_SMASH, false);
-		this.dataManager.register(CAN_ROAR, false);
-		this.dataManager.register(CAN_BUTT_SMASH, false);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.entityData.define(ROARING, false);
+		this.entityData.define(BUTT_SMASH, false);
+		this.entityData.define(CAN_ROAR, false);
+		this.entityData.define(CAN_BUTT_SMASH, false);
 	}
 
-	public void writeAdditional(CompoundNBT compound) {
-		super.writeAdditional(compound);
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
 		compound.putBoolean("IsRoaring", this.isRoaring());
 		compound.putBoolean("ButtSmash", this.isFallingOnButt());
 		compound.putBoolean("CanRoar", this.canRoar());
 		compound.putBoolean("CanButtSmash", this.canButtSmash());
 	}
 
-	public void readAdditional(CompoundNBT compound) {
-		super.readAdditional(compound);
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
 		this.setRoaring(compound.getBoolean("IsRoaring"));
 		this.setFallingOnButt(compound.getBoolean("ButtSmash"));
 		this.setCanButtSmash(compound.getBoolean("CanButtSmash"));
 		this.setCanRoar(compound.getBoolean("CanRoar"));
 	}
 
-	public void livingTick() {
-		super.livingTick();
-		if (this.getAttackTarget() != null) {
+	public void aiStep() {
+		super.aiStep();
+		if (this.getTarget() != null) {
 			++this.attackTimer;
 		}
-		if (this.attackTimer > 200 || this.getAttackTarget() == null) {
+		if (this.attackTimer > 200 || this.getTarget() == null) {
 			this.attackTimer = 0;
 		}
 		if (buttSmashTicks > 0) {
@@ -190,7 +190,7 @@ public class OgreEntity extends GoblinEntity {
 
 
 	public void func_230258_H__() {
-		this.setAngerTime(field_234196_bu_.getRandomWithinRange(this.rand));
+		this.setAngerTime(field_234196_bu_.sample(this.random));
 	}
 
 	public void setAngerTime(int time) {
@@ -213,14 +213,14 @@ public class OgreEntity extends GoblinEntity {
 		return (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
 	}
 
-	public boolean attackEntityAsMob(Entity entityIn) {
-		this.world.setEntityState(this, (byte)4);
+	public boolean doHurtTarget(Entity entityIn) {
+		this.level.broadcastEntityEvent(this, (byte)4);
 		float f = this.func_226511_et_();
-		float f1 = (int)f > 0 ? f / 2.0F + (float)this.rand.nextInt((int)f) : f;
-		boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), f1);
+		float f1 = (int)f > 0 ? f / 2.0F + (float)this.random.nextInt((int)f) : f;
+		boolean flag = entityIn.hurt(DamageSource.mobAttack(this), f1);
 		if (flag) {
-			entityIn.setMotion(entityIn.getMotion().add(0.0D, (double)0.4F, 0.0D));
-			this.applyEnchantments(this, entityIn);
+			entityIn.setDeltaMovement(entityIn.getDeltaMovement().add(0.0D, (double)0.4F, 0.0D));
+			this.doEnchantDamageEffects(this, entityIn);
 		}
 
 		return flag;
@@ -229,28 +229,23 @@ public class OgreEntity extends GoblinEntity {
 	/**
 	 * Called when the entity is attacked.
 	 */
-	public boolean attackEntityFrom(DamageSource source, float amount) {
-		boolean flag = super.attackEntityFrom(source, amount);
+	public boolean hurt(DamageSource source, float amount) {
+		boolean flag = super.hurt(source, amount);
 		return flag;
 	}
-
-	public IronGolemEntity.Cracks func_226512_l_() {
-		return IronGolemEntity.Cracks.func_226515_a_(this.getHealth() / this.getMaxHealth());
-	}
-
-	public void onDeath(DamageSource cause) {
-		super.onDeath(cause);
+	public void die(DamageSource cause) {
+		super.die(cause);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public Vector3d func_241205_ce_() {
-		return new Vector3d(0.0D, (double)(0.875F * this.getEyeHeight()), (double)(this.getWidth() * 0.4F));
+	public Vec3 func_241205_ce_() {
+		return new Vec3(0.0D, (double)(0.875F * this.getEyeHeight()), (double)(this.getBbWidth() * 0.4F));
 	}
 
-	public boolean isOnSameTeam(Entity entityIn) {
-		if (super.isOnSameTeam(entityIn)) {
+	public boolean isAlliedTo(Entity entityIn) {
+		if (super.isAlliedTo(entityIn)) {
 			return true;
-		} else if (entityIn instanceof LivingEntity && ((LivingEntity)entityIn).getCreatureAttribute() == CreatureAttributeInit.GOBLIN) {
+		} else if (entityIn instanceof LivingEntity && ((LivingEntity)entityIn).getMobType() == CreatureAttributeInit.GOBLIN) {
 			return this.getTeam() == null && entityIn.getTeam() == null;
 		} else {
 			return false;
@@ -268,25 +263,25 @@ public class OgreEntity extends GoblinEntity {
 	}
 
 	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
+	public ItemStack getPickedResult(HitResult target) {
 		return new ItemStack(ItemInit.OGRE_SPAWN_EGG.get());
 	}
 	
 	class AttackGoal extends MeleeAttackGoal {
 
-		public AttackGoal(CreatureEntity creature, double speedIn, boolean useLongMemory) {
+		public AttackGoal(PathfinderMob creature, double speedIn, boolean useLongMemory) {
 			super(creature, speedIn, useLongMemory);
 		}
 		
 		@Override
-		public boolean shouldExecute() {
-			if (OgreEntity.this.getAttackTarget() != null) return true;
+		public boolean canUse() {
+			if (OgreEntity.this.getTarget() != null) return true;
 			else return false;
 		}
 		
 		@Override
-		public boolean shouldContinueExecuting() {
-			if (OgreEntity.this.getAttackTarget() == null || OgreEntity.this.canButtSmash() || OgreEntity.this.canRoar()) return false;
+		public boolean canContinueToUse() {
+			if (OgreEntity.this.getTarget() == null || OgreEntity.this.canButtSmash() || OgreEntity.this.canRoar()) return false;
 			else return true;
 		}
 		
@@ -296,8 +291,8 @@ public class OgreEntity extends GoblinEntity {
 		int timer = 0;
 		
 		@Override
-		public boolean shouldExecute() {
-			if (OgreEntity.this.getAttackTarget() != null && OgreEntity.this.canRoar()) {
+		public boolean canUse() {
+			if (OgreEntity.this.getTarget() != null && OgreEntity.this.canRoar()) {
 				return true;
 			} else {
 				return false;
@@ -307,27 +302,27 @@ public class OgreEntity extends GoblinEntity {
 		public void tick() {
 			timer++;
 			if (timer == 50) {
-				this.resetTask();
+				this.stop();
 			}
 		}
 
-		public void startExecuting() {
+		public void start() {
 			OgreEntity.this.setRoaring(true);
-			LivingEntity entity = OgreEntity.this.getAttackTarget();
-			world.playSound((PlayerEntity) null, OgreEntity.this.getPosition(), SoundInit.OGRE_ROAR, SoundCategory.HOSTILE, 2, 1);
+			LivingEntity entity = OgreEntity.this.getTarget();
+			level.playSound((Player) null, OgreEntity.this.blockPosition(), SoundInit.OGRE_ROAR, SoundSource.HOSTILE, 2, 1);
 			OgreEntity.this.playSound(SoundInit.OGRE_ROAR, 1, 1);
-			entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 300, 1));
+			entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 300, 1));
 		}
 
 		@Override
-		public boolean shouldContinueExecuting() {
-			if (OgreEntity.this.getAttackTarget() == null || !OgreEntity.this.canRoar()) return false;
+		public boolean canContinueToUse() {
+			if (OgreEntity.this.getTarget() == null || !OgreEntity.this.canRoar()) return false;
 			else return true;
 		}
 
 		@Override
-		public void resetTask() {
-			super.resetTask();
+		public void stop() {
+			super.stop();
 			OgreEntity.this.setRoaring(false);
 			OgreEntity.this.roarTicks = 1800;
 			timer = 0;
@@ -345,8 +340,8 @@ public class OgreEntity extends GoblinEntity {
 		}
 
 		@Override
-		public boolean shouldExecute() {
-			if (ogre.getAttackTarget() != null && ogre.canButtSmash()) {
+		public boolean canUse() {
+			if (ogre.getTarget() != null && ogre.canButtSmash()) {
 				return true;
 			} else {
 				return false;
@@ -354,8 +349,8 @@ public class OgreEntity extends GoblinEntity {
 		}
 		
 		@Override
-		public boolean shouldContinueExecuting() {
-			if (ogre.getAttackTarget() == null || !ogre.canButtSmash()) return false;
+		public boolean canContinueToUse() {
+			if (ogre.getTarget() == null || !ogre.canButtSmash()) return false;
 			else return true;
 		}
 
@@ -363,78 +358,78 @@ public class OgreEntity extends GoblinEntity {
 		public void tick() {
 			timer++;
 			if (ogre.isOnGround() && !this.hasJumped) {
-				ogre.setMotion(0, 0.5, 0);
+				ogre.setDeltaMovement(0, 0.5, 0);
 				
 				this.hasJumped = true;
 			}
-			double perpFacing = ogre.renderYawOffset * (Math.PI / 180);
+			double perpFacing = ogre.yo * (Math.PI / 180);
 			double facingAngle = perpFacing + Math.PI / 2;
-			int hitY = MathHelper.floor(ogre.getBoundingBox().minY - 0.5);
+			int hitY = Mth.floor(ogre.getBoundingBox().minY - 0.5);
 			int tick = timer;
 			final int maxDistance = 6;
-			ServerWorld world = (ServerWorld) ogre.world;
+			ServerLevel world = (ServerLevel) ogre.level;
 			if (tick > 0) {
 				int distance = tick / 2 - 2;
 				double spread = Math.PI * 2;
-				int arcLen = MathHelper.ceil(distance * spread);
+				int arcLen = Mth.ceil(distance * spread);
 				double minY = ogre.getBoundingBox().minY;
 				double maxY = ogre.getBoundingBox().maxY;
 				for (int i = 0; i < arcLen; i++) {
 					double theta = (i / (arcLen - 1.0) - 0.5) * spread + facingAngle;
 					double vx = Math.cos(theta);
 					double vz = Math.sin(theta);
-					double px = ogre.getPosX() + vx * distance;
-					double pz = ogre.getPosZ() + vz * distance;
+					double px = ogre.getX() + vx * distance;
+					double pz = ogre.getZ() + vz * distance;
 					float factor = 1 - distance / (float) maxDistance;
-					AxisAlignedBB selection = new AxisAlignedBB(px - 1.5, minY, pz - 1.5, px + 1.5, maxY, pz + 1.5);
-					List<Entity> hit = world.getEntitiesWithinAABB(Entity.class, selection);
+					AABB selection = new AABB(px - 1.5, minY, pz - 1.5, px + 1.5, maxY, pz + 1.5);
+					List<Entity> hit = world.getEntitiesOfClass(Entity.class, selection);
 					for (Entity entity : hit) {
 						if (entity == this.ogre || entity instanceof GDFallingBlockEntity) {
 							continue;
 						}
 						float applyKnockbackResistance = 0;
 						if (entity instanceof LivingEntity) {
-							entity.attackEntityFrom(DamageSource.causeMobDamage(this.ogre),(float) ((factor * 5 + 1) * ogre.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+							entity.hurt(DamageSource.mobAttack(this.ogre),(float) ((factor * 5 + 1) * ogre.getAttributeValue(Attributes.ATTACK_DAMAGE)));
 							applyKnockbackResistance = (float) ((LivingEntity)entity).getAttribute(Attributes.KNOCKBACK_RESISTANCE).getValue();
 						}
-						double magnitude = world.rand.nextDouble() * 0.15 + 0.1;
+						double magnitude = world.random.nextDouble() * 0.15 + 0.1;
 						float x = 0, y = 0, z = 0;
 						x += vx * factor * magnitude * (1 - applyKnockbackResistance);
 						if (entity.isOnGround()) {
 							y += 0.1 * (1 - applyKnockbackResistance) + factor * 0.15 * (1 - applyKnockbackResistance);
 						}
 						z += vz * factor * magnitude * (1 - applyKnockbackResistance);
-						entity.setMotion(entity.getMotion().add(x, y, z));
-						if (entity instanceof ServerPlayerEntity) {
-							((ServerPlayerEntity)entity).connection.sendPacket(new SEntityVelocityPacket(entity));
+						entity.setDeltaMovement(entity.getDeltaMovement().add(x, y, z));
+						if (entity instanceof ServerPlayer) {
+							((ServerPlayer)entity).connection.send(new ClientboundSetEntityMotionPacket(entity));
 						}
-						if (world.rand.nextBoolean()) {
-							int hitX = MathHelper.floor(px);
-							int hitZ = MathHelper.floor(pz);
+						if (world.random.nextBoolean()) {
+							int hitX = Mth.floor(px);
+							int hitZ = Mth.floor(pz);
 							BlockPos pos = new BlockPos(hitX, hitY, hitZ);
-							BlockPos abovePos = new BlockPos(pos).up();
+							BlockPos abovePos = new BlockPos(pos).above();
 							BlockState block = world.getBlockState(pos);
 							BlockState blockAbove = world.getBlockState(abovePos);
-							if (block.getMaterial() != Material.AIR && block.isNormalCube(world, pos) && !block.getBlock().hasTileEntity(block) && !blockAbove.getMaterial().blocksMovement()) {
+							if (block.getMaterial() != Material.AIR && block.isRedstoneConductor(world, pos) && !block.hasBlockEntity() && !blockAbove.getMaterial().blocksMotion()) {
 								GDFallingBlockEntity fallingBlock = new GDFallingBlockEntity(EntityInit.FALLING_BLOCK.get(), world, block, (float) (0.4 + factor * 0.2));
-								fallingBlock.setPosition(hitX + 0.5, hitY + 1, hitZ + 0.5);
-								world.addEntity(fallingBlock);
+								fallingBlock.setPos(hitX + 0.5, hitY + 1, hitZ + 0.5);
+								world.addFreshEntity(fallingBlock);
 							}
 						}
 					}
 				}
 			}
-			if (ogre.isAirBorne) {
+			if (!ogre.isOnGround()) {
 				ogre.setFallingOnButt(true);
 			} else {
 				ogre.setFallingOnButt(false);
-				this.resetTask();
+				this.stop();
 			}
 		}
 
 		@Override
-		public void resetTask() {
-			super.resetTask();
+		public void stop() {
+			super.stop();
 			ogre.buttSmashTicks = 900;
 			ogre.setCanButtSmash(false);
 		}

@@ -4,14 +4,14 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class RegistryHelper {
 	
@@ -34,10 +34,10 @@ public class RegistryHelper {
 		return this.blockRegister;
 	}
 	
-	public <B extends Block> RegistryObject<B> createCompatBlock(String modId, String name, Supplier<? extends B> supplier, @Nullable ItemGroup group) {
-		ItemGroup determineGroup = ModList.get().isLoaded(modId) || modId == "indev" ? group : null;
+	public <B extends Block> RegistryObject<B> createCompatBlock(String modId, String name, Supplier<? extends B> supplier, @Nullable CreativeModeTab group) {
+		CreativeModeTab determineGroup = ModList.get().isLoaded(modId) || modId == "indev" ? group : null;
 		RegistryObject<B> block = this.blockRegister.register(name, supplier);
-		this.itemRegister.register(name, () -> new BlockItem(block.get(), new Item.Properties().group(determineGroup)));
+		this.itemRegister.register(name, () -> new BlockItem(block.get(), new Item.Properties().tab(determineGroup)));
 		return block;
 	}
 

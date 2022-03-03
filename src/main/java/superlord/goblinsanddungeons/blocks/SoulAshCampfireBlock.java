@@ -1,60 +1,6 @@
 package superlord.goblinsanddungeons.blocks;
 
-import java.util.Optional;
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CampfireCookingRecipe;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.stats.Stats;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.entity.tile.SoulAshCampfireTileEntity;
-
-public class SoulAshCampfireBlock extends ContainerBlock implements IWaterLoggable {
+public class SoulAshCampfireBlock {} /** extends ContainerBlock implements IWaterLoggable {
 	protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D);
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 	public static final BooleanProperty SIGNAL_FIRE = BlockStateProperties.SIGNAL_FIRE;
@@ -119,12 +65,6 @@ public class SoulAshCampfireBlock extends ContainerBlock implements IWaterLoggab
 		return this.getDefaultState().with(WATERLOGGED, Boolean.valueOf(flag)).with(SIGNAL_FIRE, Boolean.valueOf(this.isHayBlock(iworld.getBlockState(blockpos.down())))).with(LIT, Boolean.valueOf(!flag)).with(FACING, context.getPlacementHorizontalFacing());
 	}
 
-	/**
-	 * Update the provided state given the provided neighbor facing and neighbor state, returning a new state.
-	 * For example, fences make their connections to the passed in state if possible, and wet concrete powder immediately
-	 * returns its solidified counterpart.
-	 * Note that this method should ideally consider only the specific face passed in.
-	 */
 	@SuppressWarnings("deprecation")
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
 		if (stateIn.get(WATERLOGGED)) {
@@ -134,9 +74,6 @@ public class SoulAshCampfireBlock extends ContainerBlock implements IWaterLoggab
 		return facing == Direction.DOWN ? stateIn.with(SIGNAL_FIRE, Boolean.valueOf(this.isHayBlock(facingState))) : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
 	}
 
-	/**
-	 * Returns true if the block of the passed blockstate is a Hay block, otherwise false.
-	 */
 	private boolean isHayBlock(BlockState stateIn) {
 		return stateIn.isIn(Blocks.HAY_BLOCK);
 	}
@@ -145,20 +82,10 @@ public class SoulAshCampfireBlock extends ContainerBlock implements IWaterLoggab
 		return SHAPE;
 	}
 
-	/**
-	 * The type of render function called. MODEL for mixed tesr and static model, MODELBLOCK_ANIMATED for TESR-only,
-	 * LIQUID for vanilla liquids, INVISIBLE to skip all rendering
-	 * @deprecated call via {@link IBlockState#getRenderType()} whenever possible. Implementing/overriding is fine.
-	 */
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;
 	}
 
-	/**
-	 * Called periodically clientside on blocks near the player to show effects (like furnace fire particles). Note that
-	 * this method is unrelated to {@link randomTick} and {@link #needsRandomTick}, and will always be called regardless
-	 * of whether the block can receive random update ticks
-	 */
 	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
 		if (stateIn.get(LIT)) {
@@ -257,21 +184,10 @@ public class SoulAshCampfireBlock extends ContainerBlock implements IWaterLoggab
 		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
 	}
 
-	/**
-	 * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
-	 * blockstate.
-	 * @deprecated call via {@link IBlockState#withRotation(Rotation)} whenever possible. Implementing/overriding is
-	 * fine.
-	 */
 	public BlockState rotate(BlockState state, Rotation rot) {
 		return state.with(FACING, rot.rotate(state.get(FACING)));
 	}
 
-	/**
-	 * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-	 * blockstate.
-	 * @deprecated call via {@link IBlockState#withMirror(Mirror)} whenever possible. Implementing/overriding is fine.
-	 */
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		return state.rotate(mirrorIn.toRotation(state.get(FACING)));
 	}
@@ -293,4 +209,4 @@ public class SoulAshCampfireBlock extends ContainerBlock implements IWaterLoggab
 			return stateIn.hasProperty(BlockStateProperties.WATERLOGGED) && stateIn.hasProperty(BlockStateProperties.LIT);
 		}) && !state.get(BlockStateProperties.WATERLOGGED) && !state.get(BlockStateProperties.LIT);
 	}
-}
+}*/

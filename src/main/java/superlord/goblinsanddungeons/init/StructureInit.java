@@ -1,62 +1,116 @@
 package superlord.goblinsanddungeons.init;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.settings.DimensionStructuresSettings;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.config.GoblinsDungeonsConfig;
 import superlord.goblinsanddungeons.world.structures.LargeGoblinCampStructure;
+import superlord.goblinsanddungeons.world.structures.LargeGoblinCampStructurePiece;
 import superlord.goblinsanddungeons.world.structures.MediumGoblinCampStructure;
+import superlord.goblinsanddungeons.world.structures.MediumGoblinCampStructurePiece;
 import superlord.goblinsanddungeons.world.structures.RuinedKeepStructure;
+import superlord.goblinsanddungeons.world.structures.RuinedKeepStructurePiece;
 import superlord.goblinsanddungeons.world.structures.SmallGoblinCampStructure;
+import superlord.goblinsanddungeons.world.structures.SmallGoblinCampStructurePiece;
 
 @Mod.EventBusSubscriber(modid = GoblinsAndDungeons.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class StructureInit {
-	
-	public static IStructurePieceType SMALL_GOBLIN_CAMP_PIECE_TYPE = SmallGoblinCampStructure.Piece::new;
-	public static IStructurePieceType MEDIUM_GOBLIN_CAMP_PIECE_TYPE = MediumGoblinCampStructure.Piece::new;
-	public static IStructurePieceType LARGE_GOBLIN_CAMP_PIECE_TYPE = LargeGoblinCampStructure.Piece::new;
-	public static IStructurePieceType RUINED_KEEP_PIECE_TYPE = RuinedKeepStructure.Piece::new;
 
-	public static final DeferredRegister<Structure<?>> REGISTER = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, GoblinsAndDungeons.MOD_ID);
+	public static final StructureFeature<NoneFeatureConfiguration> SMALL_GOBLIN_CAMP = new SmallGoblinCampStructure(NoneFeatureConfiguration.CODEC);
+	public static final ConfiguredStructureFeature<NoneFeatureConfiguration, ? extends StructureFeature<NoneFeatureConfiguration>> SMALL_GOBLIN_CAMP_FEATURE = configFeatureRegister(prefix("small_goblin_camp_feature"), SMALL_GOBLIN_CAMP.configured(NoneFeatureConfiguration.INSTANCE));
+	public static final StructureFeature<NoneFeatureConfiguration> MEDIUM_GOBLIN_CAMP = new MediumGoblinCampStructure(NoneFeatureConfiguration.CODEC);
+	public static final ConfiguredStructureFeature<NoneFeatureConfiguration, ? extends StructureFeature<NoneFeatureConfiguration>> MEDIUM_GOBLIN_CAMP_FEATURE = configFeatureRegister(prefix("medium_goblin_camp_feature"), MEDIUM_GOBLIN_CAMP.configured(NoneFeatureConfiguration.INSTANCE));
+	public static final StructureFeature<NoneFeatureConfiguration> LARGE_GOBLIN_CAMP = new LargeGoblinCampStructure(NoneFeatureConfiguration.CODEC);
+	public static final ConfiguredStructureFeature<NoneFeatureConfiguration, ? extends StructureFeature<NoneFeatureConfiguration>> LARGE_GOBLIN_CAMP_FEATURE = configFeatureRegister(prefix("large_goblin_camp_feature"), LARGE_GOBLIN_CAMP.configured(NoneFeatureConfiguration.INSTANCE));
+	public static final StructureFeature<NoneFeatureConfiguration> RUINED_KEEP = new RuinedKeepStructure(NoneFeatureConfiguration.CODEC);
+	public static final ConfiguredStructureFeature<NoneFeatureConfiguration, ? extends StructureFeature<NoneFeatureConfiguration>> RUINED_KEEP_FEATURE = configFeatureRegister(prefix("ruined_keep_feature"), RUINED_KEEP.configured(NoneFeatureConfiguration.INSTANCE));
 
-	public static final RegistryObject<Structure<NoFeatureConfig>> SMALL_GOBLIN_CAMP = REGISTER.register("small_goblin_camp", () -> (new SmallGoblinCampStructure(NoFeatureConfig.field_236558_a_)));
-	public static final RegistryObject<Structure<NoFeatureConfig>> MEDIUM_GOBLIN_CAMP = REGISTER.register("medium_goblin_camp", () -> (new MediumGoblinCampStructure(NoFeatureConfig.field_236558_a_)));
-	public static final RegistryObject<Structure<NoFeatureConfig>> LARGE_GOBLIN_CAMP = REGISTER.register("large_goblin_camp", () -> (new LargeGoblinCampStructure(NoFeatureConfig.field_236558_a_)));
-	public static final RegistryObject<Structure<NoFeatureConfig>> RUINED_KEEP = REGISTER.register("ruined_keep", () -> (new RuinedKeepStructure(NoFeatureConfig.field_236558_a_)));
-	
-	public static void setupStructures() {
-		setupMapSpacingAndLand(SMALL_GOBLIN_CAMP.get(), new StructureSeparationSettings(GoblinsDungeonsConfig.smallGoblinCampMaxDistance, GoblinsDungeonsConfig.smallGoblinCampMinDistance, 2538959), true);
-		setupMapSpacingAndLand(MEDIUM_GOBLIN_CAMP.get(), new StructureSeparationSettings(GoblinsDungeonsConfig.mediumGoblinCampMaxDistance, GoblinsDungeonsConfig.mediumGoblinCampMinDistance, 2895726), true);
-		setupMapSpacingAndLand(LARGE_GOBLIN_CAMP.get(), new StructureSeparationSettings(GoblinsDungeonsConfig.largeGoblinCampMaxDistance, GoblinsDungeonsConfig.largeGoblinCampMinDistance, 2716364), true);
-		setupMapSpacingAndLand(RUINED_KEEP.get(), new StructureSeparationSettings(GoblinsDungeonsConfig.ruinedKeepMaxDistance, GoblinsDungeonsConfig.ruinedKeepMinDistance, 2827153), true);
+	public static final StructurePieceType SMALL_GOBLIN_CAMP_STRUCTURE_PIECE = setPieceId(SmallGoblinCampStructurePiece.Piece::new, "SGCSP");
+	public static final StructurePieceType MEDIUM_GOBLIN_CAMP_STRUCTURE_PIECE = setPieceId(MediumGoblinCampStructurePiece.Piece::new, "MGCSP");
+	public static final StructurePieceType LARGE_GOBLIN_CAMP_STRUCTURE_PIECE = setPieceId(LargeGoblinCampStructurePiece.Piece::new, "LGCSP");
+	public static final StructurePieceType RUINED_KEEP_STRUCTURE_PIECE = setPieceId(RuinedKeepStructurePiece.Piece::new, "RKSP");
+
+	static StructurePieceType setPieceId(StructurePieceType.StructureTemplateType p_67164_, String p_67165_) {
+		return Registry.register(Registry.STRUCTURE_PIECE, p_67165_.toLowerCase(Locale.ROOT), p_67164_);
 	}
+	
+	@SubscribeEvent
+	public static void registerfeature(RegistryEvent.Register<StructureFeature<?>> registry) {
+		StructureFeature.STRUCTURES_REGISTRY.put("goblinsanddungeons:small_goblin_camp_feature", SMALL_GOBLIN_CAMP);
+		StructureFeature.STRUCTURES_REGISTRY.put("goblinsanddungeons:medium_golbin_camp_feature", MEDIUM_GOBLIN_CAMP);
+		StructureFeature.STRUCTURES_REGISTRY.put("goblinsanddungeons:large_golbin_camp_feature", LARGE_GOBLIN_CAMP);
+		StructureFeature.STRUCTURES_REGISTRY.put("goblinsanddungeons:ruined_keep_feature", RUINED_KEEP);
 
-	public static <F extends Structure<?>> void setupMapSpacingAndLand(F structure, StructureSeparationSettings structureSeparationSettings, boolean transformSurroundingLand) {
-		Structure.NAME_STRUCTURE_BIMAP.put(structure.getRegistryName().toString(), structure);
+		setupMapSpacingAndLand(SMALL_GOBLIN_CAMP, new StructureFeatureConfiguration(GoblinsDungeonsConfig.smallGoblinCampMaxDistance, GoblinsDungeonsConfig.smallGoblinCampMinDistance, 2538959), false);
+		setupMapSpacingAndLand(MEDIUM_GOBLIN_CAMP, new StructureFeatureConfiguration(GoblinsDungeonsConfig.mediumGoblinCampMaxDistance, GoblinsDungeonsConfig.mediumGoblinCampMinDistance, 2895726), false);
+		setupMapSpacingAndLand(LARGE_GOBLIN_CAMP, new StructureFeatureConfiguration(GoblinsDungeonsConfig.largeGoblinCampMaxDistance, GoblinsDungeonsConfig.largeGoblinCampMinDistance, 2716364), false);
+		setupMapSpacingAndLand(RUINED_KEEP, new StructureFeatureConfiguration(GoblinsDungeonsConfig.ruinedKeepMaxDistance, GoblinsDungeonsConfig.ruinedKeepMinDistance, 2827153), false);
 
+		registry.getRegistry().register(SMALL_GOBLIN_CAMP.setRegistryName("goblinsanddungeons:small_goblin_camp_feature"));
+		registry.getRegistry().register(MEDIUM_GOBLIN_CAMP.setRegistryName("goblinsanddungeons:medium_goblin_camp_feature"));
+		registry.getRegistry().register(LARGE_GOBLIN_CAMP.setRegistryName("goblinsanddungeons:large_goblin_camp_feature"));
+		registry.getRegistry().register(RUINED_KEEP.setRegistryName("goblinsanddungeons:ruined_keep_feature"));
+	}
+	
+	public static <F extends StructureFeature<?>> void setupMapSpacingAndLand(
+			F structure,
+			StructureFeatureConfiguration structureFeatureConfiguration,
+			boolean transformSurroundingLand) {
 		if (transformSurroundingLand) {
-			Structure.field_236384_t_ = ImmutableList.<Structure<?>>builder().addAll(Structure.field_236384_t_).add(structure).build();
+			StructureFeature.NOISE_AFFECTING_FEATURES =
+					ImmutableList.<StructureFeature<?>>builder()
+							.addAll(StructureFeature.NOISE_AFFECTING_FEATURES)
+							.add(structure)
+							.build();
 		}
+		StructureSettings.DEFAULTS =
+				ImmutableMap.<StructureFeature<?>, StructureFeatureConfiguration>builder()
+						.putAll(StructureSettings.DEFAULTS)
+						.put(structure, structureFeatureConfiguration)
+						.build();
 
-		DimensionStructuresSettings.field_236191_b_ = ImmutableMap.<Structure<?>, StructureSeparationSettings>builder().putAll(DimensionStructuresSettings.field_236191_b_).put(structure, structureSeparationSettings).build();
+		BuiltinRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
+			Map<StructureFeature<?>, StructureFeatureConfiguration> structureMap = settings.getValue().structureSettings().structureConfig();
+
+			/*
+			 * Pre-caution in case a mod makes the structure map immutable like datapacks do.
+			 * I take no chances myself. You never know what another mods does...
+			 *
+			 * structureConfig requires AccessTransformer (See resources/META-INF/accesstransformer.cfg)
+			 */
+			if (structureMap instanceof ImmutableMap) {
+				Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(structureMap);
+				tempMap.put(structure, structureFeatureConfiguration);
+				settings.getValue().structureSettings().structureConfig = tempMap;
+			} else {
+				structureMap.put(structure, structureFeatureConfiguration);
+			}
+		});
 	}
 
-	public static void registerStructurePieces() {
-		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(GoblinsAndDungeons.MOD_ID, "small_goblin_camp"), SMALL_GOBLIN_CAMP_PIECE_TYPE);
-		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(GoblinsAndDungeons.MOD_ID, "medium_goblin_camp"), MEDIUM_GOBLIN_CAMP_PIECE_TYPE);
-		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(GoblinsAndDungeons.MOD_ID, "large_goblin_camp"), LARGE_GOBLIN_CAMP_PIECE_TYPE);
-		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(GoblinsAndDungeons.MOD_ID, "ruined_keep"), RUINED_KEEP_PIECE_TYPE);
+	private static <FC extends FeatureConfiguration, F extends StructureFeature<FC>> ConfiguredStructureFeature<FC, F> configFeatureRegister(String p_127268_, ConfiguredStructureFeature<FC, F> p_127269_) {
+		return BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, p_127268_, p_127269_);
 	}
+
+	private static String prefix(String path) {
+		return "goblinsanddungeons:" + path;
+	}
+
 }
