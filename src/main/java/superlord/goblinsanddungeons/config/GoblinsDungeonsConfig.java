@@ -15,6 +15,7 @@ public class GoblinsDungeonsConfig {
 	public static int smallGoblinCampMaxDistance = 100;
 	public static int ruinedKeepMinDistance = 50;
 	public static int ruinedKeepMaxDistance = 100;
+	public static boolean magicalWorld = true;
 	
 	public static boolean superSecretSettings = false;
 	
@@ -33,6 +34,7 @@ public class GoblinsDungeonsConfig {
 			smallGoblinCampMaxDistance = GDConfigHolder.SERVER.smallGoblinCampMaxDistance.get();
 			ruinedKeepMinDistance = GDConfigHolder.SERVER.ruinedKeepMinDistance.get();
 			ruinedKeepMaxDistance = GDConfigHolder.SERVER.ruinedKeepMaxDistance.get();
+			magicalWorld = GDConfigHolder.SERVER.magicalWorld.get();
 			superSecretSettings = GDConfigHolder.SERVER.superSecretSettings.get();
 		} catch (Exception e) {
 			GoblinsAndDungeons.LOGGER.warn("An exception was caused trying to load the config for Goblins & Dungeons");

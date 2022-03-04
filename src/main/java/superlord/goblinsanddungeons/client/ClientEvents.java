@@ -4,13 +4,19 @@ import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.model.GarchModel;
 import superlord.goblinsanddungeons.client.model.GobModel;
@@ -36,7 +42,11 @@ import superlord.goblinsanddungeons.client.renderer.GoomRenderer;
 import superlord.goblinsanddungeons.client.renderer.HobGobRenderer;
 import superlord.goblinsanddungeons.client.renderer.MimicRenderer;
 import superlord.goblinsanddungeons.client.renderer.OgreRenderer;
+import superlord.goblinsanddungeons.client.renderer.SoulAshCampfireTileEntityRenderer;
+import superlord.goblinsanddungeons.client.renderer.SoulBulletRenderer;
+import superlord.goblinsanddungeons.init.BlockInit;
 import superlord.goblinsanddungeons.init.EntityInit;
+import superlord.goblinsanddungeons.init.TileEntityInit;
 import superlord.goblinsanddungeons.item.GoblinsAndDungeonsSpawnEggItem;
 
 @OnlyIn(Dist.CLIENT)
@@ -67,10 +77,11 @@ public class ClientEvents {
 		event.registerEntityRenderer(EntityInit.GOBBER.get(), GobberRenderer::new);
 		event.registerEntityRenderer(EntityInit.OGRE.get(), OgreRenderer::new);
 		event.registerEntityRenderer(EntityInit.GOBLIN_SOUL_BULLET.get(), GoblinSoulBulletRenderer::new);
+		event.registerEntityRenderer(EntityInit.SOUL_BULLET.get(), SoulBulletRenderer::new);
 		event.registerEntityRenderer(EntityInit.GOB_KING.get(), GobKingRenderer::new);
 		event.registerEntityRenderer(EntityInit.MIMIC.get(), MimicRenderer::new);
 		event.registerEntityRenderer(EntityInit.FALLING_BLOCK.get(), FallingBlockRenderer::new);
-		//ClientRegistry.bindTileEntityRenderer(TileEntityInit.SOUL_ASH_CAMPFIRE.get(), SoulAshCampfireTileEntityRenderer::new);
+		BlockEntityRenderers.register(TileEntityInit.SOUL_ASH_CAMPFIRE.get(), SoulAshCampfireTileEntityRenderer::new);
 	}
 	
 	@SubscribeEvent
@@ -97,15 +108,16 @@ public class ClientEvents {
 		ItemColor eggColor = (stack, tintIndex) -> ((GoblinsAndDungeonsSpawnEggItem) stack.getItem()).getColor(tintIndex);
 		for (GoblinsAndDungeonsSpawnEggItem e : GoblinsAndDungeonsSpawnEggItem.UNADDED_EGGS) handler.register(eggColor, e);
 	}
-/*
+	
+
 	@SubscribeEvent
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
-			RenderType cutoutRenderType = RenderType.getCutout();
+			RenderType cutoutRenderType = RenderType.cutout();
 
-			RenderTypeLookup.setRenderLayer(BlockInit.SOUL_ASH_CAMPFIRE.get(), cutoutRenderType);
-			RenderTypeLookup.setRenderLayer(BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get(), cutoutRenderType);
+			ItemBlockRenderTypes.setRenderLayer(BlockInit.SOUL_ASH_CAMPFIRE.get(), cutoutRenderType);
+			ItemBlockRenderTypes.setRenderLayer(BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get(), cutoutRenderType);
 		}
-	}*/
+	}
 
 }

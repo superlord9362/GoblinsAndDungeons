@@ -13,7 +13,11 @@
 	"item.goblinsanddungeons.goblin_king_spawn_egg": "Goblin King Spawn Egg",
 	
 	"item.goblinsanddungeons.goblin_soul_bullet": "Goblin Soul Bullet",
+	"item.goblinsanddungeons.soul_bullet": "Soul Bullet",
 	"item.goblinsanddungeons.staff_amethyst": "Magic Staff",
+	
+	"item.goblinsanddungeons.soul_bullet_spell_tome": "Soul Bullet Spell Tome",
+	"item.goblinsanddungeons.soul_jump_spell_tome": "Soul Jump Spell Tome",
 	
 	"block.goblinsanddungeons.urn": "Urn",
 	"block.goblinsanddungeons.scoria": "Scoria",
@@ -58,6 +62,8 @@
 	"item.minecraft.splash_potion.effect.ogres_might": "Splash Potion of Ogre's Might",
 	"item.minecraft.splash_potion.effect.ogres_might_long": "Splash Potion of Ogre's Might",
 	"item.minecraft.splash_potion.effect.ogres_might_strong": "Splash Potion of Ogre's Might",
+	
+	"item.goblinsanddungeons.bottled_souls": "Bottled Souls",
 	
 	"item.minecraft.tipped_arrow.effect.ogres_might": "Arrow of Ogre's Might",
 	"item.minecraft.tipped_arrow.effect.ogres_might_strong": "Arrow of Ogre's Might",
@@ -142,5 +148,12 @@
 	"glory_ring": "When in the offhand, this ring heals the wearer for every mob killed. The amount of health increases corresponding with the amount of health the mob killed has.",
 	"experience_ring": "When in the offhand, the wearer gains one extra experience point every time XP is earned.",
 	"goblin_crown": "When on the head, the wearer causes Goblins and Ogres to gain Weakness II, and all other hostile mobs Weakness I. It will also reduce Goblin and Ogre detection range of the wearer by 50%.",
-	"shift": "Hold [SHIFT] for more information"
+	"shift": "Hold [SHIFT] for more information",
+	"no_spell": "None",
+	"active_spell": "Active Spell:",
+	"soul_jump": "Soul Jump",
+	"soul_bullet": "Soul Bullet",
+	"item.goblinsanddungeons.current_spell_soul_bullet": "Active Spell: Soul Bullet",
+	"item.goblinsanddungeons.current_spell_soul_jump": "Active Spell: Soul Jump",
+	"item.goblinsanddungeons.current_spell_no_spell": "Active Spell: None"
 }

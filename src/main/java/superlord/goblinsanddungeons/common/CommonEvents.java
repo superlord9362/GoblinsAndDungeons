@@ -1,5 +1,12 @@
 package superlord.goblinsanddungeons.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,18 +22,37 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShovelItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.entries.LootTableReference;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
+import superlord.goblinsanddungeons.common.util.ManaEntityStats;
+import superlord.goblinsanddungeons.config.GoblinsDungeonsConfig;
 import superlord.goblinsanddungeons.entity.GoblinEntity;
 import superlord.goblinsanddungeons.entity.ai.FollowOgreGoal;
+import superlord.goblinsanddungeons.init.BlockInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 
 @Mod.EventBusSubscriber(modid = GoblinsAndDungeons.MOD_ID, bus = Bus.FORGE)
 public class CommonEvents {
+
+	public static Map<Block, Block> BLOCK_SHOVEL_MAP = new HashMap<>();
 
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
@@ -40,40 +66,108 @@ public class CommonEvents {
 			((Mob) event.getEntity()).goalSelector.addGoal(4, new FollowOgreGoal((Animal)event.getEntity(), 1.0F));
 		}
 	}
-	/*
-	@SubscribeEvent
-	public static void convertCampfire(BlockEvent.EntityPlaceEvent event) {
-		BlockPos pos = event.getPos();
-		IWorld world = event.getWorld();
-		Block block = event.getPlacedBlock().getBlock();
-		if (block == Blocks.SOUL_SAND && world.getBlockState(pos.down()).getBlock() == Blocks.CAMPFIRE) {
-			world.setBlockState(pos.down(), BlockInit.SOUL_ASH_CAMPFIRE.get().getDefaultState(), 0);
-		}
-		if (block == Blocks.SOUL_SAND && world.getBlockState(pos.down()).getBlock() == Blocks.SOUL_CAMPFIRE) {
-			world.setBlockState(pos.down(), BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get().getDefaultState(), 0);
-		}
-		if (block == Blocks.CAMPFIRE && world.getBlockState(pos.up()).getBlock() == Blocks.SOUL_SAND) {
-			world.setBlockState(pos, BlockInit.SOUL_ASH_CAMPFIRE.get().getDefaultState(), 0);
-		}
 
-		if (block == Blocks.SOUL_CAMPFIRE && world.getBlockState(pos.up()).getBlock() == Blocks.SOUL_SAND) {
-			world.setBlockState(pos, BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get().getDefaultState(), 0);
+	@SubscribeEvent
+	public static void registerMana(LivingUpdateEvent event) {
+		if (event.getEntityLiving() instanceof Player) {
+			Player player = (Player) event.getEntityLiving();
+			ManaEntityStats.addStatsOnSpawn(player);
+			if (!player.level.isClientSide) {
+				ManaEntityStats.getManaStats(player).baseTick(player);
+			}
 		}
 	}
-	
+
+	@SubscribeEvent
+	public static void onLootLoad(LootTableLoadEvent event) throws IllegalAccessException {
+		if (GoblinsDungeonsConfig.magicalWorld) {
+			ResourceLocation name = event.getName();
+			if (name.equals(BuiltInLootTables.SIMPLE_DUNGEON)) {
+				LootPool pool = event.getTable().getPool("main");
+				addEntry(pool, getInjectEntry(new ResourceLocation("goblinsanddungeons:inject/simple_dungeon"), 20, 1));
+			}
+			if (name.equals(BuiltInLootTables.ABANDONED_MINESHAFT)) {
+				LootPool pool = event.getTable().getPool("main");
+				addEntry(pool, getInjectEntry(new ResourceLocation("goblinsanddungeons:inject/abandoned_mineshaft"), 20, 1));
+			}
+		}
+	}
+
+	private static LootPoolEntryContainer getInjectEntry(ResourceLocation location, int weight, int quality) {
+		return LootTableReference.lootTableReference(location).setWeight(weight).setQuality(quality).build();
+	}
+
+	private static void addEntry(LootPool pool, LootPoolEntryContainer entry) throws IllegalAccessException {
+		LootPoolEntryContainer[] newEntries = new LootPoolEntryContainer[pool.entries.length + 1];
+		System.arraycopy(pool.entries, 0, newEntries, 0, pool.entries.length);
+		newEntries[pool.entries.length] = entry;
+		pool.entries = newEntries;
+	}
+
+
+	@SubscribeEvent
+	public static void convertCampfire(BlockEvent.EntityPlaceEvent event) {
+		if (GoblinsDungeonsConfig.magicalWorld) {
+			BlockPos pos = event.getPos();
+			LevelAccessor world = event.getWorld();
+			Block block = event.getPlacedBlock().getBlock();
+			if (block == Blocks.SOUL_SAND && world.getBlockState(pos.below()).getBlock() == Blocks.CAMPFIRE) {
+				world.setBlock(pos.below(), BlockInit.SOUL_ASH_CAMPFIRE.get().defaultBlockState(), 0);
+			}
+			if (block == Blocks.SOUL_SAND && world.getBlockState(pos.below()).getBlock() == Blocks.SOUL_CAMPFIRE) {
+				world.setBlock(pos.below(), BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get().defaultBlockState(), 0);
+			}
+			if (block == Blocks.CAMPFIRE && world.getBlockState(pos.above()).getBlock() == Blocks.SOUL_SAND) {
+				world.setBlock(pos, BlockInit.SOUL_ASH_CAMPFIRE.get().defaultBlockState(), 0);
+			}
+
+			if (block == Blocks.SOUL_CAMPFIRE && world.getBlockState(pos.above()).getBlock() == Blocks.SOUL_SAND) {
+				world.setBlock(pos, BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get().defaultBlockState(), 0);
+			}
+		}
+	}
+
 	@SubscribeEvent
 	public static void convertCampfireBack(BlockEvent.BreakEvent event) {
 		BlockPos pos = event.getPos();
-		IWorld world = event.getWorld();
+		LevelAccessor world = event.getWorld();
 		Block block = world.getBlockState(pos).getBlock();
-		if ((block == Blocks.SOUL_SAND || block == BlockInit.ASHED_SOUL_SAND.get()) && world.getBlockState(pos.down()).getBlock() == BlockInit.SOUL_ASH_CAMPFIRE.get()) {
-			world.setBlockState(pos.down(), Blocks.CAMPFIRE.getDefaultState(), 0);
+		if ((block == Blocks.SOUL_SAND || block == BlockInit.ASHED_SOUL_SAND) && world.getBlockState(pos.below()).getBlock() == BlockInit.SOUL_ASH_CAMPFIRE.get()) {
+			world.setBlock(pos.below(), Blocks.CAMPFIRE.defaultBlockState(), 0);
 		}
-		if ((block == Blocks.SOUL_SAND || block == BlockInit.ASHED_SOUL_SAND.get()) && world.getBlockState(pos.down()).getBlock() == BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get()) {
-			world.setBlockState(pos.down(), Blocks.SOUL_CAMPFIRE.getDefaultState(), 0);
+		if ((block == Blocks.SOUL_SAND || block == BlockInit.ASHED_SOUL_SAND) && world.getBlockState(pos.below()).getBlock() == BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get()) {
+			world.setBlock(pos.below(), Blocks.SOUL_CAMPFIRE.defaultBlockState(), 0);
 		}
 	}
-*/
+
+	static {
+		BLOCK_SHOVEL_MAP.put(BlockInit.ASHED_SOUL_SAND, Blocks.SOUL_SAND);
+	}
+
+	@SubscribeEvent
+	public static void onBlockClicked(PlayerInteractEvent.RightClickBlock event) {
+		if(event.getItemStack().getItem() instanceof ShovelItem) {
+			Level world = event.getWorld();
+			BlockPos pos = event.getPos();
+			Player player = event.getPlayer();
+			BlockState state = world.getBlockState(pos);
+			Block block = BLOCK_SHOVEL_MAP.get(state.getBlock());
+			if(block != null) {
+				Player entity = event.getPlayer();
+				world.playSound(entity, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F);
+				if(!world.isClientSide) {
+					world.setBlock(pos, block.defaultBlockState(), 11);
+					player.addItem(new ItemStack(ItemInit.SOUL_ASH.get()));
+					if(entity != null) {
+						event.getItemStack().hurtAndBreak(1, entity, (p_220040_1_) -> {
+							p_220040_1_.broadcastBreakEvent(event.getHand());
+						});
+					}
+				}
+			}
+		}
+	}
+
 	@SubscribeEvent
 	public static void onEntityDeath(LivingDeathEvent event) {		
 		DamageSource source = event.getSource();
@@ -135,5 +229,5 @@ public class CommonEvents {
 			}
 		}
 	}
-	
+
 }

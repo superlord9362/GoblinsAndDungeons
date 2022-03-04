@@ -9,7 +9,8 @@ import superlord.goblinsanddungeons.GoblinsAndDungeons;
 public class ManaEntityStats {
 	
 	public static String manaStatsID = "ManaStats";
-	
+	public static String knownSpellsID = "KnownSpells";
+
 	public static ManaData getManaStats(LivingEntity entity) {
 		ManaData stats = new ManaData();
 		if (entity != null) {
@@ -27,6 +28,24 @@ public class ManaEntityStats {
 		getModNBT(entity).put(manaStatsID, compound2);
 	}
 	
+	public static KnownSpellsData getKnownSpells(LivingEntity entity) {
+		KnownSpellsData stats = new KnownSpellsData();
+		if (entity != null) {
+			if (getModNBT(entity) != null && getModNBT(entity).contains(knownSpellsID, 10)) {
+				stats.read(getModNBT(entity).getCompound(knownSpellsID));
+				return stats;
+			}
+		}
+		return stats;
+	}
+	
+	public static void setKnownSpells(LivingEntity entity, KnownSpellsData knownSpells) {
+		CompoundTag compound2 = new CompoundTag();
+		knownSpells.write(compound2);
+		getModNBT(entity).put(knownSpellsID, compound2);
+	}
+	
+	@SuppressWarnings("unused")
 	public static void addStatsOnSpawn(Player player) {
 		if (player != null) {
 			CompoundTag compound;
@@ -36,10 +55,14 @@ public class ManaEntityStats {
 				if (!compound.contains(manaStatsID)) {
 					setManaStats(player, new ManaData());
 				}
+				if (!compound.contains(knownSpellsID)) {
+					setKnownSpells(player, new KnownSpellsData());
+				}
 			}
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private static String append(String string) {
 		return GoblinsAndDungeons.MOD_ID + ":" + string;
 	}

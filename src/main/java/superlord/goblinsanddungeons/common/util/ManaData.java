@@ -13,7 +13,7 @@ public class ManaData extends GDData {
 	}
 	
 	public void tick(Player player) {
-		
+
 	}
 	
 	public void read(CompoundTag compound) {
@@ -33,6 +33,24 @@ public class ManaData extends GDData {
 
 	public void write(CompoundTag compound) {
 		compound.putFloat("manaLevel", this.manaLevel);
+	}
+	
+	public void shrink(int shrinkAmount, Player player) {
+		if (getManaLevel() - shrinkAmount <= 0) {
+			this.manaLevel = 0;
+		} else {
+			this.manaLevel = getManaLevel() - shrinkAmount;
+		}
+		this.save(player);
+	}
+	
+	public void grow(int growAmount, Player player) {
+		if (getManaLevel() + growAmount >= 20) {
+			this.manaLevel = 20;
+		} else {
+			this.manaLevel = getManaLevel() + growAmount;
+		}
+		this.save(player);
 	}
 	
 	@Override

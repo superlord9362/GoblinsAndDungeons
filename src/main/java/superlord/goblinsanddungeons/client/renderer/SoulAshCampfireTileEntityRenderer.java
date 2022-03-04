@@ -1,33 +1,49 @@
 package superlord.goblinsanddungeons.client.renderer;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import superlord.goblinsanddungeons.blocks.SoulAshCampfireBlock;
+import superlord.goblinsanddungeons.entity.tile.SoulAshCampfireTileEntity;
 
 @OnlyIn(Dist.CLIENT)
-public class SoulAshCampfireTileEntityRenderer {} /** extends TileEntityRenderer<SoulAshCampfireTileEntity> {
-   public SoulAshCampfireTileEntityRenderer(TileEntityRendererDispatcher p_i226007_1_) {
-      super(p_i226007_1_);
-   }
+public class SoulAshCampfireTileEntityRenderer implements BlockEntityRenderer<SoulAshCampfireTileEntity> {
+	@SuppressWarnings("unused")
+	private static final float SIZE = 0.375F;
 
-   public void render(SoulAshCampfireTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-      Direction direction = tileEntityIn.getBlockState().get(SoulAshCampfireBlock.FACING);
-      NonNullList<ItemStack> nonnulllist = tileEntityIn.getInventory();
+	public SoulAshCampfireTileEntityRenderer(BlockEntityRendererProvider.Context p_173602_) {
+	}
 
-      for(int i = 0; i < nonnulllist.size(); ++i) {
-         ItemStack itemstack = nonnulllist.get(i);
-         if (itemstack != ItemStack.EMPTY) {
-            matrixStackIn.push();
-            matrixStackIn.translate(0.5D, 0.44921875D, 0.5D);
-            Direction direction1 = Direction.byHorizontalIndex((i + direction.getHorizontalIndex()) % 4);
-            float f = -direction1.getHorizontalAngle();
-            matrixStackIn.rotate(Vector3f.YP.rotationDegrees(f));
-            matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90.0F));
-            matrixStackIn.translate(-0.3125D, -0.3125D, 0.0D);
-            matrixStackIn.scale(0.375F, 0.375F, 0.375F);
-            Minecraft.getInstance().getItemRenderer().renderItem(itemstack, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
-            matrixStackIn.pop();
-         }
-      }
+	public void render(SoulAshCampfireTileEntity p_112344_, float p_112345_, PoseStack p_112346_, MultiBufferSource p_112347_, int p_112348_, int p_112349_) {
+		Direction direction = p_112344_.getBlockState().getValue(SoulAshCampfireBlock.FACING);
+		NonNullList<ItemStack> nonnulllist = p_112344_.getItems();
+		int i = (int)p_112344_.getBlockPos().asLong();
 
-   }
-}*/
+		for(int j = 0; j < nonnulllist.size(); ++j) {
+			ItemStack itemstack = nonnulllist.get(j);
+			if (itemstack != ItemStack.EMPTY) {
+				p_112346_.pushPose();
+				p_112346_.translate(0.5D, 0.44921875D, 0.5D);
+				Direction direction1 = Direction.from2DDataValue((j + direction.get2DDataValue()) % 4);
+				float f = -direction1.toYRot();
+				p_112346_.mulPose(Vector3f.YP.rotationDegrees(f));
+				p_112346_.mulPose(Vector3f.XP.rotationDegrees(90.0F));
+				p_112346_.translate(-0.3125D, -0.3125D, 0.0D);
+				p_112346_.scale(0.375F, 0.375F, 0.375F);
+				Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.FIXED, p_112348_, p_112349_, p_112346_, p_112347_, i + j);
+				p_112346_.popPose();
+			}
+		}
+
+	}
+}

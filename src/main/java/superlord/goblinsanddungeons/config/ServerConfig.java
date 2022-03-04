@@ -14,6 +14,7 @@ public class ServerConfig {
 	public final ForgeConfigSpec.IntValue smallGoblinCampMaxDistance;
 	public final ForgeConfigSpec.IntValue ruinedKeepMinDistance;
 	public final ForgeConfigSpec.IntValue ruinedKeepMaxDistance;
+	public final ForgeConfigSpec.BooleanValue magicalWorld;
 	
 	public final ForgeConfigSpec.BooleanValue superSecretSettings;
 	
@@ -28,6 +29,7 @@ public class ServerConfig {
 		this.smallGoblinCampMinDistance = buildInt(builder, "Small Goblin Camp Min Distance", "all", 50, 1, 300, "The closest two Small Goblin Camps can spawn from eachother. Keep this value lower than the max. Default is 50");
 		this.ruinedKeepMaxDistance = buildInt(builder, "Ruined Keep Max Distance", "all", 100, 1, 300, "The farthest two Ruined Keeps can spawn from eachother. Keep this value higher than the min. Default is 100");
 		this.ruinedKeepMinDistance = buildInt(builder, "Ruined Keep Min Distance", "all", 50, 1, 300, "The closest two Ruined Keeps can spawn from eachother. Keep this value lower than the max. Default is 50");
+		this.magicalWorld = buildBoolean(builder, "Magical World", "all", true, "Toggles whether the player has access to magic or not. Default is true");
 		this.superSecretSettings = buildBoolean(builder, "Super Secret Settings", "all", false, "Even I don't know what it does. Default is false");
 	}
 	

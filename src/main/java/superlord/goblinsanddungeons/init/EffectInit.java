@@ -30,7 +30,6 @@ public class EffectInit {
 		PotionBrewing.addMix(Potions.AWKWARD, ItemInit.OGRE_TUSK.get(), OGRES_MIGHT.get());
 		PotionBrewing.addMix(OGRES_MIGHT.get(), Items.GLOWSTONE_DUST, OGRES_MIGHT_STRONG.get());
 		PotionBrewing.addMix(OGRES_MIGHT.get(), Items.REDSTONE, OGRES_MIGHT_LONG.get());
-		//BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.AWKWARD)), Ingredient.fromItems(ItemInit.SOUL_ASH.get()), PotionUtils.addPotionToItemStack(new ItemStack(ItemInit.BOTTLED_SOULS.get()), Potions.EMPTY));
 	}
 
 }

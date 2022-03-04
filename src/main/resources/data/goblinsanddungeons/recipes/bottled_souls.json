@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:glass_bottle"
+    },
+	{
+		"item": "goblinsanddungeons:soul_ash"
+	},
+	{
+		"item": "minecraft:fermented_spider_eye"
+	},
+	{
+		"item": "minecraft:bone_meal"
+	}
+  ],
+  "result": {
+    "item": "goblinsanddungeons:bottled_souls",
+    "count": 1
+  }
+}

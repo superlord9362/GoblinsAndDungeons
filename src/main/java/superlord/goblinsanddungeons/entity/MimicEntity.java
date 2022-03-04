@@ -1,13 +1,18 @@
 package superlord.goblinsanddungeons.entity;
 
+import java.util.Optional;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundAddMobPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -29,6 +34,9 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,6 +47,8 @@ public class MimicEntity extends GoblinEntity {
 	private static final EntityDataAccessor<Boolean> HIDING = SynchedEntityData.defineId(MimicEntity.class, EntityDataSerializers.BOOLEAN);
 	private BlockPos currentAttachmentPosition = null;
 	private int clientSideTeleportInterpolation;
+	@Nullable
+	private BlockPos clientOldAttachPosition;
 
 	public MimicEntity(EntityType<? extends MimicEntity> p_i50196_1_, Level p_i50196_2_) {
 		super(p_i50196_1_, p_i50196_2_);
@@ -49,6 +59,60 @@ public class MimicEntity extends GoblinEntity {
 
 	private void setHiding(boolean isHiding) {
 		this.entityData.set(HIDING, isHiding);
+	}
+
+	public void tick() {
+		super.tick();
+		if (this.level.isClientSide) {
+			if (this.clientSideTeleportInterpolation > 0) {
+				--this.clientSideTeleportInterpolation;
+			} else {
+				this.clientOldAttachPosition = null;
+			}
+		}
+
+	}
+
+	public boolean startRiding(Entity p_149773_, boolean p_149774_) {
+		if (this.level.isClientSide()) {
+			this.clientOldAttachPosition = null;
+			this.clientSideTeleportInterpolation = 0;
+		}
+		return super.startRiding(p_149773_, p_149774_);
+	}
+
+	public void stopRiding() {
+		super.stopRiding();
+		if (this.level.isClientSide) {
+			this.clientOldAttachPosition = this.blockPosition();
+		}
+
+		this.yBodyRotO = 0.0F;
+		this.yBodyRot = 0.0F;
+	}
+
+	public void setPos(double p_33449_, double p_33450_, double p_33451_) {
+		BlockPos blockpos = this.blockPosition();
+		if (this.isPassenger()) {
+			super.setPos(p_33449_, p_33450_, p_33451_);
+		} else {
+			super.setPos((double)Mth.floor(p_33449_) + 0.5D, (double)Mth.floor(p_33450_ + 0.5D), (double)Mth.floor(p_33451_) + 0.5D);
+		}
+
+		if (this.tickCount != 0) {
+			BlockPos blockpos1 = this.blockPosition();
+			if (!blockpos1.equals(blockpos)) {
+				this.hasImpulse = true;
+				if (this.level.isClientSide && !this.isPassenger() && !blockpos1.equals(this.clientOldAttachPosition)) {
+					this.clientOldAttachPosition = blockpos;
+					this.clientSideTeleportInterpolation = 6;
+					this.xOld = this.getX();
+					this.yOld = this.getY();
+					this.zOld = this.getZ();
+				}
+			}
+
+		}
 	}
 
 	protected void registerGoals() {
@@ -91,10 +155,10 @@ public class MimicEntity extends GoblinEntity {
 	}
 
 	public InteractionResult mobInteract(Player p_230254_1_, InteractionHand p_230254_2_) {
-        if (!level.isClientSide) {
-        	this.setHiding(false);
-            return InteractionResult.SUCCESS;
-        }
+		if (!level.isClientSide) {
+			this.setHiding(false);
+			return InteractionResult.SUCCESS;
+		}
 		return super.mobInteract(p_230254_1_, p_230254_2_);
 	}
 
@@ -125,7 +189,7 @@ public class MimicEntity extends GoblinEntity {
 			}
 		}
 	}
-	
+
 	protected SoundEvent getAmbientSound() {
 		if (!this.isHiding()) return SoundInit.MIMIC_IDLE;
 		else return null;
@@ -166,7 +230,7 @@ public class MimicEntity extends GoblinEntity {
 
 	public void push(Entity entityIn) {
 		if (!this.isHiding()) {
-	         super.push(entityIn);
+			super.push(entityIn);
 		}
 	}
 
@@ -216,6 +280,44 @@ public class MimicEntity extends GoblinEntity {
 
 	}
 
+	public static AABB getProgressAabb(Direction p_149791_, float p_149792_) {
+		return getProgressDeltaAabb(p_149791_, -1.0F, p_149792_);
+	}
+
+	public static AABB getProgressDeltaAabb(Direction p_149794_, float p_149795_, float p_149796_) {
+		double d0 = (double)Math.max(p_149795_, p_149796_);
+		double d1 = (double)Math.min(p_149795_, p_149796_);
+		return (new AABB(BlockPos.ZERO)).expandTowards((double)p_149794_.getStepX() * d0, (double)p_149794_.getStepY() * d0, (double)p_149794_.getStepZ() * d0).contract((double)(-p_149794_.getStepX()) * (1.0D + d1), (double)(-p_149794_.getStepY()) * (1.0D + d1), (double)(-p_149794_.getStepZ()) * (1.0D + d1));
+	}
+
+	boolean canStayAt(BlockPos p_149786_, Direction p_149787_) {
+		if (this.isPositionBlocked(p_149786_)) {
+			return false;
+		} else {
+			Direction direction = p_149787_.getOpposite();
+			if (!this.level.loadedAndEntityCanStandOnFace(p_149786_.relative(p_149787_), this, direction)) {
+				return false;
+			} else {
+				AABB aabb = getProgressAabb(direction, 1.0F).move(p_149786_).deflate(1.0E-6D);
+				return this.level.noCollision(this, aabb);
+			}
+		}
+	}
+
+	private boolean isPositionBlocked(BlockPos p_149813_) {
+		BlockState blockstate = this.level.getBlockState(p_149813_);
+		if (blockstate.isAir()) {
+			return false;
+		} else {
+			boolean flag = blockstate.is(Blocks.MOVING_PISTON) && p_149813_.equals(this.blockPosition());
+			return !flag;
+		}
+	}
+
+	public boolean canBeCollidedWith() {
+		return this.isAlive();
+	}
+
 	class HidingLookGoal extends LookAtPlayerGoal {
 
 		public HidingLookGoal(Mob entityIn, Class<? extends Player> watchTargetClass, float maxDistance) {
@@ -242,17 +344,32 @@ public class MimicEntity extends GoblinEntity {
 				return false;
 			}
 		}
-		
+
 		public void startExecuting() {
 			MimicEntity.this.setHiding(true);
 		}
 
 	}
 
-
-	@OnlyIn(Dist.CLIENT)
-	public Vec3 getLightProbePosition(float p_241842_1_) {
-		return super.getLightProbePosition(p_241842_1_);
+	public Optional<Vec3> getRenderPosition(float p_149767_) {
+		if (this.clientOldAttachPosition != null && this.clientSideTeleportInterpolation > 0) {
+			double d0 = (double)((float)this.clientSideTeleportInterpolation - p_149767_) / 6.0D;
+			d0 *= d0;
+			BlockPos blockpos = this.blockPosition();
+			double d1 = (double)(blockpos.getX() - this.clientOldAttachPosition.getX()) * d0;
+			double d2 = (double)(blockpos.getY() - this.clientOldAttachPosition.getY()) * d0;
+			double d3 = (double)(blockpos.getZ() - this.clientOldAttachPosition.getZ()) * d0;
+			return Optional.of(new Vec3(-d1, -d2, -d3));
+		} else {
+			return Optional.empty();
+		}
 	}
+
+	public void recreateFromPacket(ClientboundAddMobPacket p_149798_) {
+		super.recreateFromPacket(p_149798_);
+		this.yBodyRot = 0.0F;
+		this.yBodyRotO = 0.0F;
+	}
+
 
 }

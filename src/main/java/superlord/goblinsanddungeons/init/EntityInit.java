@@ -18,6 +18,7 @@ import superlord.goblinsanddungeons.entity.GoomEntity;
 import superlord.goblinsanddungeons.entity.HobGobEntity;
 import superlord.goblinsanddungeons.entity.MimicEntity;
 import superlord.goblinsanddungeons.entity.OgreEntity;
+import superlord.goblinsanddungeons.entity.SoulBulletEntity;
 
 public class EntityInit {
 	
@@ -31,6 +32,7 @@ public class EntityInit {
 	public static final RegistryObject<EntityType<OgreEntity>> OGRE = REGISTER.register("ogre", () -> EntityType.Builder.<OgreEntity>of(OgreEntity::new, MobCategory.MONSTER).sized(2.125F, 4.5F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "ogre").toString()));
 	public static final RegistryObject<EntityType<GobberEntity>> GOBBER = REGISTER.register("gobber", () -> EntityType.Builder.<GobberEntity>of(GobberEntity::new, MobCategory.MONSTER).sized(1.0625F, 1.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "gobber").toString()));
 	public static final RegistryObject<EntityType<GoblinSoulBulletEntity>> GOBLIN_SOUL_BULLET = REGISTER.register("goblin_soul_bullet", () -> EntityType.Builder.<GoblinSoulBulletEntity>of(GoblinSoulBulletEntity::new, MobCategory.MISC).sized(0.25F, 0.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "goblin_soul_bullet").toString()));
+	public static final RegistryObject<EntityType<SoulBulletEntity>> SOUL_BULLET = REGISTER.register("soul_bullet", () -> EntityType.Builder.<SoulBulletEntity>of(SoulBulletEntity::new, MobCategory.MISC).sized(0.25F, 0.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "soul_bullet").toString()));
 	public static final RegistryObject<EntityType<GobKingEntity>> GOB_KING = REGISTER.register("goblin_king", () -> EntityType.Builder.<GobKingEntity>of(GobKingEntity::new, MobCategory.MONSTER).sized(0.75F, 1.25F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "goblin_king").toString()));
 	public static final RegistryObject<EntityType<MimicEntity>> MIMIC = REGISTER.register("mimic", () -> EntityType.Builder.<MimicEntity>of(MimicEntity::new, MobCategory.MONSTER).sized(0.875F, 1.0625F).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "mimic").toString()));
 	public static final RegistryObject<EntityType<GDFallingBlockEntity>> FALLING_BLOCK = REGISTER.register("falling_block", () -> EntityType.Builder.<GDFallingBlockEntity>of(GDFallingBlockEntity::new, MobCategory.MISC).sized(1, 1).build(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "falling_block").toString()));

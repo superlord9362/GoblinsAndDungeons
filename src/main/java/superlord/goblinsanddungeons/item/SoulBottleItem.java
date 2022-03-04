@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
+import superlord.goblinsanddungeons.common.util.ManaEntityStats;
 
 public class SoulBottleItem extends Item {
 
@@ -25,6 +26,7 @@ public class SoulBottleItem extends Item {
 				stack.shrink(1);
 			}
 		}
+		ManaEntityStats.getManaStats((Player)user).grow(4, (Player)user);
 		return stack.isEmpty() ? new ItemStack(Items.GLASS_BOTTLE) : stack;
 	}
 

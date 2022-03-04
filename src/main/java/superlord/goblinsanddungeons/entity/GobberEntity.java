@@ -173,7 +173,7 @@ public class GobberEntity extends GoblinEntity implements CrossbowAttackMob {
 	}
 
 	public void performRangedAttack(LivingEntity target, float distanceFactor) {
-		this.performRangedAttack(this, 1.6F);
+		this.performCrossbowAttack(this, 1.6F);
 	}
 
 	protected AbstractArrow getArrow(ItemStack arrowStack, float distanceFactor) {
