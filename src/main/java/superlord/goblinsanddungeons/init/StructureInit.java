@@ -58,10 +58,10 @@ public class StructureInit {
 		StructureFeature.STRUCTURES_REGISTRY.put("goblinsanddungeons:large_golbin_camp_feature", LARGE_GOBLIN_CAMP);
 		StructureFeature.STRUCTURES_REGISTRY.put("goblinsanddungeons:ruined_keep_feature", RUINED_KEEP);
 
-		setupMapSpacingAndLand(SMALL_GOBLIN_CAMP, new StructureFeatureConfiguration(GoblinsDungeonsConfig.smallGoblinCampMaxDistance, GoblinsDungeonsConfig.smallGoblinCampMinDistance, 2538959), false);
-		setupMapSpacingAndLand(MEDIUM_GOBLIN_CAMP, new StructureFeatureConfiguration(GoblinsDungeonsConfig.mediumGoblinCampMaxDistance, GoblinsDungeonsConfig.mediumGoblinCampMinDistance, 2895726), false);
-		setupMapSpacingAndLand(LARGE_GOBLIN_CAMP, new StructureFeatureConfiguration(GoblinsDungeonsConfig.largeGoblinCampMaxDistance, GoblinsDungeonsConfig.largeGoblinCampMinDistance, 2716364), false);
-		setupMapSpacingAndLand(RUINED_KEEP, new StructureFeatureConfiguration(GoblinsDungeonsConfig.ruinedKeepMaxDistance, GoblinsDungeonsConfig.ruinedKeepMinDistance, 2827153), false);
+		setupMapSpacingAndLand(SMALL_GOBLIN_CAMP, new StructureFeatureConfiguration(GoblinsDungeonsConfig.smallGoblinCampMaxDistance, GoblinsDungeonsConfig.smallGoblinCampMinDistance, 2538959), true);
+		setupMapSpacingAndLand(MEDIUM_GOBLIN_CAMP, new StructureFeatureConfiguration(GoblinsDungeonsConfig.mediumGoblinCampMaxDistance, GoblinsDungeonsConfig.mediumGoblinCampMinDistance, 2895726), true);
+		setupMapSpacingAndLand(LARGE_GOBLIN_CAMP, new StructureFeatureConfiguration(GoblinsDungeonsConfig.largeGoblinCampMaxDistance, GoblinsDungeonsConfig.largeGoblinCampMinDistance, 2716364), true);
+		setupMapSpacingAndLand(RUINED_KEEP, new StructureFeatureConfiguration(GoblinsDungeonsConfig.ruinedKeepMaxDistance, GoblinsDungeonsConfig.ruinedKeepMinDistance, 2827153), true);
 
 		registry.getRegistry().register(SMALL_GOBLIN_CAMP.setRegistryName("goblinsanddungeons:small_goblin_camp_feature"));
 		registry.getRegistry().register(MEDIUM_GOBLIN_CAMP.setRegistryName("goblinsanddungeons:medium_goblin_camp_feature"));

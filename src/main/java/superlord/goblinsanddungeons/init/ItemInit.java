@@ -12,6 +12,7 @@ import superlord.goblinsanddungeons.item.GoblinCrownItem;
 import superlord.goblinsanddungeons.item.GoblinSoulBulletItem;
 import superlord.goblinsanddungeons.item.GoblinsAndDungeonsSpawnEggItem;
 import superlord.goblinsanddungeons.item.HealthRingItem;
+import superlord.goblinsanddungeons.item.ScrollItem;
 import superlord.goblinsanddungeons.item.SoulBottleItem;
 import superlord.goblinsanddungeons.item.SoulBulletItem;
 import superlord.goblinsanddungeons.item.SpellTomeItem;
@@ -66,8 +67,10 @@ public class ItemInit {
 	public static final RegistryObject<Item> RING_OF_EXPERIENCE = REGISTER.register("ring_of_experience", () -> new StealthRingItem(new Item.Properties().tab(GoblinsAndDungeons.GROUP).stacksTo(1)));
 	public static final RegistryObject<Item> RING_OF_GLORY = REGISTER.register("ring_of_glory", () -> new StealthRingItem(new Item.Properties().tab(GoblinsAndDungeons.GROUP).stacksTo(1)));
 	
-	public static final RegistryObject<Item> SOUL_BULLET_SPELL_TOME = REGISTER.register("soul_bullet_spell_tome", () -> new SpellTomeItem(new Item.Properties().tab(GoblinsAndDungeons.GROUP).stacksTo(1)));
-	public static final RegistryObject<Item> SOUL_JUMP_SPELL_TOME = REGISTER.register("soul_jump_spell_tome", () -> new SpellTomeItem(new Item.Properties().tab(GoblinsAndDungeons.GROUP).stacksTo(1)));
+	public static final RegistryObject<Item> SOUL_BULLET_SPELL_TOME = REGISTER.register("soul_bullet_spell_tome", () -> new SpellTomeItem(new Item.Properties().tab(GoblinsAndDungeons.MAGIC).stacksTo(1)));
+	public static final RegistryObject<Item> SOUL_JUMP_SPELL_TOME = REGISTER.register("soul_jump_spell_tome", () -> new SpellTomeItem(new Item.Properties().tab(GoblinsAndDungeons.MAGIC).stacksTo(1)));
 
-	
+	public static final RegistryObject<Item> SOUL_BULLET_SCROLL = REGISTER.register("soul_bullet_scroll", () -> new ScrollItem(ScrollItem.SpellType.SOUL_BULLET, new Item.Properties().tab(GoblinsAndDungeons.MAGIC).stacksTo(1)));
+	public static final RegistryObject<Item> SOUL_JUMP_SCROLL = REGISTER.register("soul_jump_scroll", () -> new ScrollItem(ScrollItem.SpellType.SOUL_JUMP, new Item.Properties().tab(GoblinsAndDungeons.MAGIC).stacksTo(1)));
+
 }

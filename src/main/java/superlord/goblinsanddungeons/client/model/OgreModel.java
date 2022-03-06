@@ -56,11 +56,11 @@ public class OgreModel<T extends Entity> extends EntityModel<OgreEntity> {
 
 		PartDefinition Chest = Body.addOrReplaceChild("Chest", CubeListBuilder.create().texOffs(0, 50).addBox(-15.0F, -12.0F, -10.0F, 30.0F, 14.0F, 20.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -20.0F, 0.0F));
 
-		PartDefinition LeftArm = Chest.addOrReplaceChild("LeftArm", CubeListBuilder.create().texOffs(162, 32).mirror().addBox(-8.0F, -3.0F, -5.0F, 8.0F, 29.0F, 10.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-14.0F, -7.0F, 0.0F));
+		PartDefinition LeftArm = Chest.addOrReplaceChild("LeftArm", CubeListBuilder.create().texOffs(162, 32).addBox(-8.0F, -3.0F, -5.0F, 8.0F, 29.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(-14.0F, -7.0F, 0.0F));
 
 		PartDefinition LeftFist = LeftArm.addOrReplaceChild("LeftFist", CubeListBuilder.create().texOffs(80, 45).addBox(-6.0F, 0.0F, -7.0F, 12.0F, 11.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offset(-4.0F, 26.0F, 0.0F));
 
-		PartDefinition RightArm = Chest.addOrReplaceChild("RightArm", CubeListBuilder.create().texOffs(162, 32).addBox(0.0F, -3.0F, -5.0F, 8.0F, 29.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(14.0F, -7.0F, 0.0F));
+		PartDefinition RightArm = Chest.addOrReplaceChild("RightArm", CubeListBuilder.create().texOffs(162, 32).mirror().addBox(0.0F, -3.0F, -5.0F, 8.0F, 29.0F, 10.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(14.0F, -7.0F, 0.0F));
 
 		PartDefinition RightFist = RightArm.addOrReplaceChild("RightFist", CubeListBuilder.create().texOffs(80, 45).mirror().addBox(-6.0F, 0.0F, -7.0F, 12.0F, 11.0F, 14.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(4.0F, 26.0F, 0.0F));
 
@@ -80,7 +80,7 @@ public class OgreModel<T extends Entity> extends EntityModel<OgreEntity> {
 
 		PartDefinition Cloth = Body.addOrReplaceChild("Cloth", CubeListBuilder.create().texOffs(48, 7).addBox(-17.0F, 0.0F, -14.0F, 34.0F, 7.0F, 28.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 8.0F, 0.0F));
 
-		return LayerDefinition.create(meshdefinition, 256, 128);
+		return LayerDefinition.create(meshdefinition, 256, 128);	
 	}
 
 	@Override
@@ -89,9 +89,9 @@ public class OgreModel<T extends Entity> extends EntityModel<OgreEntity> {
 			this.Jaw.xRot = 0.35F;
 			this.Head.xRot = -0.4F;
 			this.Body.xRot = 0.5F;
-			this.LeftArm.zRot = -0.5F;
+			this.LeftArm.zRot = 0.5F;
 			this.LeftArm.xRot = 0.3F;
-			this.RightArm.zRot = 0.5F;
+			this.RightArm.zRot = -0.5F;
 			this.RightArm.xRot = 0.3F;
 		} else {
 			this.Jaw.xRot = 0F;

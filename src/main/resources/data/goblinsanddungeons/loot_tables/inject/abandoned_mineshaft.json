@@ -17,6 +17,16 @@
 					"type": "minecraft:item",
 					"weight": 10,
 					"name": "goblinsanddungeons:soul_jump_spell_tome"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 2,
+					"name": "goblinsanddungeons:soul_bullet_scroll"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 1,
+					"name": "goblinsanddungeons:soul_jump_scroll"
 				}
 			]
 		}

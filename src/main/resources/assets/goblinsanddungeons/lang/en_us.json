@@ -1,5 +1,6 @@
 {
 	"itemGroup.goblinsanddungeons_item_group": "Goblins & Dungeons",
+	"itemGroup.goblinsanddungeons_magic_item_group": "Goblins & Dungeons Magical Items",
 	
 	"item.goblinsanddungeons.goblin_crown": "Goblin Crown",
 	"item.goblinsanddungeons.gob_spawn_egg": "Gob Spawn Egg",
@@ -18,6 +19,9 @@
 	
 	"item.goblinsanddungeons.soul_bullet_spell_tome": "Soul Bullet Spell Tome",
 	"item.goblinsanddungeons.soul_jump_spell_tome": "Soul Jump Spell Tome",
+	
+	"item.goblinsanddungeons.soul_bullet_scroll": "Scroll of Soul Bullet",
+	"item.goblinsanddungeons.soul_jump_scroll": "Scroll of Soul Jump",
 	
 	"block.goblinsanddungeons.urn": "Urn",
 	"block.goblinsanddungeons.scoria": "Scoria",

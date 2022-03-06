@@ -227,6 +227,13 @@ public class GoblinsAndDungeons {
 		}
 	};
 	
+	public final static CreativeModeTab MAGIC = new CreativeModeTab("goblinsanddungeons_magic_item_group") {
+		@Override
+		public ItemStack makeIcon() {
+			return new ItemStack(ItemInit.SOUL_BULLET_SPELL_TOME.get());
+		}
+	};
+	
 	public static GoblinsAndDungeons getInstance() {
 		return instance;
 	}
