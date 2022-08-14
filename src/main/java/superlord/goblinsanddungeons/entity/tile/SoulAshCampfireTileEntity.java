@@ -68,7 +68,7 @@ public class SoulAshCampfireTileEntity extends BlockEntity implements Clearable 
 			Random random = new Random();
 			int chance = random.nextInt(199);
 			if (chance == 23) {
-				level.setBlock(p_155308_.above(), BlockInit.ASHED_SOUL_SAND.defaultBlockState(), 0);
+				level.setBlock(p_155308_.above(), BlockInit.ASHED_SOUL_SAND.get().defaultBlockState(), 0);
 			}
 		}
 

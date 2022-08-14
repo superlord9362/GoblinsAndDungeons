@@ -1,12 +1,7 @@
 package superlord.goblinsanddungeons.common;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,12 +17,9 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShovelItem;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
@@ -36,7 +28,6 @@ import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -51,8 +42,6 @@ import superlord.goblinsanddungeons.init.ItemInit;
 
 @Mod.EventBusSubscriber(modid = GoblinsAndDungeons.MOD_ID, bus = Bus.FORGE)
 public class CommonEvents {
-
-	public static Map<Block, Block> BLOCK_SHOVEL_MAP = new HashMap<>();
 
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
@@ -132,39 +121,11 @@ public class CommonEvents {
 		BlockPos pos = event.getPos();
 		LevelAccessor world = event.getWorld();
 		Block block = world.getBlockState(pos).getBlock();
-		if ((block == Blocks.SOUL_SAND || block == BlockInit.ASHED_SOUL_SAND) && world.getBlockState(pos.below()).getBlock() == BlockInit.SOUL_ASH_CAMPFIRE.get()) {
+		if ((block == Blocks.SOUL_SAND || block == BlockInit.ASHED_SOUL_SAND.get()) && world.getBlockState(pos.below()).getBlock() == BlockInit.SOUL_ASH_CAMPFIRE.get()) {
 			world.setBlock(pos.below(), Blocks.CAMPFIRE.defaultBlockState(), 0);
 		}
-		if ((block == Blocks.SOUL_SAND || block == BlockInit.ASHED_SOUL_SAND) && world.getBlockState(pos.below()).getBlock() == BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get()) {
+		if ((block == Blocks.SOUL_SAND || block == BlockInit.ASHED_SOUL_SAND.get()) && world.getBlockState(pos.below()).getBlock() == BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get()) {
 			world.setBlock(pos.below(), Blocks.SOUL_CAMPFIRE.defaultBlockState(), 0);
-		}
-	}
-
-	static {
-		BLOCK_SHOVEL_MAP.put(BlockInit.ASHED_SOUL_SAND, Blocks.SOUL_SAND);
-	}
-
-	@SubscribeEvent
-	public static void onBlockClicked(PlayerInteractEvent.RightClickBlock event) {
-		if(event.getItemStack().getItem() instanceof ShovelItem) {
-			Level world = event.getWorld();
-			BlockPos pos = event.getPos();
-			Player player = event.getPlayer();
-			BlockState state = world.getBlockState(pos);
-			Block block = BLOCK_SHOVEL_MAP.get(state.getBlock());
-			if(block != null) {
-				Player entity = event.getPlayer();
-				world.playSound(entity, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F);
-				if(!world.isClientSide) {
-					world.setBlock(pos, block.defaultBlockState(), 11);
-					player.addItem(new ItemStack(ItemInit.SOUL_ASH.get()));
-					if(entity != null) {
-						event.getItemStack().hurtAndBreak(1, entity, (p_220040_1_) -> {
-							p_220040_1_.broadcastBreakEvent(event.getHand());
-						});
-					}
-				}
-			}
 		}
 	}
 

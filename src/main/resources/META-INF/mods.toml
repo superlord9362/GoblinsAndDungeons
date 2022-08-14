@@ -3,7 +3,7 @@ loaderVersion="[39,)" #mandatory This is typically bumped every Minecraft versio
 license="All rights reserved"
 [[mods]] #mandatory
 modId="goblinsanddungeons" #mandatory
-version="1.0.5" #mandatory
+version="1.0.8" #mandatory
 displayName="Goblins & Dungeons" #mandatory
 credits="superlord9362 (code and voice acting), Weastian (art), Ralof (art), Crimes Against Art (art), Mr. Esuoh (noises and voice acting), and Ninni (voice acting)" #optional
 authors="superlord9362" #optional

@@ -24,6 +24,7 @@ public class QuarkFlagRecipeCondition implements ICondition {
 		return this.location;
 	}
 	
+	@SuppressWarnings("removal")
 	@Override
 	public boolean test() {
 		if (ModList.get().isLoaded("quark")) {

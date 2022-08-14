@@ -1,10 +1,13 @@
 package superlord.goblinsanddungeons.world.structures;
 
-import java.util.Map;
-import java.util.Random;
+import superlord.goblinsanddungeons.GoblinsAndDungeons;
+import superlord.goblinsanddungeons.entity.GarchEntity;
+import superlord.goblinsanddungeons.entity.GobEntity;
+import superlord.goblinsanddungeons.init.EntityInit;
+import superlord.goblinsanddungeons.init.LootTableInit;
+import superlord.goblinsanddungeons.init.StructureInit;
 
 import com.google.common.collect.ImmutableMap;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -29,12 +32,9 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnorePr
 import net.minecraft.world.level.levelgen.structure.templatesystem.ProtectedBlockProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import superlord.goblinsanddungeons.GoblinsAndDungeons;
-import superlord.goblinsanddungeons.entity.GarchEntity;
-import superlord.goblinsanddungeons.entity.GobEntity;
-import superlord.goblinsanddungeons.init.EntityInit;
-import superlord.goblinsanddungeons.init.LootTableInit;
-import superlord.goblinsanddungeons.init.StructureInit;
+
+import java.util.Map;
+import java.util.Random;
 
 public class SmallGoblinCampStructurePiece {
 
@@ -50,11 +50,11 @@ public class SmallGoblinCampStructurePiece {
 
 	public static class Piece extends TemplateStructurePiece {
 		public Piece(StructureManager p_71244_, ResourceLocation p_71245_, BlockPos p_71246_, Rotation p_71247_, int p_71248_) {
-			super(StructureInit.SMALL_GOBLIN_CAMP_STRUCTURE_PIECE, 0, p_71244_, p_71245_, p_71245_.toString(), makeSettings(p_71247_), makePosition(p_71245_, p_71246_, p_71248_));
+			super(StructureInit.SMALL_GOBLIN_CAMP_PIECE, 0, p_71244_, p_71245_, p_71245_.toString(), makeSettings(p_71247_), makePosition(p_71245_, p_71246_, p_71248_));
 		}
 
 		public Piece(StructureManager p_162441_, CompoundTag p_162442_) {
-			super(StructureInit.SMALL_GOBLIN_CAMP_STRUCTURE_PIECE, p_162442_, p_162441_, (p_162451_) -> {
+			super(StructureInit.SMALL_GOBLIN_CAMP_PIECE, p_162442_, p_162441_, (p_162451_) -> {
 				return makeSettings(Rotation.valueOf(p_162442_.getString("Rot")));
 			});
 		}
@@ -62,7 +62,7 @@ public class SmallGoblinCampStructurePiece {
 		private static StructurePlaceSettings makeSettings(Rotation p_163156_) {
 			BlockIgnoreProcessor blockignoreprocessor = BlockIgnoreProcessor.STRUCTURE_BLOCK;
 
-			StructurePlaceSettings structureplacesettings = (new StructurePlaceSettings()).setRotation(p_163156_).setMirror(Mirror.NONE).setRotationPivot(PIVOT).addProcessor(blockignoreprocessor).addProcessor(new ProtectedBlockProcessor(BlockTags.FEATURES_CANNOT_REPLACE.getName()));
+			StructurePlaceSettings structureplacesettings = (new StructurePlaceSettings()).setRotation(p_163156_).setMirror(Mirror.NONE).setRotationPivot(PIVOT).addProcessor(blockignoreprocessor).addProcessor(new ProtectedBlockProcessor(BlockTags.FEATURES_CANNOT_REPLACE));
 
 
 			return structureplacesettings;
@@ -87,18 +87,18 @@ public class SmallGoblinCampStructurePiece {
 			this.templatePosition = this.templatePosition.offset(0, i - 90 - 2, 0);
 			super.postProcess(worldIn, p_230383_2_, p_230383_3_, p_230383_4_, p_230383_5_, p_230383_6_, p_230383_7_);
 			this.templatePosition = blockpos2;
-		}	
+		}
 
-        @Override
-        protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor world, Random rand, BoundingBox sbb) {
-            if ("chest".equals(function)) {
-                world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-                BlockEntity tileentity = world.getBlockEntity(pos.below());
-                if (tileentity instanceof ChestBlockEntity) {
-                    ((ChestBlockEntity) tileentity).setLootTable(LootTableInit.CAMP_LOOT_TABLE, rand.nextLong());
-                }
-            }
-            if ("gob".equals(function)) {
+		@Override
+		protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor world, Random rand, BoundingBox sbb) {
+			if ("chest".equals(function)) {
+				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+				BlockEntity tileentity = world.getBlockEntity(pos.below());
+				if (tileentity instanceof ChestBlockEntity) {
+					((ChestBlockEntity) tileentity).setLootTable(LootTableInit.CAMP_LOOT_TABLE, rand.nextLong());
+				}
+			}
+			if ("gob".equals(function)) {
 				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
 				GobEntity entity = EntityInit.GOB.get().create(world.getLevel());
 				if (entity != null) {
@@ -116,6 +116,6 @@ public class SmallGoblinCampStructurePiece {
 					world.addFreshEntity(entity);
 				}
 			}
-        }
-    }
+		}
+	}
 }

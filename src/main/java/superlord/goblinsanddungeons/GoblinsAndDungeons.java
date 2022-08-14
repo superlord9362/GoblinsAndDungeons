@@ -1,43 +1,22 @@
 package superlord.goblinsanddungeons;
 
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
-import com.mojang.serialization.Codec;
-
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.StructureSettings;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -48,7 +27,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import superlord.goblinsanddungeons.client.ClientProxy;
@@ -72,7 +50,6 @@ import superlord.goblinsanddungeons.init.EffectInit;
 import superlord.goblinsanddungeons.init.EntityInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.PacketInit;
-import superlord.goblinsanddungeons.init.StructureInit;
 import superlord.goblinsanddungeons.init.TileEntityInit;
 import superlord.goblinsanddungeons.world.GoblinsAndDungeonsFeatures;
 
@@ -114,7 +91,6 @@ public class GoblinsAndDungeons {
 		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, GDConfigHolder.CLIENT_SPEC);
 		modLoadingContext.registerConfig(ModConfig.Type.SERVER, GDConfigHolder.SERVER_SPEC);
 		IEventBus forgeBus = MinecraftForge.EVENT_BUS;
-		forgeBus.addListener(EventPriority.NORMAL, this::addDimensionalSpacing);
 		forgeBus.addListener(EventPriority.HIGH, this::biomeModification);
 	}
 	
@@ -128,17 +104,7 @@ public class GoblinsAndDungeons {
 	public static ResourceLocation location(String name) {
 		return new ResourceLocation(MOD_ID, name);
 	}
-
-	private static void associateBiomeToConfiguredStructure(Map<StructureFeature<?>, HashMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> structureToMultiMap, ConfiguredStructureFeature<?, ?> configuredStructureFeature, ResourceKey<Biome> biomeRegistryKey) {
-		structureToMultiMap.putIfAbsent(configuredStructureFeature.feature, HashMultimap.create());
-		HashMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>> configuredStructureToBiomeMultiMap = structureToMultiMap.get(configuredStructureFeature.feature);
-		if (configuredStructureToBiomeMultiMap.containsValue(biomeRegistryKey)) {
-			
-		} else {
-			configuredStructureToBiomeMultiMap.put(configuredStructureFeature, biomeRegistryKey);
-		}
-	}
-
+	
 	public void setup(final FMLCommonSetupEvent event) {
 		EffectInit.brewingRecipes();
 		SpawnPlacements.register(EntityInit.OGRE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkAnyLightMonsterSpawnRules);
@@ -160,65 +126,11 @@ public class GoblinsAndDungeons {
 		event .put(EntityInit.MIMIC.get(), MimicEntity.createAttributes().build());
 	}
 
-	public void biomeModification(final BiomeLoadingEvent event) {
-		event.getGeneration().getFeatures(Decoration.UNDERGROUND_ORES).add(() -> GoblinsAndDungeonsFeatures.ORE_SCORIA_LOWER);
-		event.getGeneration().getFeatures(Decoration.UNDERGROUND_ORES).add(() -> GoblinsAndDungeonsFeatures.ORE_SCORIA_UPPER);
+    public void biomeModification(final BiomeLoadingEvent event) {
+		event.getGeneration().getFeatures(Decoration.UNDERGROUND_ORES).add(GoblinsAndDungeonsFeatures.ORE_SCORIA_LOWER);
+		event.getGeneration().getFeatures(Decoration.UNDERGROUND_ORES).add(GoblinsAndDungeonsFeatures.ORE_SCORIA_UPPER);
 	}
 
-	private static Method GETCODEC_METHOD;
-	@SuppressWarnings("unchecked")
-	public void addDimensionalSpacing(final WorldEvent.Load event) {
-		if (event.getWorld() instanceof ServerLevel serverLevel) {
-			ChunkGenerator chunkGenerator = serverLevel.getChunkSource().getGenerator();
-			if (chunkGenerator instanceof FlatLevelSource && serverLevel.dimension().equals(Level.OVERWORLD)) {
-				return;
-			}
-
-			StructureSettings worldStructureConfig = chunkGenerator.getSettings();
-
-			HashMap<StructureFeature<?>, HashMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> structureToMultiMap = new HashMap<>();
-
-			for (Map.Entry<ResourceKey<Biome>, Biome> biomeEntry : serverLevel.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY).entrySet()) {
-
-				Biome.BiomeCategory biomeCategory = biomeEntry.getValue().getBiomeCategory();
-				if (biomeCategory == Biome.BiomeCategory.PLAINS || biomeCategory == Biome.BiomeCategory.FOREST || biomeCategory == Biome.BiomeCategory.TAIGA) {
-					if (BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.OVERWORLD) && (BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.FOREST) || BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.PLAINS)) && !BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.UNDERGROUND) && !BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.OCEAN) && !BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.RIVER) && !BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.MOUNTAIN) && !BiomeDictionary.hasType(biomeEntry.getKey(), BiomeDictionary.Type.HILLS)) {
-						associateBiomeToConfiguredStructure(structureToMultiMap, StructureInit.SMALL_GOBLIN_CAMP_FEATURE, biomeEntry.getKey());
-						associateBiomeToConfiguredStructure(structureToMultiMap, StructureInit.MEDIUM_GOBLIN_CAMP_FEATURE, biomeEntry.getKey());
-						associateBiomeToConfiguredStructure(structureToMultiMap, StructureInit.LARGE_GOBLIN_CAMP_FEATURE, biomeEntry.getKey());
-						associateBiomeToConfiguredStructure(structureToMultiMap, StructureInit.RUINED_KEEP_FEATURE, biomeEntry.getKey());
-					}
-				}
-			}
-			ImmutableMap.Builder<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> tempStructureToMultiMap = ImmutableMap.builder();
-			worldStructureConfig.configuredStructures.entrySet().stream().filter(entry -> !structureToMultiMap.containsKey(entry.getKey())).forEach(tempStructureToMultiMap::put);
-
-			structureToMultiMap.forEach((key, value) -> tempStructureToMultiMap.put(key, ImmutableMultimap.copyOf(value)));
-
-			worldStructureConfig.configuredStructures = tempStructureToMultiMap.build();
-
-
-			try {
-				if (GETCODEC_METHOD == null)
-					GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "codec");
-				ResourceLocation cgRL = Registry.CHUNK_GENERATOR.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(chunkGenerator));
-				if (cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
-			} catch (Exception e) {
-			}
-
-			if (chunkGenerator instanceof FlatLevelSource &&
-					serverLevel.dimension().equals(Level.OVERWORLD)) {
-				return;
-			}
-
-			Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(worldStructureConfig.structureConfig());
-			tempMap.putIfAbsent(StructureInit.SMALL_GOBLIN_CAMP, StructureSettings.DEFAULTS.get(StructureInit.SMALL_GOBLIN_CAMP));
-			tempMap.putIfAbsent(StructureInit.MEDIUM_GOBLIN_CAMP, StructureSettings.DEFAULTS.get(StructureInit.MEDIUM_GOBLIN_CAMP));
-			tempMap.putIfAbsent(StructureInit.LARGE_GOBLIN_CAMP, StructureSettings.DEFAULTS.get(StructureInit.LARGE_GOBLIN_CAMP));
-			tempMap.putIfAbsent(StructureInit.RUINED_KEEP, StructureSettings.DEFAULTS.get(StructureInit.RUINED_KEEP));
-			worldStructureConfig.structureConfig = tempMap;
-		}
-	}
 
 	public final static CreativeModeTab GROUP = new CreativeModeTab("goblinsanddungeons_item_group") {
 		@Override

@@ -52,11 +52,11 @@ public class LargeGoblinCampStructurePiece {
 
 	public static class Piece extends TemplateStructurePiece {
 		public Piece(StructureManager p_71244_, ResourceLocation p_71245_, BlockPos p_71246_, Rotation p_71247_, int p_71248_) {
-			super(StructureInit.LARGE_GOBLIN_CAMP_STRUCTURE_PIECE, 0, p_71244_, p_71245_, p_71245_.toString(), makeSettings(p_71247_), makePosition(p_71245_, p_71246_, p_71248_));
+			super(StructureInit.LARGE_GOBLIN_CAMP_PIECE, 0, p_71244_, p_71245_, p_71245_.toString(), makeSettings(p_71247_), makePosition(p_71245_, p_71246_, p_71248_));
 		}
 
 		public Piece(StructureManager p_162441_, CompoundTag p_162442_) {
-			super(StructureInit.LARGE_GOBLIN_CAMP_STRUCTURE_PIECE, p_162442_, p_162441_, (p_162451_) -> {
+			super(StructureInit.LARGE_GOBLIN_CAMP_PIECE, p_162442_, p_162441_, (p_162451_) -> {
 				return makeSettings(Rotation.valueOf(p_162442_.getString("Rot")));
 			});
 		}
@@ -64,7 +64,7 @@ public class LargeGoblinCampStructurePiece {
 		private static StructurePlaceSettings makeSettings(Rotation p_163156_) {
 			BlockIgnoreProcessor blockignoreprocessor = BlockIgnoreProcessor.STRUCTURE_BLOCK;
 
-			StructurePlaceSettings structureplacesettings = (new StructurePlaceSettings()).setRotation(p_163156_).setMirror(Mirror.NONE).setRotationPivot(PIVOT).addProcessor(blockignoreprocessor).addProcessor(new ProtectedBlockProcessor(BlockTags.FEATURES_CANNOT_REPLACE.getName()));
+			StructurePlaceSettings structureplacesettings = (new StructurePlaceSettings()).setRotation(p_163156_).setMirror(Mirror.NONE).setRotationPivot(PIVOT).addProcessor(blockignoreprocessor).addProcessor(new ProtectedBlockProcessor(BlockTags.FEATURES_CANNOT_REPLACE));
 
 
 			return structureplacesettings;
@@ -89,7 +89,7 @@ public class LargeGoblinCampStructurePiece {
 			this.templatePosition = this.templatePosition.offset(0, i - 90 - 2, 0);
 			super.postProcess(worldIn, p_230383_2_, p_230383_3_, p_230383_4_, p_230383_5_, p_230383_6_, p_230383_7_);
 			this.templatePosition = blockpos2;
-		}	
+		}
 
         @Override
         protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor world, Random rand, BoundingBox sbb) {

@@ -4,20 +4,18 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.SoulSandBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
+import superlord.goblinsanddungeons.blocks.AshedSoulSandBlock;
 import superlord.goblinsanddungeons.blocks.SoulAshCampfireBlock;
 import superlord.goblinsanddungeons.blocks.UrnBlock;
 import superlord.goblinsanddungeons.compat.RegistryHelper;
@@ -50,8 +48,8 @@ public class BlockInit {
     public static final RegistryObject<Block> POLISHED_SCORIA_WALL = REGISTER.register("polished_scoria_wall", () -> new WallBlock(Block.Properties.of(Material.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
     public static final RegistryObject<Block> SCORIA_BRICK_WALL = REGISTER.register("scoria_brick_wall", () -> new WallBlock(Block.Properties.of(Material.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
 
-    public static final Block ASHED_SOUL_SAND = new SoulSandBlock(Block.Properties.copy(Blocks.SOUL_SAND)).setRegistryName("ashed_soul_sand");
-    
+    public static final RegistryObject<Block> ASHED_SOUL_SAND = REGISTER.register("ashed_soul_sand", () -> new AshedSoulSandBlock(Block.Properties.copy(Blocks.SOUL_SAND)));
+
     public static final RegistryObject<Block> SOUL_ASH_CAMPFIRE = REGISTER.register("soul_ash_campfire", () -> new SoulAshCampfireBlock(true, 1, Block.Properties.copy(Blocks.CAMPFIRE)));
     public static final RegistryObject<Block> SOUL_ASH_SOUL_CAMPFIRE = REGISTER.register("soul_ash_soul_campfire", () -> new SoulAshCampfireBlock(false, 2, Block.Properties.copy(Blocks.SOUL_CAMPFIRE)));
 
@@ -62,10 +60,5 @@ public class BlockInit {
     public static final RegistryObject<Block> SCORIA_VERTICAL_SLAB = HELPER.createCompatBlock("quark", "scoria_vertical_slab", () -> new VerticalSlabBlock(Block.Properties.of(Material.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)), GoblinsAndDungeons.GROUP);
     public static final RegistryObject<Block> POLISHED_SCORIA_VERTICAL_SLAB = HELPER.createCompatBlock("quark", "polished_scoria_vertical_slab", () -> new VerticalSlabBlock(Block.Properties.of(Material.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)), GoblinsAndDungeons.GROUP);
     public static final RegistryObject<Block> SCORIA_BRICK_VERTICAL_SLAB = HELPER.createCompatBlock("quark", "scoria_brick_vertical_slab", () -> new VerticalSlabBlock(Block.Properties.of(Material.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)), GoblinsAndDungeons.GROUP);
-
-    @SubscribeEvent
-	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
-		event.getRegistry().register(ASHED_SOUL_SAND);
-    }
 
 }

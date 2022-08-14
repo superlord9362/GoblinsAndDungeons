@@ -114,7 +114,6 @@ public class ClientEvents {
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			RenderType cutoutRenderType = RenderType.cutout();
-
 			ItemBlockRenderTypes.setRenderLayer(BlockInit.SOUL_ASH_CAMPFIRE.get(), cutoutRenderType);
 			ItemBlockRenderTypes.setRenderLayer(BlockInit.SOUL_ASH_SOUL_CAMPFIRE.get(), cutoutRenderType);
 		}

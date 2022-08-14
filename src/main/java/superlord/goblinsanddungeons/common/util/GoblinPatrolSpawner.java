@@ -3,6 +3,7 @@ package superlord.goblinsanddungeons.common.util;
 import java.util.Random;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobSpawnType;
@@ -56,8 +57,8 @@ public class GoblinPatrolSpawner implements CustomSpawner {
 								if (!world.hasChunksAt(blockpos$mutable.getX() - 10, blockpos$mutable.getY() - 10, blockpos$mutable.getZ() - 10, blockpos$mutable.getX() + 10, blockpos$mutable.getY() + 10, blockpos$mutable.getZ() + 10)) {
 									return 0;
 								} else {
-									Biome biome = world.getBiome(blockpos$mutable);
-									Biome.BiomeCategory biome$category = biome.getBiomeCategory();
+									Holder<Biome> biome = world.getBiome(blockpos$mutable);
+									Biome.BiomeCategory biome$category = Biome.getBiomeCategory(biome);
 									if (biome$category == Biome.BiomeCategory.MUSHROOM) {
 										return 0;
 									} else {
@@ -91,24 +92,24 @@ public class GoblinPatrolSpawner implements CustomSpawner {
 			}
 		}
 	}
-	
+
 	private boolean spawnGoblins(ServerLevel worldIn, BlockPos pos, Random random, boolean p_222695_4_) {
-	      BlockState blockstate = worldIn.getBlockState(pos);
-	      if (!NaturalSpawner.isValidEmptySpawnBlock(worldIn, pos, blockstate, blockstate.getFluidState(), EntityInit.GOB.get())) {
-	         return false;
-	      } else if (!Monster.checkAnyLightMonsterSpawnRules(EntityInit.GOB.get(), worldIn, MobSpawnType.PATROL, pos, random)) {
-	         return false;
-	      } else {
-	         GobEntity gobentity = EntityInit.GOB.get().create(worldIn);
-	         if (gobentity != null) {
-	        	 gobentity.setPos((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
-	        	 gobentity.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(pos), MobSpawnType.PATROL, (SpawnGroupData)null, (CompoundTag)null);
-	            worldIn.addFreshEntityWithPassengers(gobentity);
-	            return true;
-	         } else {
-	            return false;
-	         }
-	      }
-	   }
+		BlockState blockstate = worldIn.getBlockState(pos);
+		if (!NaturalSpawner.isValidEmptySpawnBlock(worldIn, pos, blockstate, blockstate.getFluidState(), EntityInit.GOB.get())) {
+			return false;
+		} else if (!Monster.checkAnyLightMonsterSpawnRules(EntityInit.GOB.get(), worldIn, MobSpawnType.PATROL, pos, random)) {
+			return false;
+		} else {
+			GobEntity gobentity = EntityInit.GOB.get().create(worldIn);
+			if (gobentity != null) {
+				gobentity.setPos((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
+				gobentity.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(pos), MobSpawnType.PATROL, (SpawnGroupData)null, (CompoundTag)null);
+				worldIn.addFreshEntityWithPassengers(gobentity);
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
 
 }

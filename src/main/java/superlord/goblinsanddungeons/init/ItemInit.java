@@ -60,7 +60,7 @@ public class ItemInit {
 	public static final RegistryObject<BlockItem> SCORIA_BRICK_WALL = REGISTER.register("scoria_brick_wall", () -> new BlockItem(BlockInit.SCORIA_BRICK_WALL.get(), new Item.Properties().tab(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<BlockItem> POLISHED_SCORIA_WALL = REGISTER.register("polished_scoria_wall", () -> new BlockItem(BlockInit.POLISHED_SCORIA_WALL.get(), new Item.Properties().tab(GoblinsAndDungeons.GROUP)));
 
-	public static final RegistryObject<BlockItem> ASHED_SOUL_SAND = REGISTER.register("ashed_soul_sand", () -> new BlockItem(BlockInit.ASHED_SOUL_SAND, new Item.Properties().tab(GoblinsAndDungeons.GROUP)));
+	public static final RegistryObject<BlockItem> ASHED_SOUL_SAND = REGISTER.register("ashed_soul_sand", () -> new BlockItem(BlockInit.ASHED_SOUL_SAND.get(), new Item.Properties().tab(GoblinsAndDungeons.GROUP)));
 	
 	public static final RegistryObject<Item> RING_OF_HEALTH = REGISTER.register("ring_of_health", () -> new HealthRingItem(new Item.Properties().tab(GoblinsAndDungeons.GROUP).stacksTo(1)));
 	public static final RegistryObject<Item> RING_OF_STEALTH = REGISTER.register("ring_of_stealth", () -> new StealthRingItem(new Item.Properties().tab(GoblinsAndDungeons.GROUP).stacksTo(1)));
