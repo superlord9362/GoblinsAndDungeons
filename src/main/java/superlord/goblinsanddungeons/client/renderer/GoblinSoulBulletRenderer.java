@@ -2,7 +2,7 @@ package superlord.goblinsanddungeons.client.renderer;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import superlord.goblinsanddungeons.entity.GoblinSoulBulletEntity;
+import superlord.goblinsanddungeons.common.entity.GoblinSoulBulletEntity;
 
 public class GoblinSoulBulletRenderer extends ThrownItemRenderer<GoblinSoulBulletEntity> {
 

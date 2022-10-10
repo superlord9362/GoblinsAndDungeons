@@ -10,14 +10,14 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
-import superlord.goblinsanddungeons.world.structures.LargeGoblinCampStructure;
-import superlord.goblinsanddungeons.world.structures.LargeGoblinCampStructurePiece;
-import superlord.goblinsanddungeons.world.structures.MediumGoblinCampStructure;
-import superlord.goblinsanddungeons.world.structures.MediumGoblinCampStructurePiece;
-import superlord.goblinsanddungeons.world.structures.RuinedKeepStructure;
-import superlord.goblinsanddungeons.world.structures.RuinedKeepStructurePiece;
-import superlord.goblinsanddungeons.world.structures.SmallGoblinCampStructure;
-import superlord.goblinsanddungeons.world.structures.SmallGoblinCampStructurePiece;
+import superlord.goblinsanddungeons.common.world.structures.LargeGoblinCampStructure;
+import superlord.goblinsanddungeons.common.world.structures.LargeGoblinCampStructurePiece;
+import superlord.goblinsanddungeons.common.world.structures.MediumGoblinCampStructure;
+import superlord.goblinsanddungeons.common.world.structures.MediumGoblinCampStructurePiece;
+import superlord.goblinsanddungeons.common.world.structures.RuinedKeepStructure;
+import superlord.goblinsanddungeons.common.world.structures.RuinedKeepStructurePiece;
+import superlord.goblinsanddungeons.common.world.structures.SmallGoblinCampStructure;
+import superlord.goblinsanddungeons.common.world.structures.SmallGoblinCampStructurePiece;
 
 @Mod.EventBusSubscriber(modid = GoblinsAndDungeons.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class StructureInit {

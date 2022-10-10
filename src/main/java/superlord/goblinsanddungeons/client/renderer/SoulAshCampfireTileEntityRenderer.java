@@ -13,8 +13,8 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.blocks.SoulAshCampfireBlock;
-import superlord.goblinsanddungeons.entity.tile.SoulAshCampfireTileEntity;
+import superlord.goblinsanddungeons.common.blocks.SoulAshCampfireBlock;
+import superlord.goblinsanddungeons.common.entity.tile.SoulAshCampfireTileEntity;
 
 @OnlyIn(Dist.CLIENT)
 public class SoulAshCampfireTileEntityRenderer implements BlockEntityRenderer<SoulAshCampfireTileEntity> {

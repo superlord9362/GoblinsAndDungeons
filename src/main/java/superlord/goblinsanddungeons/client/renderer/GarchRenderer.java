@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.GarchModel;
-import superlord.goblinsanddungeons.entity.GarchEntity;
+import superlord.goblinsanddungeons.common.entity.GarchEntity;
 
 public class GarchRenderer extends MobRenderer<GarchEntity, GarchModel<GarchEntity>> {
 	

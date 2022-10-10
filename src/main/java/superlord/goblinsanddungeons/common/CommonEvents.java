@@ -3,6 +3,7 @@ package superlord.goblinsanddungeons.common;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -24,21 +25,26 @@ import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.entries.LootTableReference;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
-import superlord.goblinsanddungeons.common.util.ManaEntityStats;
+import superlord.goblinsanddungeons.common.entity.GoblinEntity;
+import superlord.goblinsanddungeons.common.entity.ai.FollowOgreGoal;
 import superlord.goblinsanddungeons.config.GoblinsDungeonsConfig;
-import superlord.goblinsanddungeons.entity.GoblinEntity;
-import superlord.goblinsanddungeons.entity.ai.FollowOgreGoal;
 import superlord.goblinsanddungeons.init.BlockInit;
 import superlord.goblinsanddungeons.init.ItemInit;
+import superlord.goblinsanddungeons.magic.PlayerMana;
+import superlord.goblinsanddungeons.magic.PlayerManaProvider;
+import superlord.goblinsanddungeons.magic.PlayerSpells;
+import superlord.goblinsanddungeons.magic.PlayerSpellsProvider;
 
 @Mod.EventBusSubscriber(modid = GoblinsAndDungeons.MOD_ID, bus = Bus.FORGE)
 public class CommonEvents {
@@ -53,17 +59,6 @@ public class CommonEvents {
 		}
 		if (event.getEntity() instanceof Donkey) {
 			((Mob) event.getEntity()).goalSelector.addGoal(4, new FollowOgreGoal((Animal)event.getEntity(), 1.0F));
-		}
-	}
-
-	@SubscribeEvent
-	public static void registerMana(LivingUpdateEvent event) {
-		if (event.getEntityLiving() instanceof Player) {
-			Player player = (Player) event.getEntityLiving();
-			ManaEntityStats.addStatsOnSpawn(player);
-			if (!player.level.isClientSide) {
-				ManaEntityStats.getManaStats(player).baseTick(player);
-			}
 		}
 	}
 
@@ -189,6 +184,42 @@ public class CommonEvents {
 				});
 			}
 		}
+	}
+	
+	@SubscribeEvent
+	public static void onAttachCapabilitesPlayer(AttachCapabilitiesEvent<Entity> event) {
+		if (event.getObject() instanceof Player) {
+			if (!event.getObject().getCapability(PlayerManaProvider.PLAYER_MANA).isPresent()) {
+				event.addCapability(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "properties"), new PlayerManaProvider());
+			}
+		}
+		if (event.getObject() instanceof Player) {
+			if (!event.getObject().getCapability(PlayerSpellsProvider.PLAYER_SPELLS).isPresent()) {
+				event.addCapability(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "spells"), new PlayerSpellsProvider());
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerCloned(PlayerEvent.Clone event) {
+		if (event.isWasDeath()) {
+			event.getOriginal().getCapability(PlayerManaProvider.PLAYER_MANA).ifPresent(oldStore -> {
+				event.getOriginal().getCapability(PlayerManaProvider.PLAYER_MANA).ifPresent(newStore -> {
+					newStore.copyFrom(oldStore);
+				});
+			});
+			event.getOriginal().getCapability(PlayerSpellsProvider.PLAYER_SPELLS).ifPresent(oldStore -> {
+				event.getOriginal().getCapability(PlayerSpellsProvider.PLAYER_SPELLS).ifPresent(newStore -> {
+					newStore.copyFrom(oldStore);
+				});
+			});
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+		event.register(PlayerMana.class);
+		event.register(PlayerSpells.class);
 	}
 
 }

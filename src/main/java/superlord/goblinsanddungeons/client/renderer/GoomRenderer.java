@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.GoomModel;
-import superlord.goblinsanddungeons.entity.GoomEntity;
+import superlord.goblinsanddungeons.common.entity.GoomEntity;
 
 public class GoomRenderer extends MobRenderer<GoomEntity, GoomModel<GoomEntity>> {
 

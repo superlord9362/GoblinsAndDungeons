@@ -16,7 +16,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.entity.GobberEntity;
+import superlord.goblinsanddungeons.common.entity.GobberEntity;
 
 /**
  * GobberModel - superlord9362

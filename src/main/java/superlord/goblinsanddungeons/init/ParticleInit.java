@@ -7,8 +7,8 @@ import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
-import superlord.goblinsanddungeons.particle.GoblinSoulBulletParticle;
-import superlord.goblinsanddungeons.particle.SoulBulletParticle;
+import superlord.goblinsanddungeons.common.particle.GoblinSoulBulletParticle;
+import superlord.goblinsanddungeons.common.particle.SoulBulletParticle;
 
 @Mod.EventBusSubscriber(modid = GoblinsAndDungeons.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ParticleInit {

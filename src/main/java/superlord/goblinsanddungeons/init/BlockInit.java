@@ -15,11 +15,11 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
-import superlord.goblinsanddungeons.blocks.AshedSoulSandBlock;
-import superlord.goblinsanddungeons.blocks.SoulAshCampfireBlock;
-import superlord.goblinsanddungeons.blocks.UrnBlock;
-import superlord.goblinsanddungeons.compat.RegistryHelper;
-import superlord.goblinsanddungeons.compat.VerticalSlabBlock;
+import superlord.goblinsanddungeons.common.blocks.AshedSoulSandBlock;
+import superlord.goblinsanddungeons.common.blocks.SoulAshCampfireBlock;
+import superlord.goblinsanddungeons.common.blocks.UrnBlock;
+import superlord.goblinsanddungeons.common.compat.RegistryHelper;
+import superlord.goblinsanddungeons.common.compat.VerticalSlabBlock;
 
 @Mod.EventBusSubscriber(modid = GoblinsAndDungeons.MOD_ID, bus = Bus.MOD)
 public class BlockInit {

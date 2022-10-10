@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.GobModel;
-import superlord.goblinsanddungeons.entity.GobEntity;
+import superlord.goblinsanddungeons.common.entity.GobEntity;
 
 public class GobRenderer extends MobRenderer<GobEntity, EntityModel<GobEntity>> {
 	

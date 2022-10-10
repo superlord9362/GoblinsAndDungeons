@@ -19,7 +19,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.entity.GobloEntity;
+import superlord.goblinsanddungeons.common.entity.GobloEntity;
 
 /**
  * goblo - Weastian

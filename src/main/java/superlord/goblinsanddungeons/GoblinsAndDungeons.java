@@ -1,5 +1,8 @@
 package superlord.goblinsanddungeons;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,26 +35,26 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import superlord.goblinsanddungeons.client.ClientProxy;
 import superlord.goblinsanddungeons.client.renderer.ManaGUIRenderer;
 import superlord.goblinsanddungeons.common.CommonProxy;
-import superlord.goblinsanddungeons.compat.QuarkFlagRecipeCondition;
-import superlord.goblinsanddungeons.compat.RegistryHelper;
+import superlord.goblinsanddungeons.common.compat.QuarkFlagRecipeCondition;
+import superlord.goblinsanddungeons.common.compat.RegistryHelper;
+import superlord.goblinsanddungeons.common.entity.GarchEntity;
+import superlord.goblinsanddungeons.common.entity.GobEntity;
+import superlord.goblinsanddungeons.common.entity.GobKingEntity;
+import superlord.goblinsanddungeons.common.entity.GobberEntity;
+import superlord.goblinsanddungeons.common.entity.GobloEntity;
+import superlord.goblinsanddungeons.common.entity.GoomEntity;
+import superlord.goblinsanddungeons.common.entity.HobGobEntity;
+import superlord.goblinsanddungeons.common.entity.MimicEntity;
+import superlord.goblinsanddungeons.common.entity.OgreEntity;
+import superlord.goblinsanddungeons.common.world.GoblinsAndDungeonsFeatures;
 import superlord.goblinsanddungeons.config.GDConfigHolder;
 import superlord.goblinsanddungeons.config.GoblinsDungeonsConfig;
-import superlord.goblinsanddungeons.entity.GarchEntity;
-import superlord.goblinsanddungeons.entity.GobEntity;
-import superlord.goblinsanddungeons.entity.GobKingEntity;
-import superlord.goblinsanddungeons.entity.GobberEntity;
-import superlord.goblinsanddungeons.entity.GobloEntity;
-import superlord.goblinsanddungeons.entity.GoomEntity;
-import superlord.goblinsanddungeons.entity.HobGobEntity;
-import superlord.goblinsanddungeons.entity.MimicEntity;
-import superlord.goblinsanddungeons.entity.OgreEntity;
 import superlord.goblinsanddungeons.init.BlockInit;
 import superlord.goblinsanddungeons.init.EffectInit;
 import superlord.goblinsanddungeons.init.EntityInit;
 import superlord.goblinsanddungeons.init.ItemInit;
-import superlord.goblinsanddungeons.init.PacketInit;
 import superlord.goblinsanddungeons.init.TileEntityInit;
-import superlord.goblinsanddungeons.world.GoblinsAndDungeonsFeatures;
+import superlord.goblinsanddungeons.networking.ModMessages;
 
 @Mod(GoblinsAndDungeons.MOD_ID)
 @Mod.EventBusSubscriber(modid = GoblinsAndDungeons.MOD_ID)
@@ -61,6 +64,7 @@ public class GoblinsAndDungeons {
 	public static final Logger LOGGER = LogManager.getLogger();
 	public static final RegistryHelper REGISTRY_HELPER = new RegistryHelper(MOD_ID);
 	private static final String PROTOCOL_VERSION = "1";
+    public static final List<Runnable> CALLBACKS = new ArrayList<>();
 	public static final SimpleChannel NETWORK_WRAPPER = NetworkRegistry.ChannelBuilder
 			.named(new ResourceLocation("goblinsanddungeons", "main_channel"))
 			.clientAcceptedVersions(PROTOCOL_VERSION::equals)
@@ -87,10 +91,10 @@ public class GoblinsAndDungeons {
 		EffectInit.EFFECTS.register(bus);
 		EffectInit.POTIONS.register(bus);
 		TileEntityInit.REGISTER.register(bus);
-		PacketInit.registerPackets();
 		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, GDConfigHolder.CLIENT_SPEC);
 		modLoadingContext.registerConfig(ModConfig.Type.SERVER, GDConfigHolder.SERVER_SPEC);
 		IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+        bus.addListener(this::registerClient);
 		forgeBus.addListener(EventPriority.HIGH, this::biomeModification);
 	}
 	
@@ -106,6 +110,7 @@ public class GoblinsAndDungeons {
 	}
 	
 	public void setup(final FMLCommonSetupEvent event) {
+		ModMessages.register();
 		EffectInit.brewingRecipes();
 		SpawnPlacements.register(EntityInit.OGRE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkAnyLightMonsterSpawnRules);
 	}
@@ -149,5 +154,10 @@ public class GoblinsAndDungeons {
 	public static GoblinsAndDungeons getInstance() {
 		return instance;
 	}
+	
+	private void registerClient(FMLClientSetupEvent event) {
+        CALLBACKS.forEach(Runnable::run);
+        CALLBACKS.clear();
+    }
 
 }

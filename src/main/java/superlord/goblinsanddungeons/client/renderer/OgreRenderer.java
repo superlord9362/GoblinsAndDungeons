@@ -11,7 +11,7 @@ import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.OgreModel;
 import superlord.goblinsanddungeons.client.model.SittingOgreModel;
-import superlord.goblinsanddungeons.entity.OgreEntity;
+import superlord.goblinsanddungeons.common.entity.OgreEntity;
 
 public class OgreRenderer extends MobRenderer<OgreEntity, EntityModel<OgreEntity>> {
 

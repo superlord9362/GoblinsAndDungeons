@@ -10,14 +10,13 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
-import superlord.goblinsanddungeons.common.util.ManaEntityStats;
 import superlord.goblinsanddungeons.config.GoblinsDungeonsConfig;
+import superlord.goblinsanddungeons.magic.PlayerMana;
 
 @OnlyIn(Dist.CLIENT)
 public class ManaGUIRenderer {
@@ -41,8 +40,8 @@ public class ManaGUIRenderer {
 	@OnlyIn(Dist.CLIENT)
 	public static void renderMana(Gui gui, PoseStack matrixStack, MutableInt moveUp, int j1, int k1, boolean forgeOverlay) {
 		if (GoblinsDungeonsConfig.magicalWorld) {
-			Player player = (Player)gui.minecraft.getCameraEntity();
-			int manaL = (int) ManaEntityStats.getManaStats(player).getManaLevel();
+			PlayerMana mana = new PlayerMana();
+			int manaL = mana.getMana();
 			gui.minecraft.getProfiler().push("mana");
 			if (!forgeOverlay) {
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);

@@ -11,7 +11,7 @@ import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.GobloModel;
 import superlord.goblinsanddungeons.client.model.SleepingGobloModel;
-import superlord.goblinsanddungeons.entity.GobloEntity;
+import superlord.goblinsanddungeons.common.entity.GobloEntity;
 
 public class GobloRenderer extends MobRenderer<GobloEntity, EntityModel<GobloEntity>> {
 	

@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.GoblinKingModel;
-import superlord.goblinsanddungeons.entity.GobKingEntity;
+import superlord.goblinsanddungeons.common.entity.GobKingEntity;
 
 public class GobKingRenderer extends MobRenderer<GobKingEntity, GoblinKingModel<GobKingEntity>> {
 

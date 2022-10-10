@@ -7,18 +7,18 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
-import superlord.goblinsanddungeons.entity.GDFallingBlockEntity;
-import superlord.goblinsanddungeons.entity.GarchEntity;
-import superlord.goblinsanddungeons.entity.GobEntity;
-import superlord.goblinsanddungeons.entity.GobKingEntity;
-import superlord.goblinsanddungeons.entity.GobberEntity;
-import superlord.goblinsanddungeons.entity.GoblinSoulBulletEntity;
-import superlord.goblinsanddungeons.entity.GobloEntity;
-import superlord.goblinsanddungeons.entity.GoomEntity;
-import superlord.goblinsanddungeons.entity.HobGobEntity;
-import superlord.goblinsanddungeons.entity.MimicEntity;
-import superlord.goblinsanddungeons.entity.OgreEntity;
-import superlord.goblinsanddungeons.entity.SoulBulletEntity;
+import superlord.goblinsanddungeons.common.entity.GDFallingBlockEntity;
+import superlord.goblinsanddungeons.common.entity.GarchEntity;
+import superlord.goblinsanddungeons.common.entity.GobEntity;
+import superlord.goblinsanddungeons.common.entity.GobKingEntity;
+import superlord.goblinsanddungeons.common.entity.GobberEntity;
+import superlord.goblinsanddungeons.common.entity.GoblinSoulBulletEntity;
+import superlord.goblinsanddungeons.common.entity.GobloEntity;
+import superlord.goblinsanddungeons.common.entity.GoomEntity;
+import superlord.goblinsanddungeons.common.entity.HobGobEntity;
+import superlord.goblinsanddungeons.common.entity.MimicEntity;
+import superlord.goblinsanddungeons.common.entity.OgreEntity;
+import superlord.goblinsanddungeons.common.entity.SoulBulletEntity;
 
 public class EntityInit {
 	

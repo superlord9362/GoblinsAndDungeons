@@ -11,7 +11,7 @@ import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.HiddenMimicModel;
 import superlord.goblinsanddungeons.client.model.MimicModel;
-import superlord.goblinsanddungeons.entity.MimicEntity;
+import superlord.goblinsanddungeons.common.entity.MimicEntity;
 
 public class MimicRenderer extends MobRenderer<MimicEntity, EntityModel<MimicEntity>> {
 

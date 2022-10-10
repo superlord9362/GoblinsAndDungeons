@@ -18,7 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.entity.GobEntity;
+import superlord.goblinsanddungeons.common.entity.GobEntity;
 
 /**
  * gob - Weastian

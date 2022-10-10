@@ -16,7 +16,7 @@ import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import superlord.goblinsanddungeons.entity.GobEntity;
+import superlord.goblinsanddungeons.common.entity.GobEntity;
 import superlord.goblinsanddungeons.init.EntityInit;
 
 public class GoblinPatrolSpawner implements CustomSpawner {

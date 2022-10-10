@@ -1,0 +1,33 @@
+package superlord.goblinsanddungeons.networking.packet;
+
+import java.util.function.Supplier;
+
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
+import superlord.goblinsanddungeons.magic.PlayerMana;
+
+public class CastSoulJumpC2SPacket {
+	
+	public CastSoulJumpC2SPacket() {
+		
+	}
+	
+	public CastSoulJumpC2SPacket(FriendlyByteBuf buf) {
+		
+	}
+	
+	public void toBytes(FriendlyByteBuf buf) {
+		
+	}
+	
+	public boolean handle(Supplier<NetworkEvent.Context> supplier) {
+		NetworkEvent.Context context = supplier.get();
+		context.enqueueWork(() -> {
+			PlayerMana mana = new PlayerMana();
+			mana.subMana(2);
+		});
+		return true;
+	}
+
+}
+

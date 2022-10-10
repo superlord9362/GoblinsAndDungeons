@@ -19,7 +19,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.entity.GarchEntity;
+import superlord.goblinsanddungeons.common.entity.GarchEntity;
 
 /**
  * garch - Weastian

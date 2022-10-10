@@ -8,16 +8,18 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
-import superlord.goblinsanddungeons.item.GoblinCrownItem;
-import superlord.goblinsanddungeons.item.GoblinSoulBulletItem;
-import superlord.goblinsanddungeons.item.GoblinsAndDungeonsSpawnEggItem;
-import superlord.goblinsanddungeons.item.HealthRingItem;
-import superlord.goblinsanddungeons.item.ScrollItem;
-import superlord.goblinsanddungeons.item.SoulBottleItem;
-import superlord.goblinsanddungeons.item.SoulBulletItem;
-import superlord.goblinsanddungeons.item.SpellTomeItem;
-import superlord.goblinsanddungeons.item.StaffItem;
-import superlord.goblinsanddungeons.item.StealthRingItem;
+import superlord.goblinsanddungeons.common.item.BulletStaffItem;
+import superlord.goblinsanddungeons.common.item.GoblinCrownItem;
+import superlord.goblinsanddungeons.common.item.GoblinSoulBulletItem;
+import superlord.goblinsanddungeons.common.item.GoblinsAndDungeonsSpawnEggItem;
+import superlord.goblinsanddungeons.common.item.HealthRingItem;
+import superlord.goblinsanddungeons.common.item.JumpStaffItem;
+import superlord.goblinsanddungeons.common.item.ScrollItem;
+import superlord.goblinsanddungeons.common.item.SoulBottleItem;
+import superlord.goblinsanddungeons.common.item.SoulBulletItem;
+import superlord.goblinsanddungeons.common.item.SpellTomeItem;
+import superlord.goblinsanddungeons.common.item.StaffItem;
+import superlord.goblinsanddungeons.common.item.StealthRingItem;
 
 public class ItemInit {
 
@@ -38,6 +40,8 @@ public class ItemInit {
 
 	public static final RegistryObject<Item> GOBLIN_EYE = REGISTER.register("goblin_eye", () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> STAFF_AMETHYST = REGISTER.register("staff_amethyst", () -> new StaffItem(new Item.Properties().tab(GoblinsAndDungeons.GROUP).stacksTo(1).defaultDurability(250)));
+	public static final RegistryObject<Item> STAFF_BULLET = REGISTER.register("staff_bullet", () -> new BulletStaffItem(new Item.Properties().stacksTo(1).defaultDurability(250)));
+	public static final RegistryObject<Item> STAFF_JUMP = REGISTER.register("staff_jump", () -> new JumpStaffItem(new Item.Properties().stacksTo(1).defaultDurability(250)));
 	public static final RegistryObject<Item> SOUL_ASH = REGISTER.register("soul_ash", () -> new Item(new Item.Properties().tab(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<Item> BOTTLED_SOULS = REGISTER.register("bottled_souls", () -> new SoulBottleItem(new Item.Properties().tab(GoblinsAndDungeons.GROUP).stacksTo(1)));
 

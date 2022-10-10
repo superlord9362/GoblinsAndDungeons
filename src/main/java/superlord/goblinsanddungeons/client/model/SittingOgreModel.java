@@ -14,7 +14,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.entity.OgreEntity;
+import superlord.goblinsanddungeons.common.entity.OgreEntity;
 
 /**
  * Ogre - Weastian

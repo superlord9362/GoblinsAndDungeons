@@ -44,10 +44,10 @@ import superlord.goblinsanddungeons.client.renderer.MimicRenderer;
 import superlord.goblinsanddungeons.client.renderer.OgreRenderer;
 import superlord.goblinsanddungeons.client.renderer.SoulAshCampfireTileEntityRenderer;
 import superlord.goblinsanddungeons.client.renderer.SoulBulletRenderer;
+import superlord.goblinsanddungeons.common.item.GoblinsAndDungeonsSpawnEggItem;
 import superlord.goblinsanddungeons.init.BlockInit;
 import superlord.goblinsanddungeons.init.EntityInit;
 import superlord.goblinsanddungeons.init.TileEntityInit;
-import superlord.goblinsanddungeons.item.GoblinsAndDungeonsSpawnEggItem;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = GoblinsAndDungeons.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

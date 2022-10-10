@@ -15,7 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.entity.GoomEntity;
+import superlord.goblinsanddungeons.common.entity.GoomEntity;
 
 /**
  * GoomModel - superlord9362

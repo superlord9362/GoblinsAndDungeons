@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import superlord.goblinsanddungeons.entity.GDFallingBlockEntity;
+import superlord.goblinsanddungeons.common.entity.GDFallingBlockEntity;
 
 public class FallingBlockRenderer extends EntityRenderer<GDFallingBlockEntity> {
 

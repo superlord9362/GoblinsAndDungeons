@@ -17,7 +17,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.entity.MimicEntity;
+import superlord.goblinsanddungeons.common.entity.MimicEntity;
 
 /**
  * mimic goblin - Weastian
