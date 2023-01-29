@@ -15,14 +15,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.common.entity.GoomEntity;
+import superlord.goblinsanddungeons.common.entity.Goom;
 
 /**
  * GoomModel - superlord9362
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class GoomModel<T extends Entity> extends EntityModel<GoomEntity> {
+public class GoomModel<T extends Entity> extends EntityModel<Goom> {
 	private final ModelPart Body;
 	private final ModelPart Head;
 	private final ModelPart LeftArm;
@@ -72,7 +72,7 @@ public class GoomModel<T extends Entity> extends EntityModel<GoomEntity> {
 	}
 	
 	@Override
-	public void setupAnim(GoomEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Goom entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.Head.xRot = headPitch * ((float)Math.PI / 180F);
 		this.Head.yRot = netHeadYaw * ((float)Math.PI / 180F);
 		this.RightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;

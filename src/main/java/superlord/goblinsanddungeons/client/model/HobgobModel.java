@@ -20,15 +20,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.common.entity.GobEntity;
-import superlord.goblinsanddungeons.common.entity.HobGobEntity;
+import superlord.goblinsanddungeons.common.entity.Gob;
+import superlord.goblinsanddungeons.common.entity.HobGob;
 
 /**
  * hobgob - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class HobgobModel<T extends Entity> extends EntityModel<HobGobEntity> {
+public class HobgobModel<T extends Entity> extends EntityModel<HobGob> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "custom_model"), "main");
 	private final ModelPart LeftLeg;
 	private final ModelPart RightArm;
@@ -77,7 +77,7 @@ public class HobgobModel<T extends Entity> extends EntityModel<HobGobEntity> {
 	}
 
 	@Override
-	public void setupAnim(HobGobEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(HobGob entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.RightArm.xRot = 0.0F;
 		this.LeftArm.xRot = 0.0F;
 		this.Head.xRot = headPitch * ((float)Math.PI / 180F);
@@ -86,7 +86,7 @@ public class HobgobModel<T extends Entity> extends EntityModel<HobGobEntity> {
 		this.LeftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
 		this.RightArm.xRot = Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
 		this.LeftArm.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-		List<GobEntity> gob1 = entity.level.getEntitiesOfClass(GobEntity.class, entity.getBoundingBox().inflate(1.0D, 1.0D, 1.0D));
+		List<Gob> gob1 = entity.level.getEntitiesOfClass(Gob.class, entity.getBoundingBox().inflate(1.0D, 1.0D, 1.0D));
 		List<Player> player = entity.level.getEntitiesOfClass(Player.class, entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
 		if (!gob1.isEmpty() && !player.isEmpty() && entity.getTarget() == null){
 			this.RightArm.xRot = -Mth.abs(-0.5F * 2F * Mth.sin((1F * ageInTicks) / 10));

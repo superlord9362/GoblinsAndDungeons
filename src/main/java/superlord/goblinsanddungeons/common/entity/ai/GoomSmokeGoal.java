@@ -4,13 +4,13 @@ import java.util.EnumSet;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
-import superlord.goblinsanddungeons.common.entity.GoomEntity;
+import superlord.goblinsanddungeons.common.entity.Goom;
 
 public class GoomSmokeGoal extends Goal {
-   private final GoomEntity swellingGoom;
+   private final Goom swellingGoom;
    private LivingEntity goomAttackTarget;
 
-   public GoomSmokeGoal(GoomEntity entitygoomIn) {
+   public GoomSmokeGoal(Goom entitygoomIn) {
       this.swellingGoom = entitygoomIn;
       this.setFlags(EnumSet.of(Goal.Flag.MOVE));
    }

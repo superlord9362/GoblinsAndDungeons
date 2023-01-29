@@ -12,9 +12,9 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import superlord.goblinsanddungeons.common.entity.GDFallingBlockEntity;
+import superlord.goblinsanddungeons.common.entity.GDFallingBlock;
 
-public class FallingBlockRenderer extends EntityRenderer<GDFallingBlockEntity> {
+public class FallingBlockRenderer extends EntityRenderer<GDFallingBlock> {
 
 	public FallingBlockRenderer(EntityRendererProvider.Context mgr) {
 		super(mgr);
@@ -22,11 +22,11 @@ public class FallingBlockRenderer extends EntityRenderer<GDFallingBlockEntity> {
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public void render(GDFallingBlockEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+	public void render(GDFallingBlock entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
 		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
 		matrixStack.pushPose();
 		matrixStack.translate(0, 0.5F, 0);
-		if (entity.getMode() == GDFallingBlockEntity.EnumFallingState.MOBILE) {
+		if (entity.getMode() == GDFallingBlock.EnumFallingState.MOBILE) {
 			matrixStack.mulPose(new Quaternion(0, Mth.lerp(partialTicks, entity.yRotO, entity.yRot), 0, true));
 			matrixStack.mulPose(new Quaternion(Mth.lerp(partialTicks, entity.xRotO, entity.xRot), 0, 0, true));
 		} else {
@@ -40,7 +40,7 @@ public class FallingBlockRenderer extends EntityRenderer<GDFallingBlockEntity> {
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public ResourceLocation getTextureLocation(GDFallingBlockEntity entity) {
+	public ResourceLocation getTextureLocation(GDFallingBlock entity) {
 	      return TextureAtlas.LOCATION_BLOCKS;
 	}
 	

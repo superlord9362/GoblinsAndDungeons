@@ -6,9 +6,9 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.HobgobModel;
-import superlord.goblinsanddungeons.common.entity.HobGobEntity;
+import superlord.goblinsanddungeons.common.entity.HobGob;
 
-public class HobGobRenderer extends MobRenderer<HobGobEntity, HobgobModel<HobGobEntity>> {
+public class HobGobRenderer extends MobRenderer<HobGob, HobgobModel<HobGob>> {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/hobgob.png");
 
@@ -18,7 +18,7 @@ public class HobGobRenderer extends MobRenderer<HobGobEntity, HobgobModel<HobGob
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(HobGobEntity entity) {
+	public ResourceLocation getTextureLocation(HobGob entity) {
 		return TEXTURE;
 	}
 

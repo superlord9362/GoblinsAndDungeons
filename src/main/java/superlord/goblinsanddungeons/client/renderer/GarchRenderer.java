@@ -7,9 +7,9 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.GarchModel;
-import superlord.goblinsanddungeons.common.entity.GarchEntity;
+import superlord.goblinsanddungeons.common.entity.Garch;
 
-public class GarchRenderer extends MobRenderer<GarchEntity, GarchModel<GarchEntity>> {
+public class GarchRenderer extends MobRenderer<Garch, GarchModel<Garch>> {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/garch.png");
 
@@ -20,7 +20,7 @@ public class GarchRenderer extends MobRenderer<GarchEntity, GarchModel<GarchEnti
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(GarchEntity entity) {
+	public ResourceLocation getTextureLocation(Garch entity) {
 		return TEXTURE;
 	}
 

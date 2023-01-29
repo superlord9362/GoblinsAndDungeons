@@ -8,9 +8,9 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.GobberModel;
-import superlord.goblinsanddungeons.common.entity.GobberEntity;
+import superlord.goblinsanddungeons.common.entity.Gobber;
 
-public class GobberRenderer extends MobRenderer<GobberEntity, EntityModel<GobberEntity>> {
+public class GobberRenderer extends MobRenderer<Gobber, EntityModel<Gobber>> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/gobber.png");
 	private static final ResourceLocation SLEEPING = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/gobber_sleeping.png");
@@ -22,7 +22,7 @@ public class GobberRenderer extends MobRenderer<GobberEntity, EntityModel<Gobber
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(GobberEntity entity) {
+	public ResourceLocation getTextureLocation(Gobber entity) {
 		if (entity.isSleeping()) {
 			return SLEEPING;
 		} else {

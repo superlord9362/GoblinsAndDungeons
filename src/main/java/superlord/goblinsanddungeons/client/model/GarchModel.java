@@ -19,14 +19,14 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.common.entity.GarchEntity;
+import superlord.goblinsanddungeons.common.entity.Garch;
 
 /**
  * garch - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class GarchModel<T extends Mob & RangedAttackMob> extends EntityModel<GarchEntity> implements ArmedModel {
+public class GarchModel<T extends Mob & RangedAttackMob> extends EntityModel<Garch> implements ArmedModel {
 	private final ModelPart RightArm;
 	private final ModelPart Leftleg;
 	private final ModelPart LeftArm;
@@ -74,7 +74,7 @@ public class GarchModel<T extends Mob & RangedAttackMob> extends EntityModel<Gar
 	}
 
 	@Override
-	public void setupAnim(GarchEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Garch entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.Headlayer.xRot = headPitch * ((float)Math.PI / 180F);
 		this.Headlayer.yRot = netHeadYaw * ((float)Math.PI / 180F);
 		this.Rightleg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;

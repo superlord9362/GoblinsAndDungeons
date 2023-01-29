@@ -3,8 +3,9 @@ package superlord.goblinsanddungeons.networking.packet;
 import java.util.function.Supplier;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
-import superlord.goblinsanddungeons.magic.PlayerSpells;
+import superlord.goblinsanddungeons.magic.PlayerSpellsProvider;
 
 public class LearnSoulJumpC2SPacket {
 	
@@ -23,8 +24,10 @@ public class LearnSoulJumpC2SPacket {
 	public boolean handle(Supplier<NetworkEvent.Context> supplier) {
 		NetworkEvent.Context context = supplier.get();
 		context.enqueueWork(() -> {
-			PlayerSpells spells = new PlayerSpells();
-			spells.setKnowsSoulJump(true);
+			ServerPlayer player = context.getSender();
+			player.getCapability(PlayerSpellsProvider.PLAYER_SPELLS).ifPresent(playerSpells -> {
+				playerSpells.setKnowsSoulJump(true);
+			});
 		});
 		return true;
 	}

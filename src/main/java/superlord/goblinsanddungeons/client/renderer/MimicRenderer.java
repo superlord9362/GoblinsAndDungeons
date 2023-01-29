@@ -11,9 +11,9 @@ import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.HiddenMimicModel;
 import superlord.goblinsanddungeons.client.model.MimicModel;
-import superlord.goblinsanddungeons.common.entity.MimicEntity;
+import superlord.goblinsanddungeons.common.entity.Mimic;
 
-public class MimicRenderer extends MobRenderer<MimicEntity, EntityModel<MimicEntity>> {
+public class MimicRenderer extends MobRenderer<Mimic, EntityModel<Mimic>> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/mimic.png");
 	private static MimicModel<?> MIMIC;
@@ -26,7 +26,7 @@ public class MimicRenderer extends MobRenderer<MimicEntity, EntityModel<MimicEnt
 		HIDDEN_MIMIC = new HiddenMimicModel(renderManager.bakeLayer(ClientEvents.HIDDEN_MIMIC));
 	}
 
-	protected void scale(MimicEntity entitylivingbaseIn, PoseStack matrixStackIn, float partialTickTime) {
+	protected void scale(Mimic entitylivingbaseIn, PoseStack matrixStackIn, float partialTickTime) {
 		if (entitylivingbaseIn.isHiding()) {
 			model = HIDDEN_MIMIC;
 		} else {
@@ -35,15 +35,15 @@ public class MimicRenderer extends MobRenderer<MimicEntity, EntityModel<MimicEnt
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(MimicEntity entity) {
+	public ResourceLocation getTextureLocation(Mimic entity) {
 		return TEXTURE;
 	}
 
-	public boolean shouldRender(MimicEntity p_115913_, Frustum p_115914_, double p_115915_, double p_115916_, double p_115917_) {
+	public boolean shouldRender(Mimic p_115913_, Frustum p_115914_, double p_115915_, double p_115916_, double p_115917_) {
 		return true;
 	}
 
-	protected void setupRotations(MimicEntity p_115907_, PoseStack p_115908_, float p_115909_, float p_115910_, float p_115911_) {
+	protected void setupRotations(Mimic p_115907_, PoseStack p_115908_, float p_115909_, float p_115910_, float p_115911_) {
 		super.setupRotations(p_115907_, p_115908_, p_115909_, p_115910_ + 180.0F, p_115911_);
 		p_115908_.translate(0.0D, 0.5D, 0.0D);
 		p_115908_.translate(0.0D, -0.5D, 0.0D);

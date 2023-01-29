@@ -19,9 +19,9 @@ import net.minecraft.world.level.Level;
 import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 
-public class GoblinEntity extends Monster {
+public class Goblin extends Monster {
 
-	protected GoblinEntity(EntityType<? extends Monster> type, Level worldIn) {
+	protected Goblin(EntityType<? extends Monster> type, Level worldIn) {
 		super(type, worldIn);
 	}
 
@@ -40,7 +40,7 @@ public class GoblinEntity extends Monster {
 			Item item2 = itemstack2.getItem();
 
 
-			if (lookingEntity instanceof GoblinEntity && item == ItemInit.GOBLIN_CROWN.get()) {
+			if (lookingEntity instanceof Goblin && item == ItemInit.GOBLIN_CROWN.get()) {
 				d0 *= 0.5D;
 			}
 			if (lookingEntity instanceof Monster && lookingEntity.isCrouching() && item2 == ItemInit.RING_OF_STEALTH.get()) {
@@ -51,12 +51,12 @@ public class GoblinEntity extends Monster {
 		return d0;
 	}
 
-	private static boolean isAdmiringItem(GoblinEntity p_234451_0_) {
+	private static boolean isAdmiringItem(Goblin p_234451_0_) {
 		return p_234451_0_.getBrain().hasMemoryValue(MemoryModuleType.ADMIRING_ITEM);
 	}
 
 
-	protected static void cancelAdmiring(GoblinEntity p_234496_0_) {
+	protected static void cancelAdmiring(Goblin p_234496_0_) {
 		if (isAdmiringItem(p_234496_0_) && !p_234496_0_.getOffhandItem().isEmpty()) {
 			p_234496_0_.spawnAtLocation(p_234496_0_.getOffhandItem());
 			p_234496_0_.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);

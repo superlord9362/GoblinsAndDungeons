@@ -6,9 +6,9 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.GoomModel;
-import superlord.goblinsanddungeons.common.entity.GoomEntity;
+import superlord.goblinsanddungeons.common.entity.Goom;
 
-public class GoomRenderer extends MobRenderer<GoomEntity, GoomModel<GoomEntity>> {
+public class GoomRenderer extends MobRenderer<Goom, GoomModel<Goom>> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/goom.png");
 	private static final ResourceLocation EXPLODED_TEXTURE = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/goom_ignited.png");
@@ -19,7 +19,7 @@ public class GoomRenderer extends MobRenderer<GoomEntity, GoomModel<GoomEntity>>
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(GoomEntity entity) {
+	public ResourceLocation getTextureLocation(Goom entity) {
 		if (entity.isBlownUp()) {
 			return EXPLODED_TEXTURE;
 		} else {

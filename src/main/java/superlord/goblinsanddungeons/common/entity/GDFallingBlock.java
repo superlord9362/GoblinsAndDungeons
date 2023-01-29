@@ -17,16 +17,16 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkHooks;
 
-public class GDFallingBlockEntity extends Entity {
+public class GDFallingBlock extends Entity {
 	
 	public static float GRAVITY = 0.1f;
 	public double prevMotionX, prevMotionY, prevMotionZ;
 	
-	private static final EntityDataAccessor<Optional<BlockState>> BLOCK_STATE = SynchedEntityData.defineId(GDFallingBlockEntity.class, EntityDataSerializers.BLOCK_STATE);
-	private static final EntityDataAccessor<Integer> DURATION = SynchedEntityData.defineId(GDFallingBlockEntity.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> TICKS_EXISTED = SynchedEntityData.defineId(GDFallingBlockEntity.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<String> MODE = SynchedEntityData.defineId(GDFallingBlockEntity.class, EntityDataSerializers.STRING);
-	private static final EntityDataAccessor<Float> ANIM = SynchedEntityData.defineId(GDFallingBlockEntity.class, EntityDataSerializers.FLOAT);
+	private static final EntityDataAccessor<Optional<BlockState>> BLOCK_STATE = SynchedEntityData.defineId(GDFallingBlock.class, EntityDataSerializers.BLOCK_STATE);
+	private static final EntityDataAccessor<Integer> DURATION = SynchedEntityData.defineId(GDFallingBlock.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> TICKS_EXISTED = SynchedEntityData.defineId(GDFallingBlock.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<String> MODE = SynchedEntityData.defineId(GDFallingBlock.class, EntityDataSerializers.STRING);
+	private static final EntityDataAccessor<Float> ANIM = SynchedEntityData.defineId(GDFallingBlock.class, EntityDataSerializers.FLOAT);
 
 	public enum EnumFallingState {
 		MOBILE,
@@ -36,19 +36,19 @@ public class GDFallingBlockEntity extends Entity {
 	public float animY = 0;
 	public float prevAnimY = 0;
 	
-	public GDFallingBlockEntity(EntityType<?> entityType, Level world) {
+	public GDFallingBlock(EntityType<?> entityType, Level world) {
 		super(entityType, world);
 		setBlock(Blocks.DIRT.defaultBlockState());
 		setDuration(70);
 	}
 	
-	public GDFallingBlockEntity(EntityType<?> type, Level world, int duration, BlockState state) {
+	public GDFallingBlock(EntityType<?> type, Level world, int duration, BlockState state) {
 		super(type, world);
 		setBlock(state);
 		setDuration(duration);
 	}
 	
-	public GDFallingBlockEntity(EntityType<?> type, Level world, BlockState state, float vy) {
+	public GDFallingBlock(EntityType<?> type, Level world, BlockState state, float vy) {
 		super(type, world);
 		setBlock(state);
 		setMode(EnumFallingState.POP_UP);

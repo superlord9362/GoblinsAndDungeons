@@ -4,11 +4,11 @@ import java.util.List;
 
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Animal;
-import superlord.goblinsanddungeons.common.entity.OgreEntity;
+import superlord.goblinsanddungeons.common.entity.Ogre;
 
 public class FollowOgreGoal extends Goal {
    private final Animal animal;
-   private OgreEntity ogre;
+   private Ogre ogre;
    private final double moveSpeed;
    private int delayCounter;
 
@@ -21,7 +21,7 @@ public class FollowOgreGoal extends Goal {
       if (this.animal.getAge() >= 0) {
          return false;
       } else {
-         List<OgreEntity> list = this.animal.level.getEntitiesOfClass(OgreEntity.class, this.animal.getBoundingBox().inflate(8.0D, 4.0D, 8.0D));
+         List<Ogre> list = this.animal.level.getEntitiesOfClass(Ogre.class, this.animal.getBoundingBox().inflate(8.0D, 4.0D, 8.0D));
          if (!list.isEmpty()) {
             return true;
          } else {

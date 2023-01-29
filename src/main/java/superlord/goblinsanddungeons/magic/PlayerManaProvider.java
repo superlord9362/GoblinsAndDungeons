@@ -1,5 +1,7 @@
 package superlord.goblinsanddungeons.magic;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,17 +24,22 @@ public class PlayerManaProvider implements ICapabilityProvider, INBTSerializable
         if(this.mana == null) {
             this.mana = new PlayerMana();
         }
-
         return this.mana;
     }
 
+    @Nonnull
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+    public @NotNull <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
         if(cap == PLAYER_MANA) {
             return optional.cast();
         }
-
         return LazyOptional.empty();
+    }
+    
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+    	return getCapability(cap);
     }
 
     @Override

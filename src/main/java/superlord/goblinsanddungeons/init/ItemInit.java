@@ -8,18 +8,23 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
+import superlord.goblinsanddungeons.common.item.BlindnessOrbItem;
 import superlord.goblinsanddungeons.common.item.BulletStaffItem;
+import superlord.goblinsanddungeons.common.item.ExplosiveOrbItem;
 import superlord.goblinsanddungeons.common.item.GoblinCrownItem;
 import superlord.goblinsanddungeons.common.item.GoblinSoulBulletItem;
 import superlord.goblinsanddungeons.common.item.GoblinsAndDungeonsSpawnEggItem;
 import superlord.goblinsanddungeons.common.item.HealthRingItem;
 import superlord.goblinsanddungeons.common.item.JumpStaffItem;
+import superlord.goblinsanddungeons.common.item.LevitationOrbItem;
 import superlord.goblinsanddungeons.common.item.ScrollItem;
 import superlord.goblinsanddungeons.common.item.SoulBottleItem;
 import superlord.goblinsanddungeons.common.item.SoulBulletItem;
 import superlord.goblinsanddungeons.common.item.SpellTomeItem;
 import superlord.goblinsanddungeons.common.item.StaffItem;
 import superlord.goblinsanddungeons.common.item.StealthRingItem;
+import superlord.goblinsanddungeons.common.item.TeleportationOrbItem;
+import superlord.goblinsanddungeons.common.item.WeaknessOrbItem;
 
 public class ItemInit {
 
@@ -35,7 +40,8 @@ public class ItemInit {
 	public static final RegistryObject<Item> GOBBER_SPAWN_EGG = REGISTER.register("gobber_spawn_egg", () -> new GoblinsAndDungeonsSpawnEggItem(EntityInit.GOBBER, 0x677FE8, 0x82A190, new Item.Properties().tab(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<Item> OGRE_SPAWN_EGG = REGISTER.register("ogre_spawn_egg", () -> new GoblinsAndDungeonsSpawnEggItem(EntityInit.OGRE, 0xB8AE4D, 0x875D2A, new Item.Properties().tab(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<Item> GOBLIN_KING_SPAWN_EGG = REGISTER.register("goblin_king_spawn_egg", () -> new GoblinsAndDungeonsSpawnEggItem(EntityInit.GOB_KING, 0x79911E, 0xCF4466, new Item.Properties().tab(GoblinsAndDungeons.GROUP)));
-
+	public static final RegistryObject<Item> BEHOLDER_SPAWN_EGG = REGISTER.register("beholder_spawn_egg", () -> new GoblinsAndDungeonsSpawnEggItem(EntityInit.BEHOLDER, 0xD65286, 0x9417A1, new Item.Properties().tab(GoblinsAndDungeons.GROUP)));
+	
 	public static final RegistryObject<Item> OGRE_TUSK = REGISTER.register("ogre_tusk", () -> new Item(new Item.Properties().tab(GoblinsAndDungeons.GROUP)));
 
 	public static final RegistryObject<Item> GOBLIN_EYE = REGISTER.register("goblin_eye", () -> new Item(new Item.Properties()));
@@ -48,6 +54,12 @@ public class ItemInit {
 	public static final RegistryObject<Item> GOBLIN_SOUL_BULLET = REGISTER.register("goblin_soul_bullet", () -> new GoblinSoulBulletItem(new Item.Properties()));
 	public static final RegistryObject<Item> SOUL_BULLET = REGISTER.register("soul_bullet", () -> new SoulBulletItem(new Item.Properties()));
 
+	public static final RegistryObject<Item> BLINDNESS_ORB = REGISTER.register("blindness_orb", () -> new BlindnessOrbItem(new Item.Properties()));
+	public static final RegistryObject<Item> TELEPORTATION_ORB = REGISTER.register("teleportation_orb", () -> new TeleportationOrbItem(new Item.Properties()));
+	public static final RegistryObject<Item> LEVITATION_ORB = REGISTER.register("levitation_orb", () -> new LevitationOrbItem(new Item.Properties()));
+	public static final RegistryObject<Item> WEAKNESS_ORB = REGISTER.register("weakness_orb", () -> new WeaknessOrbItem(new Item.Properties()));
+	public static final RegistryObject<Item> EXPLOSIVE_ORB = REGISTER.register("explosive_orb", () -> new ExplosiveOrbItem(new Item.Properties()));
+	
 	public static final RegistryObject<BlockItem> URN = REGISTER.register("urn", () -> new BlockItem(BlockInit.URN.get(), new Item.Properties().tab(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<BlockItem> SCORIA = REGISTER.register("scoria", () -> new BlockItem(BlockInit.SCORIA.get(), new Item.Properties().tab(GoblinsAndDungeons.GROUP)));
 	public static final RegistryObject<BlockItem> SCORIA_BRICKS = REGISTER.register("scoria_bricks", () -> new BlockItem(BlockInit.SCORIA_BRICKS.get(), new Item.Properties().tab(GoblinsAndDungeons.GROUP)));

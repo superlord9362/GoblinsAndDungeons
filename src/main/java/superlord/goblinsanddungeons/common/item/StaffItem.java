@@ -16,7 +16,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import superlord.goblinsanddungeons.config.GoblinsDungeonsConfig;
 import superlord.goblinsanddungeons.init.ItemInit;
-import superlord.goblinsanddungeons.magic.PlayerSpells;
+import superlord.goblinsanddungeons.magic.PlayerSpellsProvider;
 
 public class StaffItem extends Item {
 
@@ -26,26 +26,27 @@ public class StaffItem extends Item {
 
 	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
-		PlayerSpells knownSpells = new PlayerSpells();
-		if (player.getAbilities().instabuild && player.isShiftKeyDown()) {
-			ItemStack newStack = new ItemStack(ItemInit.STAFF_BULLET.get());
-			int damage = this.getDamage(player.getItemInHand(hand));
-			player.displayClientMessage(new TranslatableComponent("item.goblinsanddungeons.current_spell_soul_bullet"), true);
-			player.setItemInHand(hand, newStack);
-			newStack.setDamageValue(damage);
-		} else if (player.isShiftKeyDown() && knownSpells.doesKnowSoulBullet()) {
-			ItemStack newStack = new ItemStack(ItemInit.STAFF_BULLET.get());
-			int damage = this.getDamage(player.getItemInHand(hand));
-			player.displayClientMessage(new TranslatableComponent("item.goblinsanddungeons.current_spell_soul_bullet"), true);
-			player.setItemInHand(hand, newStack);
-			newStack.setDamageValue(damage);
-		} else if (player.isShiftKeyDown() && knownSpells.doesKnowSoulJump() && !knownSpells.doesKnowSoulBullet()) {
-			ItemStack newStack = new ItemStack(ItemInit.STAFF_JUMP.get());
-			int damage = this.getDamage(player.getItemInHand(hand));
-			player.displayClientMessage(new TranslatableComponent("item.goblinsanddungeons.current_spell_soul_jump"), true);
-			player.setItemInHand(hand, newStack);
-			newStack.setDamageValue(damage);
-		}
+		player.getCapability(PlayerSpellsProvider.PLAYER_SPELLS).ifPresent(spells -> {
+			if (player.getAbilities().instabuild && player.isShiftKeyDown()) {
+				ItemStack newStack = new ItemStack(ItemInit.STAFF_BULLET.get());
+				int damage = this.getDamage(player.getItemInHand(hand));
+				player.displayClientMessage(new TranslatableComponent("item.goblinsanddungeons.current_spell_soul_bullet"), true);
+				player.setItemInHand(hand, newStack);
+				newStack.setDamageValue(damage);
+			} else if (player.isShiftKeyDown() && spells.doesKnowSoulBullet()) {
+				ItemStack newStack = new ItemStack(ItemInit.STAFF_BULLET.get());
+				int damage = this.getDamage(player.getItemInHand(hand));
+				player.displayClientMessage(new TranslatableComponent("item.goblinsanddungeons.current_spell_soul_bullet"), true);
+				player.setItemInHand(hand, newStack);
+				newStack.setDamageValue(damage);
+			} else if (player.isShiftKeyDown() && spells.doesKnowSoulJump() && !spells.doesKnowSoulBullet()) {
+				ItemStack newStack = new ItemStack(ItemInit.STAFF_JUMP.get());
+				int damage = this.getDamage(player.getItemInHand(hand));
+				player.displayClientMessage(new TranslatableComponent("item.goblinsanddungeons.current_spell_soul_jump"), true);
+				player.setItemInHand(hand, newStack);
+				newStack.setDamageValue(damage);
+			}
+		});
 		return InteractionResultHolder.sidedSuccess(stack, world.isClientSide());
 	}
 

@@ -19,14 +19,14 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.common.entity.GobloEntity;
+import superlord.goblinsanddungeons.common.entity.Goblo;
 
 /**
  * goblo - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class GobloModel<T extends Entity> extends EntityModel<GobloEntity> implements ArmedModel {
+public class GobloModel<T extends Entity> extends EntityModel<Goblo> implements ArmedModel {
 	private final ModelPart RightArm;
 	private final ModelPart LeftLeg;
 	private final ModelPart LeftArm;
@@ -68,7 +68,7 @@ public class GobloModel<T extends Entity> extends EntityModel<GobloEntity> imple
 	}
 
 	@Override
-	public void setupAnim(GobloEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Goblo entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.RightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 		this.LeftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
 		this.RightArm.xRot = Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;

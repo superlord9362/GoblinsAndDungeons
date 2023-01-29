@@ -50,17 +50,17 @@ import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
-public class GobloEntity extends GoblinEntity implements ContainerListener {
+public class Goblo extends Goblin implements ContainerListener {
 
-	private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(GobloEntity.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> HAS_CHICKEN = SynchedEntityData.defineId(GobloEntity.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Byte> STATUS = SynchedEntityData.defineId(GobloEntity.class, EntityDataSerializers.BYTE);
+	private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(Goblo.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> HAS_CHICKEN = SynchedEntityData.defineId(Goblo.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Byte> STATUS = SynchedEntityData.defineId(Goblo.class, EntityDataSerializers.BYTE);
 	public int eatTicks;
 	private SimpleContainer inventory;
 	@SuppressWarnings("unused")
 	private net.minecraftforge.common.util.LazyOptional<?> itemHandler = null;
 
-	public GobloEntity(EntityType<? extends GobloEntity> type, Level worldIn) {
+	public Goblo(EntityType<? extends Goblo> type, Level worldIn) {
 		super(type, worldIn);
 		this.setCanPickUpLoot(true);
 		this.initInventory();
@@ -99,9 +99,9 @@ public class GobloEntity extends GoblinEntity implements ContainerListener {
 		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 		this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 1.0D, true));
-		this.goalSelector.addGoal(1, new GobloEntity.SleepGoal(this));
-		this.goalSelector.addGoal(2, new GobloEntity.PickUpChickenGoal(this));
-		this.goalSelector.addGoal(2, new GobloEntity.FindItemsGoal());
+		this.goalSelector.addGoal(1, new Goblo.SleepGoal(this));
+		this.goalSelector.addGoal(2, new Goblo.PickUpChickenGoal(this));
+		this.goalSelector.addGoal(2, new Goblo.FindItemsGoal());
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Raider.class, true));
@@ -351,7 +351,8 @@ public class GobloEntity extends GoblinEntity implements ContainerListener {
 		super.aiStep();
 	}
 
-	public boolean causeFallDamage(float distance, float damageMultiplier) {
+	@Override
+	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
 		if(this.hasChicken()) {
 			return false;
 		} else {
@@ -371,11 +372,11 @@ public class GobloEntity extends GoblinEntity implements ContainerListener {
 
 	class PickUpChickenGoal extends Goal {
 
-		GobloEntity goblo;
+		Goblo goblo;
 		Chicken chicken;
 		int ticks = 0;
 
-		public PickUpChickenGoal(GobloEntity goblo) {
+		public PickUpChickenGoal(Goblo goblo) {
 			this.setFlags(EnumSet.of(Goal.Flag.MOVE));
 			this.goblo = goblo;
 		}
@@ -426,14 +427,14 @@ public class GobloEntity extends GoblinEntity implements ContainerListener {
 		}
 
 		public boolean canUse() {
-			if (!GobloEntity.this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty() || GobloEntity.this.hasChicken()) {
+			if (!Goblo.this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty() || Goblo.this.hasChicken()) {
 				return false;
-			} else if (GobloEntity.this.getTarget() == null) {
-				if (GobloEntity.this.getRandom().nextInt(10) != 0) {
+			} else if (Goblo.this.getTarget() == null) {
+				if (Goblo.this.getRandom().nextInt(10) != 0) {
 					return false;
 				} else {
-					List<ItemEntity> list = GobloEntity.this.level.getEntitiesOfClass(ItemEntity.class, GobloEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
-					return !list.isEmpty() && GobloEntity.this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty();
+					List<ItemEntity> list = Goblo.this.level.getEntitiesOfClass(ItemEntity.class, Goblo.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+					return !list.isEmpty() && Goblo.this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty();
 				}
 			} else {
 				return false;
@@ -441,18 +442,18 @@ public class GobloEntity extends GoblinEntity implements ContainerListener {
 		}
 
 		public void tick() {
-			List<ItemEntity> list = GobloEntity.this.level.getEntitiesOfClass(ItemEntity.class, GobloEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
-			ItemStack itemstack = GobloEntity.this.getItemBySlot(EquipmentSlot.MAINHAND);
+			List<ItemEntity> list = Goblo.this.level.getEntitiesOfClass(ItemEntity.class, Goblo.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			ItemStack itemstack = Goblo.this.getItemBySlot(EquipmentSlot.MAINHAND);
 			if (itemstack.isEmpty() && !list.isEmpty()) {
-				GobloEntity.this.getNavigation().moveTo(list.get(0), (double)1.2F);
+				Goblo.this.getNavigation().moveTo(list.get(0), (double)1.2F);
 			}
 
 		}
 
 		public void start() {
-			List<ItemEntity> list = GobloEntity.this.level.getEntitiesOfClass(ItemEntity.class, GobloEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			List<ItemEntity> list = Goblo.this.level.getEntitiesOfClass(ItemEntity.class, Goblo.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
 			if (!list.isEmpty()) {
-				GobloEntity.this.getNavigation().moveTo(list.get(0), (double)1.2F);
+				Goblo.this.getNavigation().moveTo(list.get(0), (double)1.2F);
 			}
 
 		}
@@ -464,10 +465,10 @@ public class GobloEntity extends GoblinEntity implements ContainerListener {
 	}
 
 	class SleepGoal extends Goal {
-		GobloEntity goblo;
+		Goblo goblo;
 		int sleepTicks = 0;
 
-		public SleepGoal(GobloEntity goblo) {
+		public SleepGoal(Goblo goblo) {
 			this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
 			this.goblo = goblo;
 		}
@@ -494,9 +495,9 @@ public class GobloEntity extends GoblinEntity implements ContainerListener {
 
 		public void start() {
 			goblo.setTarget(null);
-			GobloEntity.this.getNavigation().isDone();
-			GobloEntity.this.setDeltaMovement(0.0D, 0.0D, 0.0D);
-			GobloEntity.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
+			Goblo.this.getNavigation().isDone();
+			Goblo.this.setDeltaMovement(0.0D, 0.0D, 0.0D);
+			Goblo.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
 		}
 
 		public void stop() {

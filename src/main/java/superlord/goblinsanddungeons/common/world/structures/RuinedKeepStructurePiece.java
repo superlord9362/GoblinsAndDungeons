@@ -32,15 +32,15 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.ProtectedBloc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
-import superlord.goblinsanddungeons.common.entity.GarchEntity;
-import superlord.goblinsanddungeons.common.entity.GobEntity;
-import superlord.goblinsanddungeons.common.entity.GobKingEntity;
-import superlord.goblinsanddungeons.common.entity.GobberEntity;
-import superlord.goblinsanddungeons.common.entity.GobloEntity;
-import superlord.goblinsanddungeons.common.entity.GoomEntity;
-import superlord.goblinsanddungeons.common.entity.HobGobEntity;
-import superlord.goblinsanddungeons.common.entity.MimicEntity;
-import superlord.goblinsanddungeons.common.entity.OgreEntity;
+import superlord.goblinsanddungeons.common.entity.Garch;
+import superlord.goblinsanddungeons.common.entity.Gob;
+import superlord.goblinsanddungeons.common.entity.GobKing;
+import superlord.goblinsanddungeons.common.entity.Gobber;
+import superlord.goblinsanddungeons.common.entity.Goblo;
+import superlord.goblinsanddungeons.common.entity.Goom;
+import superlord.goblinsanddungeons.common.entity.HobGob;
+import superlord.goblinsanddungeons.common.entity.Mimic;
+import superlord.goblinsanddungeons.common.entity.Ogre;
 import superlord.goblinsanddungeons.init.EntityInit;
 import superlord.goblinsanddungeons.init.LootTableInit;
 import superlord.goblinsanddungeons.init.StructureInit;
@@ -109,7 +109,7 @@ public class RuinedKeepStructurePiece {
 			}
 			if ("gob".equals(function)) {
 				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-				GobEntity entity = EntityInit.GOB.get().create(world.getLevel());
+				Gob entity = EntityInit.GOB.get().create(world.getLevel());
 				if (entity != null) {
 					entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 					entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
@@ -118,7 +118,7 @@ public class RuinedKeepStructurePiece {
 			}
 			if ("garch".equals(function)) {
 				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-				GarchEntity entity = EntityInit.GARCH.get().create(world.getLevel());
+				Garch entity = EntityInit.GARCH.get().create(world.getLevel());
 				if (entity != null) {
 					entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 					entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
@@ -127,7 +127,7 @@ public class RuinedKeepStructurePiece {
 			}
 			if ("gobking".equals(function)) {
 				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-				GobKingEntity entity = EntityInit.GOB_KING.get().create(world.getLevel());
+				GobKing entity = EntityInit.GOB_KING.get().create(world.getLevel());
 				if (entity != null) {
 					entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 					entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
@@ -136,7 +136,7 @@ public class RuinedKeepStructurePiece {
 			}
 			if ("gobber".equals(function)) {
 				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-				GobberEntity entity = EntityInit.GOBBER.get().create(world.getLevel());
+				Gobber entity = EntityInit.GOBBER.get().create(world.getLevel());
 				if (entity != null) {
 					entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 					entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
@@ -145,7 +145,7 @@ public class RuinedKeepStructurePiece {
 			}
 			if ("ogre".equals(function)) {
 				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-				OgreEntity entity = EntityInit.OGRE.get().create(world.getLevel());
+				Ogre entity = EntityInit.OGRE.get().create(world.getLevel());
 				if (entity != null) {
 					entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 					entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
@@ -154,7 +154,7 @@ public class RuinedKeepStructurePiece {
 			}
 			if ("goom".equals(function)) {
 				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-				GoomEntity entity = EntityInit.GOOM.get().create(world.getLevel());
+				Goom entity = EntityInit.GOOM.get().create(world.getLevel());
 				if (entity != null) {
 					entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 					entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
@@ -163,7 +163,7 @@ public class RuinedKeepStructurePiece {
 			}
 			if ("goblo".equals(function)) {
 				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-				GobloEntity entity = EntityInit.GOBLO.get().create(world.getLevel());
+				Goblo entity = EntityInit.GOBLO.get().create(world.getLevel());
 				if (entity != null) {
 					entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 					entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
@@ -172,7 +172,7 @@ public class RuinedKeepStructurePiece {
 			}
 			if ("hobgob".equals(function)) {
 				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-				HobGobEntity entity = EntityInit.HOBGOB.get().create(world.getLevel());
+				HobGob entity = EntityInit.HOBGOB.get().create(world.getLevel());
 				if (entity != null) {
 					entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 					entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
@@ -190,7 +190,7 @@ public class RuinedKeepStructurePiece {
 			}
 			if ("mimic".equals(function)) {
 				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-				MimicEntity mimic = EntityInit.MIMIC.get().create(world.getLevel());
+				Mimic mimic = EntityInit.MIMIC.get().create(world.getLevel());
 				if (mimic != null) {
 					mimic.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 					mimic.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);

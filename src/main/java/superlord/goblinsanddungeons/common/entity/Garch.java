@@ -46,11 +46,11 @@ import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
-public class GarchEntity extends GoblinEntity implements RangedAttackMob {
+public class Garch extends Goblin implements RangedAttackMob {
 
-	private final RangedBowAttackGoal<GarchEntity> aiArrowAttack = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
+	private final RangedBowAttackGoal<Garch> aiArrowAttack = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
 
-	private static final EntityDataAccessor<Boolean> HAS_RIDER = SynchedEntityData.defineId(GarchEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> HAS_RIDER = SynchedEntityData.defineId(Garch.class, EntityDataSerializers.BOOLEAN);
 
 	public boolean hasRider() {
 		return this.entityData.get(HAS_RIDER);
@@ -60,7 +60,7 @@ public class GarchEntity extends GoblinEntity implements RangedAttackMob {
 		this.entityData.set(HAS_RIDER, hasRider);
 	}
 
-	public GarchEntity(EntityType<? extends GarchEntity> type, Level worldIn) {
+	public Garch(EntityType<? extends Garch> type, Level worldIn) {
 		super(type, worldIn);
 		this.reassessWeaponGoal();
 	}

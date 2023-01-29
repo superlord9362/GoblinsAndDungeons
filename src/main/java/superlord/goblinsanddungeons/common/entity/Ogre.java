@@ -54,26 +54,26 @@ import superlord.goblinsanddungeons.init.EntityInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
-public class OgreEntity extends GoblinEntity {
+public class Ogre extends Goblin {
 
 	private static final UniformInt field_234196_bu_ = TimeUtil.rangeOfSeconds(20, 39);
 	private int field_234197_bv_;
 	private UUID field_234198_bw_;
 	private int attackTimer;
-	private static final EntityDataAccessor<Boolean> ROARING = SynchedEntityData.defineId(OgreEntity.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> BUTT_SMASH = SynchedEntityData.defineId(OgreEntity.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> CAN_BUTT_SMASH = SynchedEntityData.defineId(OgreEntity.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> CAN_ROAR = SynchedEntityData.defineId(OgreEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> ROARING = SynchedEntityData.defineId(Ogre.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> BUTT_SMASH = SynchedEntityData.defineId(Ogre.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> CAN_BUTT_SMASH = SynchedEntityData.defineId(Ogre.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> CAN_ROAR = SynchedEntityData.defineId(Ogre.class, EntityDataSerializers.BOOLEAN);
 	private int roarTicks = 1800;
 	private int buttSmashTicks = 900;
 
-	public OgreEntity(EntityType<? extends OgreEntity> type, Level worldIn) {
+	public Ogre(EntityType<? extends Ogre> type, Level worldIn) {
 		super(type, worldIn);
 		this.maxUpStep = 1.0F;
 	}
 
 	protected void registerGoals() {
-		this.goalSelector.addGoal(1, new OgreEntity.AttackGoal(this, 1.0D, true));
+		this.goalSelector.addGoal(1, new Ogre.AttackGoal(this, 1.0D, true));
 		this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.9D, 32.0F));
 		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
 		this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
@@ -83,8 +83,8 @@ public class OgreEntity extends GoblinEntity {
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Raider.class, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
-		this.targetSelector.addGoal(1, new OgreEntity.RoarGoal());
-		this.targetSelector.addGoal(1, new OgreEntity.ButtSmashGoal(this));
+		this.targetSelector.addGoal(1, new Ogre.RoarGoal());
+		this.targetSelector.addGoal(1, new Ogre.ButtSmashGoal(this));
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
@@ -275,13 +275,13 @@ public class OgreEntity extends GoblinEntity {
 		
 		@Override
 		public boolean canUse() {
-			if (OgreEntity.this.getTarget() != null) return true;
+			if (Ogre.this.getTarget() != null) return true;
 			else return false;
 		}
 		
 		@Override
 		public boolean canContinueToUse() {
-			if (OgreEntity.this.getTarget() == null || OgreEntity.this.canButtSmash() || OgreEntity.this.canRoar()) return false;
+			if (Ogre.this.getTarget() == null || Ogre.this.canButtSmash() || Ogre.this.canRoar()) return false;
 			else return true;
 		}
 		
@@ -292,7 +292,7 @@ public class OgreEntity extends GoblinEntity {
 		
 		@Override
 		public boolean canUse() {
-			if (OgreEntity.this.getTarget() != null && OgreEntity.this.canRoar()) {
+			if (Ogre.this.getTarget() != null && Ogre.this.canRoar()) {
 				return true;
 			} else {
 				return false;
@@ -307,24 +307,24 @@ public class OgreEntity extends GoblinEntity {
 		}
 
 		public void start() {
-			OgreEntity.this.setRoaring(true);
-			LivingEntity entity = OgreEntity.this.getTarget();
-			level.playSound((Player) null, OgreEntity.this.blockPosition(), SoundInit.OGRE_ROAR, SoundSource.HOSTILE, 2, 1);
-			OgreEntity.this.playSound(SoundInit.OGRE_ROAR, 1, 1);
+			Ogre.this.setRoaring(true);
+			LivingEntity entity = Ogre.this.getTarget();
+			level.playSound((Player) null, Ogre.this.blockPosition(), SoundInit.OGRE_ROAR, SoundSource.HOSTILE, 2, 1);
+			Ogre.this.playSound(SoundInit.OGRE_ROAR, 1, 1);
 			entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 300, 1));
 		}
 
 		@Override
 		public boolean canContinueToUse() {
-			if (OgreEntity.this.getTarget() == null || !OgreEntity.this.canRoar()) return false;
+			if (Ogre.this.getTarget() == null || !Ogre.this.canRoar()) return false;
 			else return true;
 		}
 
 		@Override
 		public void stop() {
 			super.stop();
-			OgreEntity.this.setRoaring(false);
-			OgreEntity.this.roarTicks = 1800;
+			Ogre.this.setRoaring(false);
+			Ogre.this.roarTicks = 1800;
 			timer = 0;
 		}
 
@@ -332,10 +332,10 @@ public class OgreEntity extends GoblinEntity {
 
 	class ButtSmashGoal extends Goal {
 		Boolean hasJumped = false;
-		OgreEntity ogre;
+		Ogre ogre;
 		int timer;
 
-		public ButtSmashGoal(OgreEntity ogre) {
+		public ButtSmashGoal(Ogre ogre) {
 			this.ogre = ogre;
 		}
 
@@ -384,7 +384,7 @@ public class OgreEntity extends GoblinEntity {
 					AABB selection = new AABB(px - 1.5, minY, pz - 1.5, px + 1.5, maxY, pz + 1.5);
 					List<Entity> hit = world.getEntitiesOfClass(Entity.class, selection);
 					for (Entity entity : hit) {
-						if (entity == this.ogre || entity instanceof GDFallingBlockEntity) {
+						if (entity == this.ogre || entity instanceof GDFallingBlock) {
 							continue;
 						}
 						float applyKnockbackResistance = 0;
@@ -411,7 +411,7 @@ public class OgreEntity extends GoblinEntity {
 							BlockState block = world.getBlockState(pos);
 							BlockState blockAbove = world.getBlockState(abovePos);
 							if (block.getMaterial() != Material.AIR && block.isRedstoneConductor(world, pos) && !block.hasBlockEntity() && !blockAbove.getMaterial().blocksMotion()) {
-								GDFallingBlockEntity fallingBlock = new GDFallingBlockEntity(EntityInit.FALLING_BLOCK.get(), world, block, (float) (0.4 + factor * 0.2));
+								GDFallingBlock fallingBlock = new GDFallingBlock(EntityInit.FALLING_BLOCK.get(), world, block, (float) (0.4 + factor * 0.2));
 								fallingBlock.setPos(hitX + 0.5, hitY + 1, hitZ + 0.5);
 								world.addFreshEntity(fallingBlock);
 							}

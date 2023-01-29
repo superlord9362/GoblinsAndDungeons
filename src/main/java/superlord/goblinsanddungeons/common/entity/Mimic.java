@@ -32,10 +32,10 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
-public class MimicEntity extends GoblinEntity {
-	private static final EntityDataAccessor<Boolean> HIDING = SynchedEntityData.defineId(MimicEntity.class, EntityDataSerializers.BOOLEAN);
+public class Mimic extends Goblin {
+	private static final EntityDataAccessor<Boolean> HIDING = SynchedEntityData.defineId(Mimic.class, EntityDataSerializers.BOOLEAN);
 
-	public MimicEntity(EntityType<? extends MimicEntity> p_i50196_1_, Level p_i50196_2_) {
+	public Mimic(EntityType<? extends Mimic> p_i50196_1_, Level p_i50196_2_) {
 		super(p_i50196_1_, p_i50196_2_);
 	}
 	public boolean isHiding() {
@@ -47,11 +47,11 @@ public class MimicEntity extends GoblinEntity {
 	}
 
 	protected void registerGoals() {
-		this.goalSelector.addGoal(1, new MimicEntity.HidingLookGoal(this, Player.class, 8.0F));
+		this.goalSelector.addGoal(1, new Mimic.HidingLookGoal(this, Player.class, 8.0F));
 		this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 1.0D, true));
-		this.targetSelector.addGoal(2, new MimicEntity.AttackNearestGoal(this));
-		this.goalSelector.addGoal(0, new MimicEntity.HideGoal());
-		this.targetSelector.addGoal(1, new MimicEntity.DefendGoal(this));
+		this.targetSelector.addGoal(2, new Mimic.AttackNearestGoal(this));
+		this.goalSelector.addGoal(0, new Mimic.HideGoal());
+		this.targetSelector.addGoal(1, new Mimic.DefendGoal(this));
 	}
 
 
@@ -151,7 +151,7 @@ public class MimicEntity extends GoblinEntity {
 
 		public void start() {
 			super.start();
-			MimicEntity.this.setHiding(false);
+			Mimic.this.setHiding(false);
 		}
 
 
@@ -164,7 +164,7 @@ public class MimicEntity extends GoblinEntity {
 	}
 
 	class AttackNearestGoal extends NearestAttackableTargetGoal<Player> {
-		public AttackNearestGoal(MimicEntity mimic) {
+		public AttackNearestGoal(Mimic mimic) {
 			super(mimic, Player.class, true);
 		}
 
@@ -173,7 +173,7 @@ public class MimicEntity extends GoblinEntity {
 		 * method as well.
 		 */
 		public boolean canUse() {
-			if (!MimicEntity.this.isHiding() && super.canUse()) {
+			if (!Mimic.this.isHiding() && super.canUse()) {
 				return true;
 			} else {
 				return false;
@@ -182,7 +182,7 @@ public class MimicEntity extends GoblinEntity {
 
 		public void start() {
 			super.start();
-			MimicEntity.this.setHiding(false);
+			Mimic.this.setHiding(false);
 		}
 
 		public void stop() {
@@ -198,7 +198,7 @@ public class MimicEntity extends GoblinEntity {
 		}
 
 		public boolean canUse() {
-			if (super.canUse() && !MimicEntity.this.isHiding()) {
+			if (super.canUse() && !Mimic.this.isHiding()) {
 				return true;
 			} else {
 				return false;
@@ -211,7 +211,7 @@ public class MimicEntity extends GoblinEntity {
 
 		@Override
 		public boolean canUse() {
-			if (MimicEntity.this.getTarget() == null) {
+			if (Mimic.this.getTarget() == null) {
 				return true;
 			} else {
 				return false;
@@ -219,7 +219,7 @@ public class MimicEntity extends GoblinEntity {
 		}
 
 		public void startExecuting() {
-			MimicEntity.this.setHiding(true);
+			Mimic.this.setHiding(true);
 		}
 
 	}

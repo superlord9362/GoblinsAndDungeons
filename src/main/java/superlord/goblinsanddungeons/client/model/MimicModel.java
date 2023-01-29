@@ -17,14 +17,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.common.entity.MimicEntity;
+import superlord.goblinsanddungeons.common.entity.Mimic;
 
 /**
  * mimic goblin - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class MimicModel<T extends Entity> extends EntityModel<MimicEntity> {
+public class MimicModel<T extends Entity> extends EntityModel<Mimic> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "custom_model"), "main");
 	private final ModelPart LeftLeg;
 	private final ModelPart Head;
@@ -63,7 +63,7 @@ public class MimicModel<T extends Entity> extends EntityModel<MimicEntity> {
 	}
 
 	@Override
-	public void setupAnim(MimicEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Mimic entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.Head.xRot = headPitch * ((float)Math.PI / 180F);
         this.Head.yRot = netHeadYaw * ((float)Math.PI / 180F);
         this.RightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;

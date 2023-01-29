@@ -39,9 +39,9 @@ import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
-public class GobEntity extends GoblinEntity {
+public class Gob extends Goblin {
 
-	public GobEntity(EntityType<? extends GobEntity> type, Level worldIn) {
+	public Gob(EntityType<? extends Gob> type, Level worldIn) {
 		super(type, worldIn);
 	}
 

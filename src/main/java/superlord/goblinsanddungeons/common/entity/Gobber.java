@@ -51,13 +51,13 @@ import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
-public class GobberEntity extends GoblinEntity implements CrossbowAttackMob {
+public class Gobber extends Goblin implements CrossbowAttackMob {
 
-	private static final EntityDataAccessor<Boolean> HAS_CROSSBOW = SynchedEntityData.defineId(GobberEntity.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(GobberEntity.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> DATA_CHARGING_STATE = SynchedEntityData.defineId(GobberEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> HAS_CROSSBOW = SynchedEntityData.defineId(Gobber.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(Gobber.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> DATA_CHARGING_STATE = SynchedEntityData.defineId(Gobber.class, EntityDataSerializers.BOOLEAN);
 
-	public GobberEntity(EntityType<? extends GobberEntity> type, Level worldIn) {
+	public Gobber(EntityType<? extends Gobber> type, Level worldIn) {
 		super(type, worldIn);
 		this.reassessWeaponGoal();
 	}
@@ -94,7 +94,7 @@ public class GobberEntity extends GoblinEntity implements CrossbowAttackMob {
 		this.goalSelector.addGoal(2, new RestrictSunGoal(this));
 		this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
 		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
-		this.goalSelector.addGoal(3, new GobberEntity.SleepGoal(this));
+		this.goalSelector.addGoal(3, new Gobber.SleepGoal(this));
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true));
@@ -254,18 +254,18 @@ public class GobberEntity extends GoblinEntity implements CrossbowAttackMob {
 	}
 
 	class SleepGoal extends Goal {
-		GobberEntity gobber;
+		Gobber gobber;
 
-		public SleepGoal(GobberEntity gobber) {
+		public SleepGoal(Gobber gobber) {
 			this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
 			this.gobber = gobber;
 		}
 
 		public boolean canUse() {
-			List<Player> players = GobberEntity.this.level.getEntitiesOfClass(Player.class, GobberEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
-			List<AbstractIllager> illagers = GobberEntity.this.level.getEntitiesOfClass(AbstractIllager.class, GobberEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
-			List<AbstractVillager> villagers = GobberEntity.this.level.getEntitiesOfClass(AbstractVillager.class, GobberEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
-			List<AbstractGolem> golems = GobberEntity.this.level.getEntitiesOfClass(AbstractGolem.class, GobberEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			List<Player> players = Gobber.this.level.getEntitiesOfClass(Player.class, Gobber.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			List<AbstractIllager> illagers = Gobber.this.level.getEntitiesOfClass(AbstractIllager.class, Gobber.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			List<AbstractVillager> villagers = Gobber.this.level.getEntitiesOfClass(AbstractVillager.class, Gobber.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			List<AbstractGolem> golems = Gobber.this.level.getEntitiesOfClass(AbstractGolem.class, Gobber.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
 			if (players.isEmpty() && illagers.isEmpty() && villagers.isEmpty() && golems.isEmpty()) {
 				return true;
 			} else {
@@ -274,10 +274,10 @@ public class GobberEntity extends GoblinEntity implements CrossbowAttackMob {
 		}
 
 		public boolean canContinueToUse() {
-			List<Player> players = GobberEntity.this.level.getEntitiesOfClass(Player.class, GobberEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
-			List<AbstractIllager> illagers = GobberEntity.this.level.getEntitiesOfClass(AbstractIllager.class, GobberEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
-			List<AbstractVillager> villagers = GobberEntity.this.level.getEntitiesOfClass(AbstractVillager.class, GobberEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
-			List<AbstractGolem> golems = GobberEntity.this.level.getEntitiesOfClass(AbstractGolem.class, GobberEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			List<Player> players = Gobber.this.level.getEntitiesOfClass(Player.class, Gobber.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			List<AbstractIllager> illagers = Gobber.this.level.getEntitiesOfClass(AbstractIllager.class, Gobber.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			List<AbstractVillager> villagers = Gobber.this.level.getEntitiesOfClass(AbstractVillager.class, Gobber.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			List<AbstractGolem> golems = Gobber.this.level.getEntitiesOfClass(AbstractGolem.class, Gobber.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
 			if (!players.isEmpty() || !illagers.isEmpty() || !villagers.isEmpty() || !golems.isEmpty()) {
 				return false;
 			} else {

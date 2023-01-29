@@ -14,14 +14,14 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.common.entity.OgreEntity;
+import superlord.goblinsanddungeons.common.entity.Ogre;
 
 /**
  * Ogre - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class SittingOgreModel<T extends Entity> extends EntityModel<OgreEntity> {
+public class SittingOgreModel<T extends Entity> extends EntityModel<Ogre> {
 	private final ModelPart LeftLeg;
 	private final ModelPart RightLeg;
 	private final ModelPart Body;
@@ -77,7 +77,7 @@ public class SittingOgreModel<T extends Entity> extends EntityModel<OgreEntity> 
 	}
 
 	@Override
-	public void setupAnim(OgreEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Ogre entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.Head.xRot = headPitch * ((float)Math.PI / 180F);
 		this.Head.yRot = netHeadYaw * ((float)Math.PI / 180F);
 	}

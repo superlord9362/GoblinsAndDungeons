@@ -47,18 +47,18 @@ import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
-public class GoomEntity extends GoblinEntity {
-	private static final EntityDataAccessor<Byte> CLIMBING = SynchedEntityData.defineId(GoomEntity.class, EntityDataSerializers.BYTE);
-	private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(GoomEntity.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Boolean> IGNITED = SynchedEntityData.defineId(GoomEntity.class, EntityDataSerializers.BOOLEAN);
-	private static final EntityDataAccessor<Boolean> BLOWN = SynchedEntityData.defineId(GoomEntity.class, EntityDataSerializers.BOOLEAN);
+public class Goom extends Goblin {
+	private static final EntityDataAccessor<Byte> CLIMBING = SynchedEntityData.defineId(Goom.class, EntityDataSerializers.BYTE);
+	private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(Goom.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Boolean> IGNITED = SynchedEntityData.defineId(Goom.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> BLOWN = SynchedEntityData.defineId(Goom.class, EntityDataSerializers.BOOLEAN);
 	@SuppressWarnings("unused")
 	private int lastActiveTime;
 	private int timeSinceIgnited;
 	private int fuseTime = 30;
 	private int timeTillBomb = 0;
 
-	public GoomEntity(EntityType<? extends GoomEntity> type, Level worldIn) {
+	public Goom(EntityType<? extends Goom> type, Level worldIn) {
 		super(type, worldIn);
 	}
 
@@ -253,12 +253,12 @@ public class GoomEntity extends GoblinEntity {
 		}
 		
 		public boolean canUse() {
-			if (GoomEntity.this.isBlownUp() && super.canUse()) return true;
+			if (Goom.this.isBlownUp() && super.canUse()) return true;
 			else return false;
 		}
 		
 		public boolean canContinueToUse() {
-			if (!GoomEntity.this.isBlownUp() || !super.canContinueToUse()) return false;
+			if (!Goom.this.isBlownUp() || !super.canContinueToUse()) return false;
 			else return true;
 		}
 		

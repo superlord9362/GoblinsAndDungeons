@@ -18,6 +18,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
+import superlord.goblinsanddungeons.client.model.BeholderModel;
 import superlord.goblinsanddungeons.client.model.GarchModel;
 import superlord.goblinsanddungeons.client.model.GobModel;
 import superlord.goblinsanddungeons.client.model.GobberModel;
@@ -31,6 +32,9 @@ import superlord.goblinsanddungeons.client.model.OgreModel;
 import superlord.goblinsanddungeons.client.model.SittingOgreModel;
 import superlord.goblinsanddungeons.client.model.SleepingGobloModel;
 import superlord.goblinsanddungeons.client.model.armor.GoblinCrownModel;
+import superlord.goblinsanddungeons.client.renderer.BeholderRenderer;
+import superlord.goblinsanddungeons.client.renderer.BlindnessOrbRenderer;
+import superlord.goblinsanddungeons.client.renderer.ExplosiveOrbRenderer;
 import superlord.goblinsanddungeons.client.renderer.FallingBlockRenderer;
 import superlord.goblinsanddungeons.client.renderer.GarchRenderer;
 import superlord.goblinsanddungeons.client.renderer.GobKingRenderer;
@@ -40,10 +44,13 @@ import superlord.goblinsanddungeons.client.renderer.GoblinSoulBulletRenderer;
 import superlord.goblinsanddungeons.client.renderer.GobloRenderer;
 import superlord.goblinsanddungeons.client.renderer.GoomRenderer;
 import superlord.goblinsanddungeons.client.renderer.HobGobRenderer;
+import superlord.goblinsanddungeons.client.renderer.LevitationOrbRenderer;
 import superlord.goblinsanddungeons.client.renderer.MimicRenderer;
 import superlord.goblinsanddungeons.client.renderer.OgreRenderer;
 import superlord.goblinsanddungeons.client.renderer.SoulAshCampfireTileEntityRenderer;
 import superlord.goblinsanddungeons.client.renderer.SoulBulletRenderer;
+import superlord.goblinsanddungeons.client.renderer.TeleportationOrbRenderer;
+import superlord.goblinsanddungeons.client.renderer.WeaknessOrbRenderer;
 import superlord.goblinsanddungeons.common.item.GoblinsAndDungeonsSpawnEggItem;
 import superlord.goblinsanddungeons.init.BlockInit;
 import superlord.goblinsanddungeons.init.EntityInit;
@@ -66,6 +73,7 @@ public class ClientEvents {
 	public static ModelLayerLocation HIDDEN_MIMIC = new ModelLayerLocation(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "hidden_mimic"), "hidden_mimic");
 	public static ModelLayerLocation GOB_KING = new ModelLayerLocation(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "gob_king"), "gob_king");
 	public static ModelLayerLocation GOBLIN_CROWN = new ModelLayerLocation(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "goblin_crown"), "goblin_crown");
+	public static ModelLayerLocation BEHOLDER = new ModelLayerLocation(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "beholder"), "beholder");
 
 	@SubscribeEvent
 	public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
@@ -78,8 +86,14 @@ public class ClientEvents {
 		event.registerEntityRenderer(EntityInit.OGRE.get(), OgreRenderer::new);
 		event.registerEntityRenderer(EntityInit.GOBLIN_SOUL_BULLET.get(), GoblinSoulBulletRenderer::new);
 		event.registerEntityRenderer(EntityInit.SOUL_BULLET.get(), SoulBulletRenderer::new);
+		event.registerEntityRenderer(EntityInit.TELEPORTATION_ORB.get(), TeleportationOrbRenderer::new);
+		event.registerEntityRenderer(EntityInit.LEVITATION_ORB.get(), LevitationOrbRenderer::new);
+		event.registerEntityRenderer(EntityInit.BLINDNESS_ORB.get(), BlindnessOrbRenderer::new);
+		event.registerEntityRenderer(EntityInit.EXPLOSIVE_ORB.get(), ExplosiveOrbRenderer::new);
+		event.registerEntityRenderer(EntityInit.WEAKNESS_ORB.get(), WeaknessOrbRenderer::new);
 		event.registerEntityRenderer(EntityInit.GOB_KING.get(), GobKingRenderer::new);
 		event.registerEntityRenderer(EntityInit.MIMIC.get(), MimicRenderer::new);
+		event.registerEntityRenderer(EntityInit.BEHOLDER.get(), BeholderRenderer::new);
 		event.registerEntityRenderer(EntityInit.FALLING_BLOCK.get(), FallingBlockRenderer::new);
 		BlockEntityRenderers.register(TileEntityInit.SOUL_ASH_CAMPFIRE.get(), SoulAshCampfireTileEntityRenderer::new);
 	}
@@ -98,6 +112,7 @@ public class ClientEvents {
 		event.registerLayerDefinition(MIMIC, MimicModel::createBodyLayer);
 		event.registerLayerDefinition(HIDDEN_MIMIC, HiddenMimicModel::createBodyLayer);
 		event.registerLayerDefinition(GOB_KING, GoblinKingModel::createBodyLayer);
+		event.registerLayerDefinition(BEHOLDER, BeholderModel::createBodyLayer);
 		event.registerLayerDefinition(GOBLIN_CROWN,  () -> GoblinCrownModel.createArmorLayer(new CubeDeformation(0.5F)));
 	}
 

@@ -15,8 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
+import superlord.goblinsanddungeons.client.mana.ClientManaData;
 import superlord.goblinsanddungeons.config.GoblinsDungeonsConfig;
-import superlord.goblinsanddungeons.magic.PlayerMana;
 
 @OnlyIn(Dist.CLIENT)
 public class ManaGUIRenderer {
@@ -40,8 +40,6 @@ public class ManaGUIRenderer {
 	@OnlyIn(Dist.CLIENT)
 	public static void renderMana(Gui gui, PoseStack matrixStack, MutableInt moveUp, int j1, int k1, boolean forgeOverlay) {
 		if (GoblinsDungeonsConfig.magicalWorld) {
-			PlayerMana mana = new PlayerMana();
-			int manaL = mana.getMana();
 			gui.minecraft.getProfiler().push("mana");
 			if (!forgeOverlay) {
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -53,11 +51,11 @@ public class ManaGUIRenderer {
 				int i8 = 0;
 				int k8 = j1 - k6 * 8 - 9;
 				gui.blit(matrixStack, k8, i7 - moveUp.getValue(), 16 + i8 * 9, 54, 9, 9);
-				if (k6 * 2 + 1 < manaL) {
+				if (k6 * 2 + 1 < ClientManaData.getPlayerMana()) {
 					gui.blit(matrixStack, k8, i7 - moveUp.getValue(), k7 + 36, 54, 9, 9);
 				}
 
-				if (k6 * 2 + 1 == manaL) {
+				if (k6 * 2 + 1 == ClientManaData.getPlayerMana()) {
 					gui.blit(matrixStack, k8, i7 - moveUp.getValue(), k7 + 45, 54, 9, 9);
 				}
 			}

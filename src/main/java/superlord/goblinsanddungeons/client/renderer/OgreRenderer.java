@@ -11,9 +11,9 @@ import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.OgreModel;
 import superlord.goblinsanddungeons.client.model.SittingOgreModel;
-import superlord.goblinsanddungeons.common.entity.OgreEntity;
+import superlord.goblinsanddungeons.common.entity.Ogre;
 
-public class OgreRenderer extends MobRenderer<OgreEntity, EntityModel<OgreEntity>> {
+public class OgreRenderer extends MobRenderer<Ogre, EntityModel<Ogre>> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/ogre.png");
 	private static final ResourceLocation SHREK = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/ogre_shrek.png");
@@ -27,7 +27,7 @@ public class OgreRenderer extends MobRenderer<OgreEntity, EntityModel<OgreEntity
 		FALLING_OGRE = new SittingOgreModel(renderManager.bakeLayer(ClientEvents.SITTING_OGRE));
 	}
 
-	protected void scale(OgreEntity entity, PoseStack matrixStackIn, float partialTickTime) {
+	protected void scale(Ogre entity, PoseStack matrixStackIn, float partialTickTime) {
 		if (entity.isFallingOnButt() && !entity.isOnGround()) {
 			model = FALLING_OGRE;
 		} else {
@@ -36,7 +36,7 @@ public class OgreRenderer extends MobRenderer<OgreEntity, EntityModel<OgreEntity
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(OgreEntity entity) {
+	public ResourceLocation getTextureLocation(Ogre entity) {
 		String s = ChatFormatting.stripFormatting(entity.getName().getString());
 		if (s != null && "Shrek".equals(s)) {
 			return SHREK;

@@ -30,8 +30,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.ProtectedBloc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
-import superlord.goblinsanddungeons.common.entity.GarchEntity;
-import superlord.goblinsanddungeons.common.entity.GobEntity;
+import superlord.goblinsanddungeons.common.entity.Garch;
+import superlord.goblinsanddungeons.common.entity.Gob;
 import superlord.goblinsanddungeons.init.EntityInit;
 import superlord.goblinsanddungeons.init.LootTableInit;
 import superlord.goblinsanddungeons.init.StructureInit;
@@ -100,7 +100,7 @@ public class SmallGoblinCampStructurePiece {
 			}
 			if ("gob".equals(function)) {
 				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-				GobEntity entity = EntityInit.GOB.get().create(world.getLevel());
+				Gob entity = EntityInit.GOB.get().create(world.getLevel());
 				if (entity != null) {
 					entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 					entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
@@ -109,7 +109,7 @@ public class SmallGoblinCampStructurePiece {
 			}
 			if ("garch".equals(function)) {
 				world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-				GarchEntity entity = EntityInit.GARCH.get().create(world.getLevel());
+				Garch entity = EntityInit.GARCH.get().create(world.getLevel());
 				if (entity != null) {
 					entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 					entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);

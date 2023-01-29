@@ -7,9 +7,9 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.GoblinKingModel;
-import superlord.goblinsanddungeons.common.entity.GobKingEntity;
+import superlord.goblinsanddungeons.common.entity.GobKing;
 
-public class GobKingRenderer extends MobRenderer<GobKingEntity, GoblinKingModel<GobKingEntity>> {
+public class GobKingRenderer extends MobRenderer<GobKing, GoblinKingModel<GobKing>> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/goblin_king.png");
 	
@@ -20,7 +20,7 @@ public class GobKingRenderer extends MobRenderer<GobKingEntity, GoblinKingModel<
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(GobKingEntity p_114482_) {
+	public ResourceLocation getTextureLocation(GobKing p_114482_) {
 		return TEXTURE;
 	}
 

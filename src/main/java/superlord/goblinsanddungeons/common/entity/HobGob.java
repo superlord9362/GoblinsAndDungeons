@@ -38,9 +38,9 @@ import superlord.goblinsanddungeons.init.CreatureAttributeInit;
 import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
-public class HobGobEntity extends GoblinEntity {
+public class HobGob extends Goblin {
 	
-	public HobGobEntity(EntityType<? extends HobGobEntity> type, Level worldIn) {
+	public HobGob(EntityType<? extends HobGob> type, Level worldIn) {
 		super(type, worldIn);
 	}
 	
@@ -104,7 +104,7 @@ public class HobGobEntity extends GoblinEntity {
 		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
-		this.targetSelector.addGoal(2, new HobGobEntity.ThrowGoblinGoal(this));
+		this.targetSelector.addGoal(2, new HobGob.ThrowGoblinGoal(this));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Raider.class, true));
@@ -119,9 +119,9 @@ public class HobGobEntity extends GoblinEntity {
 	
 	class ThrowGoblinGoal extends Goal {
 
-		HobGobEntity hobgob;
+		HobGob hobgob;
 
-		public ThrowGoblinGoal(HobGobEntity hobgob) {
+		public ThrowGoblinGoal(HobGob hobgob) {
 			this.setFlags(EnumSet.of(Goal.Flag.MOVE));
 			this.hobgob = hobgob;
 		}
@@ -146,22 +146,22 @@ public class HobGobEntity extends GoblinEntity {
 		}
 
 		public void tick() {
-			List<GobEntity> gob1 = hobgob.level.getEntitiesOfClass(GobEntity.class, hobgob.getBoundingBox().inflate(1.0D, 1.0D, 1.0D));
+			List<Gob> gob1 = hobgob.level.getEntitiesOfClass(Gob.class, hobgob.getBoundingBox().inflate(1.0D, 1.0D, 1.0D));
 			if (!gob1.isEmpty()){
 				if(hobgob.getDirection() == Direction.NORTH) {
-					GobEntity gobEntity = gob1.get(0);
+					Gob gobEntity = gob1.get(0);
 					gobEntity.setDeltaMovement(0.0D, 1.0D, -2.0D);
 				}
 				if (hobgob.getDirection() == Direction.WEST) {
-					GobEntity gobEntity = gob1.get(0);
+					Gob gobEntity = gob1.get(0);
 					gobEntity.setDeltaMovement(-2.0D, 1.0D, 0.0D);
 				}
 				if (hobgob.getDirection() == Direction.SOUTH) {
-					GobEntity gobEntity = gob1.get(0);
+					Gob gobEntity = gob1.get(0);
 					gobEntity.setDeltaMovement(0.0D, 1.0D, 2.0D);
 				}
 				if (hobgob.getDirection() == Direction.EAST) {
-					GobEntity gobEntity = gob1.get(0);
+					Gob gobEntity = gob1.get(0);
 					gobEntity.setDeltaMovement(2.0D, 1.0D, 0.0D);
 				}
 					

@@ -23,21 +23,21 @@ import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.ParticleInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
-public class SoulBulletEntity extends ThrowableItemProjectile {
-	public SoulBulletEntity(EntityType<? extends SoulBulletEntity> p_i50159_1_, Level p_i50159_2_) {
+public class GoblinSoulBullet extends ThrowableItemProjectile {
+	public GoblinSoulBullet(EntityType<? extends GoblinSoulBullet> p_i50159_1_, Level p_i50159_2_) {
 		super(p_i50159_1_, p_i50159_2_);
 	}
 
-	public SoulBulletEntity(Level worldIn, LivingEntity throwerIn) {
-		super(EntityInit.SOUL_BULLET.get(), throwerIn, worldIn);
+	public GoblinSoulBullet(Level worldIn, LivingEntity throwerIn) {
+		super(EntityInit.GOBLIN_SOUL_BULLET.get(), throwerIn, worldIn);
 	}
 
-	public SoulBulletEntity(Level worldIn, double x, double y, double z) {
-		super(EntityInit.SOUL_BULLET.get(), x, y, z, worldIn);
+	public GoblinSoulBullet(Level worldIn, double x, double y, double z) {
+		super(EntityInit.GOBLIN_SOUL_BULLET.get(), x, y, z, worldIn);
 	}
 
 	protected Item getDefaultItem() {
-		return ItemInit.SOUL_BULLET.get();
+		return ItemInit.GOBLIN_SOUL_BULLET.get();
 	}
 
 	public void tick() {
@@ -51,7 +51,7 @@ public class SoulBulletEntity extends ThrowableItemProjectile {
 	}
 
 	private void spawnParticles(int particleCount) {
-		this.level.addParticle(ParticleInit.SOUL_BULLET, true, this.getX() - 0.1, this.getY() - 1, this.getZ() - 0.1 , 0, 0, 0);
+		this.level.addParticle(ParticleInit.GOB_SOUL_BULLET, true, this.getX() - 0.1, this.getY() - 1, this.getZ() - 0.1 , 0, 0, 0);
 	}
 
 	@Override
@@ -72,14 +72,14 @@ public class SoulBulletEntity extends ThrowableItemProjectile {
 			hitEntity.hurt(DamageSource.indirectMagic(this, this.getOwner()), 4);
 			((LivingEntity)hitEntity).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
 		}
-		level.playSound((Player) null, new BlockPos(this.getX(), this.getY(), this.getZ()), SoundInit.SOUL_BULLET_COLLISION, SoundSource.NEUTRAL, 1, 1);
+		level.playSound((Player) null, new BlockPos(this.getX(), this.getY(), this.getZ()), SoundInit.SOUL_BULLET_COLLISION, SoundSource.HOSTILE, 1, 1);
 		this.playSound(SoundInit.SOUL_BULLET_COLLISION, 1, 1);
 	}
 
 	protected void onHit(HitResult result) {
 		super.onHit(result);
 		if (!this.level.isClientSide) {
-			level.playSound((Player) null, new BlockPos(this.getX(), this.getY(), this.getZ()), SoundInit.SOUL_BULLET_COLLISION, SoundSource.NEUTRAL, 1, 1);
+			level.playSound((Player) null, new BlockPos(this.getX(), this.getY(), this.getZ()), SoundInit.SOUL_BULLET_COLLISION, SoundSource.HOSTILE, 1, 1);
 			this.playSound(SoundInit.SOUL_BULLET_COLLISION, 1, 1);
 			this.remove(RemovalReason.DISCARDED);
 		}

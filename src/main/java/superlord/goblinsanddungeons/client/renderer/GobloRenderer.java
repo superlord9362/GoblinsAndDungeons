@@ -11,9 +11,9 @@ import superlord.goblinsanddungeons.GoblinsAndDungeons;
 import superlord.goblinsanddungeons.client.ClientEvents;
 import superlord.goblinsanddungeons.client.model.GobloModel;
 import superlord.goblinsanddungeons.client.model.SleepingGobloModel;
-import superlord.goblinsanddungeons.common.entity.GobloEntity;
+import superlord.goblinsanddungeons.common.entity.Goblo;
 
-public class GobloRenderer extends MobRenderer<GobloEntity, EntityModel<GobloEntity>> {
+public class GobloRenderer extends MobRenderer<Goblo, EntityModel<Goblo>> {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation(GoblinsAndDungeons.MOD_ID, "textures/entities/goblo.png");
 	private static GobloModel<?> GOBLO;
@@ -27,7 +27,7 @@ public class GobloRenderer extends MobRenderer<GobloEntity, EntityModel<GobloEnt
 		SLEEPING_GOBLO = new SleepingGobloModel(renderManager.bakeLayer(ClientEvents.SLEEPING_GOBLO));
 	}
 	
-    protected void scale(GobloEntity entitylivingbaseIn, PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(Goblo entitylivingbaseIn, PoseStack matrixStackIn, float partialTickTime) {
 		if (entitylivingbaseIn.isSleeping()) {
 			model = SLEEPING_GOBLO;
 		} else {
@@ -36,7 +36,7 @@ public class GobloRenderer extends MobRenderer<GobloEntity, EntityModel<GobloEnt
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(GobloEntity entity) {
+	public ResourceLocation getTextureLocation(Goblo entity) {
 			return TEXTURE;
 	}
 

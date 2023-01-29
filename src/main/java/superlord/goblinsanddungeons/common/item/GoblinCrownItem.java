@@ -27,7 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
-import superlord.goblinsanddungeons.common.entity.GoblinEntity;
+import superlord.goblinsanddungeons.common.entity.Goblin;
 
 public class GoblinCrownItem extends ArmorItem {
 
@@ -52,7 +52,7 @@ public class GoblinCrownItem extends ArmorItem {
 	public void onArmorTick(ItemStack stack, Level world, Player player) {
 		Monster monsters = world.getNearestEntity(Monster.class, TargetingConditions.DEFAULT, (LivingEntity)player, player.getX(), player.getY(), player.getZ(), player.getBoundingBox().inflate(8.0D, 3.0D, 8.0D));
 		if (monsters != null) {
-			if (monsters instanceof GoblinEntity) {
+			if (monsters instanceof Goblin) {
 				monsters.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 1200, 1, false, false));
 			} else {
 				monsters.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 1200, 0, false, false));

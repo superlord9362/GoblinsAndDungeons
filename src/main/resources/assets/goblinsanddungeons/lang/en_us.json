@@ -12,9 +12,13 @@
 	"item.goblinsanddungeons.gobber_spawn_egg": "Gobber Spawn Egg",
 	"item.goblinsanddungeons.ogre_spawn_egg": "Ogre Spawn Egg",
 	"item.goblinsanddungeons.goblin_king_spawn_egg": "Goblin King Spawn Egg",
+	"item.goblinsanddungeons.beholder_spawn_egg": "Beholder Spawn Egg",
 	
 	"item.goblinsanddungeons.goblin_soul_bullet": "Goblin Soul Bullet",
 	"item.goblinsanddungeons.soul_bullet": "Soul Bullet",
+	"item.goblinsanddungeons.blindness_orb": "Blindness Orb",
+	"item.goblinsanddungeons.teleportation_orb": "Teleportation Orb",
+	"item.goblinsanddungeons.levitation_orb": "Levitation Orb",
 	"item.goblinsanddungeons.staff_amethyst": "Magic Staff",
 	"item.goblinsanddungeons.staff_jump": "Magic Staff",
 	"item.goblinsanddungeons.staff_bullet": "Magic Staff",
@@ -80,6 +84,8 @@
 	"item.minecraft.lingering_potion.effect.ogres_might_long": "Lingering Potion of Ogre's Might",
 	
 	"effect.goblinsanddungeons.might": "Ogre's Might",
+	"effect.goblinsanddungeons.magic_nullification": "Magic Nullification",
+	"effect.goblinsanddungeons.paralysis": "Paralysis",
 	
 	"entity.goblinsanddungeons.gob": "Gob",
 	"entity.goblinsanddungeons.hobgob": "Hobgob",
@@ -90,7 +96,12 @@
 	"entity.goblinsanddungeons.gobber": "Gobber",
 	"entity.goblinsanddungeons.ogre": "Ogre",
 	"entity.goblinsanddungeons.goblin_soul_bullet": "Soul Bullet",
+	"entity.goblinsanddungeons.soul_bullet": "Soul Bullet",
+	"entity.goblinsanddungeons.blindness_orb": "Blindness Orb",
+	"entity.goblinsanddungeons.levitation_orb": "Levitation Orb",
+	"entity.goblinsanddungeons.teleportation_orb": "Teleportation Orb",
 	"entity.goblinsanddungeons.goblin_king": "Goblin King",
+	"entity.goblinsanddungeons.beholder": "Beholder",
 	
 	"goblinsanddungeons.subtitle.ogre_idle": "Ogre groans",
 	"goblinsanddungeons.subtitle.ogre_hurt": "Ogre hurts",

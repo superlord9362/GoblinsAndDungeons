@@ -16,7 +16,7 @@ import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import superlord.goblinsanddungeons.common.entity.GobEntity;
+import superlord.goblinsanddungeons.common.entity.Gob;
 import superlord.goblinsanddungeons.init.EntityInit;
 
 public class GoblinPatrolSpawner implements CustomSpawner {
@@ -100,7 +100,7 @@ public class GoblinPatrolSpawner implements CustomSpawner {
 		} else if (!Monster.checkAnyLightMonsterSpawnRules(EntityInit.GOB.get(), worldIn, MobSpawnType.PATROL, pos, random)) {
 			return false;
 		} else {
-			GobEntity gobentity = EntityInit.GOB.get().create(worldIn);
+			Gob gobentity = EntityInit.GOB.get().create(worldIn);
 			if (gobentity != null) {
 				gobentity.setPos((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
 				gobentity.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(pos), MobSpawnType.PATROL, (SpawnGroupData)null, (CompoundTag)null);

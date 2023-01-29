@@ -52,11 +52,11 @@ import superlord.goblinsanddungeons.init.ItemInit;
 import superlord.goblinsanddungeons.init.ParticleInit;
 import superlord.goblinsanddungeons.init.SoundInit;
 
-public class GobKingEntity extends GoblinEntity implements RangedAttackMob {
+public class GobKing extends Goblin implements RangedAttackMob {
 
 	private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(false);
 
-	public GobKingEntity(EntityType<? extends GobKingEntity> type, Level worldIn) {
+	public GobKing(EntityType<? extends GobKing> type, Level worldIn) {
 		super(type, worldIn);
 	}
 
@@ -129,40 +129,40 @@ public class GobKingEntity extends GoblinEntity implements RangedAttackMob {
 		if (this.getTarget() != null && i == 0) {
 			int goblin = random.nextInt(5);
 			if (goblin == 0) {
-				GobEntity gob = new GobEntity(EntityInit.GOB.get(), level);
+				Gob gob = new Gob(EntityInit.GOB.get(), level);
 				gob.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
 				gob.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(gob.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
 				level.addFreshEntity(gob);
 			}
 			if (goblin == 1) {
-				GarchEntity garch = new GarchEntity(EntityInit.GARCH.get(), level);
+				Garch garch = new Garch(EntityInit.GARCH.get(), level);
 				garch.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
 				garch.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(garch.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
 				level.addFreshEntity(garch);
 			}
 			if (goblin == 2) {
-				GobloEntity goblo = new GobloEntity(EntityInit.GOBLO.get(), level);
+				Goblo goblo = new Goblo(EntityInit.GOBLO.get(), level);
 				goblo.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
 				goblo.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(goblo.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
 				level.addFreshEntity(goblo);
 			}
 			if (goblin == 3) {
-				GoomEntity goom = new GoomEntity(EntityInit.GOOM.get(), level);
+				Goom goom = new Goom(EntityInit.GOOM.get(), level);
 				goom.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
 				goom.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(goom.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
 				level.addFreshEntity(goom);
 			}
 			if (goblin == 4) {
-				HobGobEntity hobgob = new HobGobEntity(EntityInit.HOBGOB.get(), level);
+				HobGob hobgob = new HobGob(EntityInit.HOBGOB.get(), level);
 				hobgob.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
 				hobgob.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(hobgob.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
 				level.addFreshEntity(hobgob);
 			}
 			if (goblin == 5) {
-				GobberEntity gobber = new GobberEntity(EntityInit.GOBBER.get(), level);
-				GobberEntity gobber2 = new GobberEntity(EntityInit.GOBBER.get(), level);
-				GobberEntity gobber3 = new GobberEntity(EntityInit.GOBBER.get(), level);
-				GobberEntity gobber4 = new GobberEntity(EntityInit.GOBBER.get(), level);
+				Gobber gobber = new Gobber(EntityInit.GOBBER.get(), level);
+				Gobber gobber2 = new Gobber(EntityInit.GOBBER.get(), level);
+				Gobber gobber3 = new Gobber(EntityInit.GOBBER.get(), level);
+				Gobber gobber4 = new Gobber(EntityInit.GOBBER.get(), level);
 				gobber.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
 				gobber2.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
 				gobber3.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
@@ -223,11 +223,11 @@ public class GobKingEntity extends GoblinEntity implements RangedAttackMob {
 
 	@Override
 	public ItemStack getPickedResult(HitResult target) {
-		return new ItemStack(ItemInit.GOB_SPAWN_EGG.get());
+		return new ItemStack(ItemInit.GOBLIN_KING_SPAWN_EGG.get());
 	}
 
 	public void performRangedAttack(LivingEntity target, float distanceFactor) {
-		GoblinSoulBulletEntity soulBullet = new GoblinSoulBulletEntity(this.level, this);
+		GoblinSoulBullet soulBullet = new GoblinSoulBullet(this.level, this);
 		double d0 = target.getY() - (double)1.1F;
 		double d1 = target.getX() - this.getX();
 		double d2 = d0 - soulBullet.getY();

@@ -16,14 +16,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.common.entity.GobberEntity;
+import superlord.goblinsanddungeons.common.entity.Gobber;
 
 /**
  * GobberModel - superlord9362
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class GobberModel extends EntityModel<GobberEntity> implements ArmedModel {
+public class GobberModel extends EntityModel<Gobber> implements ArmedModel {
 	private final ModelPart Body;
 	private final ModelPart Head;
 	private final ModelPart RightPauldron;
@@ -74,7 +74,7 @@ public class GobberModel extends EntityModel<GobberEntity> implements ArmedModel
 
 
 	@Override
-	public void setupAnim(GobberEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Gobber entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		if (entity.isSleeping()) {
 			this.RightPauldron.zRot = -0.5F * 0.45F * Mth.sin((0.6F * ageInTicks) / 10);
 			this.LeftPauldron.zRot = -(-0.5F * 0.45F * Mth.sin((0.6F * ageInTicks) / 10));

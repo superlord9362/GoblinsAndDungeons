@@ -1,7 +1,9 @@
 package superlord.goblinsanddungeons.common;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -36,7 +38,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import superlord.goblinsanddungeons.GoblinsAndDungeons;
-import superlord.goblinsanddungeons.common.entity.GoblinEntity;
+import superlord.goblinsanddungeons.common.entity.Goblin;
 import superlord.goblinsanddungeons.common.entity.ai.FollowOgreGoal;
 import superlord.goblinsanddungeons.config.GoblinsDungeonsConfig;
 import superlord.goblinsanddungeons.init.BlockInit;
@@ -45,17 +47,22 @@ import superlord.goblinsanddungeons.magic.PlayerMana;
 import superlord.goblinsanddungeons.magic.PlayerManaProvider;
 import superlord.goblinsanddungeons.magic.PlayerSpells;
 import superlord.goblinsanddungeons.magic.PlayerSpellsProvider;
+import superlord.goblinsanddungeons.networking.ModMessages;
+import superlord.goblinsanddungeons.networking.packet.ManaDataSyncS2CPacket;
 
 @Mod.EventBusSubscriber(modid = GoblinsAndDungeons.MOD_ID, bus = Bus.FORGE)
 public class CommonEvents {
+	
+	public static boolean knowsSoulJump;
+	public static boolean knowsSoulBullet;
 
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		if (event.getEntity() instanceof AbstractIllager || event.getEntity() instanceof AbstractGolem) {
-			((Mob) event.getEntity()).targetSelector.addGoal(0, new NearestAttackableTargetGoal<>((Mob) event.getEntity(), GoblinEntity.class, true));
+			((Mob) event.getEntity()).targetSelector.addGoal(0, new NearestAttackableTargetGoal<>((Mob) event.getEntity(), Goblin.class, true));
 		}
 		if (event.getEntity() instanceof AbstractVillager) {
-			((Mob) event.getEntity()).goalSelector.addGoal(0, new AvoidEntityGoal<>((PathfinderMob)event.getEntity(), GoblinEntity.class, 10.0F, 1.0D, 1.0D));
+			((Mob) event.getEntity()).goalSelector.addGoal(0, new AvoidEntityGoal<>((PathfinderMob)event.getEntity(), Goblin.class, 10.0F, 1.0D, 1.0D));
 		}
 		if (event.getEntity() instanceof Donkey) {
 			((Mob) event.getEntity()).goalSelector.addGoal(4, new FollowOgreGoal((Animal)event.getEntity(), 1.0F));
@@ -191,11 +198,13 @@ public class CommonEvents {
 		if (event.getObject() instanceof Player) {
 			if (!event.getObject().getCapability(PlayerManaProvider.PLAYER_MANA).isPresent()) {
 				event.addCapability(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "properties"), new PlayerManaProvider());
+				System.out.println("Mana added!");
 			}
 		}
 		if (event.getObject() instanceof Player) {
 			if (!event.getObject().getCapability(PlayerSpellsProvider.PLAYER_SPELLS).isPresent()) {
 				event.addCapability(new ResourceLocation(GoblinsAndDungeons.MOD_ID, "spells"), new PlayerSpellsProvider());
+				System.out.println("Spells added!");
 			}
 		}
 	}
@@ -220,6 +229,17 @@ public class CommonEvents {
 	public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
 		event.register(PlayerMana.class);
 		event.register(PlayerSpells.class);
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerJoinWorld(EntityJoinWorldEvent event) {
+		if (!event.getWorld().isClientSide()) {
+			if (event.getEntity() instanceof ServerPlayer player) {
+				player.getCapability(PlayerManaProvider.PLAYER_MANA).ifPresent(mana -> {
+					ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), player);
+				});
+			}
+		}
 	}
 
 }

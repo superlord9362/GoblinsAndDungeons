@@ -14,14 +14,14 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.common.entity.MimicEntity;
+import superlord.goblinsanddungeons.common.entity.Mimic;
 
 /**
  * HiddenMimicModel - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class HiddenMimicModel<T extends Entity> extends EntityModel<MimicEntity> {
+public class HiddenMimicModel<T extends Entity> extends EntityModel<Mimic> {
 	private final ModelPart LeftLeg;
 	private final ModelPart Head;
 	private final ModelPart RightLeg;
@@ -59,7 +59,7 @@ public class HiddenMimicModel<T extends Entity> extends EntityModel<MimicEntity>
 	}
 
 	@Override
-	public void setupAnim(MimicEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Mimic entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
 	}
 

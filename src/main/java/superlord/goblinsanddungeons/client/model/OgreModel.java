@@ -15,14 +15,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.goblinsanddungeons.common.entity.OgreEntity;
+import superlord.goblinsanddungeons.common.entity.Ogre;
 
 /**
  * Ogre - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class OgreModel<T extends Entity> extends EntityModel<OgreEntity> {
+public class OgreModel<T extends Entity> extends EntityModel<Ogre> {
 	private final ModelPart LeftLeg;
 	private final ModelPart RightLeg;
 	private final ModelPart Body;
@@ -84,7 +84,7 @@ public class OgreModel<T extends Entity> extends EntityModel<OgreEntity> {
 	}
 
 	@Override
-	public void setupAnim(OgreEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Ogre entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		if (entity.isRoaring()) {
 			this.Jaw.xRot = 0.35F;
 			this.Head.xRot = -0.4F;

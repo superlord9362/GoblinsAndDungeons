@@ -24,10 +24,10 @@ public class LearnSoulBulletC2SPacket {
 	public boolean handle(Supplier<NetworkEvent.Context> supplier) {
 		NetworkEvent.Context context = supplier.get();
 		context.enqueueWork(() -> {
-            ServerPlayer player = context.getSender();
-            player.getCapability(PlayerSpellsProvider.PLAYER_SPELLS).ifPresent(playerSpells -> {
-            	playerSpells.setKnowsSoulBullet(true);
-            });
+			ServerPlayer player = context.getSender();
+			player.getCapability(PlayerSpellsProvider.PLAYER_SPELLS).ifPresent(playerSpells -> {
+				playerSpells.setKnowsSoulBullet(true);
+			});
 		});
 		return true;
 	}
