@@ -1,14 +1,15 @@
 package superlord.goblinsanddungeons.common.util;
 
-import java.util.function.Supplier;
-
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 public class GDArmorMaterial implements ArmorMaterial {
-	
+
 	private static final int[] MAX_DAMAGE_ARRAY = new int[] {15, 18, 17, 13};
 	private final String name;
 	private final int maxDamageFactor;
@@ -17,15 +18,15 @@ public class GDArmorMaterial implements ArmorMaterial {
 	private final SoundEvent soundEvent;
 	private final float toughness;
 	private final Supplier<Ingredient> repairMaterial;
-	
-	public GDArmorMaterial(String name, int maxDamageFactor, int[] damageReductionAmountArray, int enchantability, SoundEvent soundEvent, float toughness, Supplier<Ingredient> repairMaterial) {
+
+	public GDArmorMaterial(String name, int maxDamageFactor, int[] damageReductionAmountArray, int enchantability, SoundEvent soundEvent, float toughness, @Nullable Supplier<Ingredient> repairMaterial) {
 		this.name = name;
 		this.maxDamageFactor = maxDamageFactor;
 		this.damageReductionAmountArray = damageReductionAmountArray;
 		this.enchantability = enchantability;
 		this.soundEvent = soundEvent;
 		this.toughness = toughness;
-		this.repairMaterial = repairMaterial;
+		this.repairMaterial = repairMaterial == null ? () -> Ingredient.EMPTY : repairMaterial;
 	}
 
 	@Override
